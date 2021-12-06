@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Mafia
 {
-    class MafiaGame : IMafia
+    public class MafiaGame : IMafia
     {
         private readonly List<Player> allPlayers = new List<Player>();
         private readonly List<Player> playersInGame = new List<Player>();
