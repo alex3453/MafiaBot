@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 
 namespace Bot
 {
