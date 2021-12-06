@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
-using DiscordBot.Application;
-using DiscordBot.Mafia;
 
-namespace DiscordBot.UserInterface
+namespace Bot
 {
     public class Bot
     {

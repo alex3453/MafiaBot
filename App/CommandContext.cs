@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Linq;
-using Discord.WebSocket;
-using DiscordBot.Mafia;
+﻿using System.Collections.Generic;
 
-namespace DiscordBot.Application
+namespace App
 {
     public class CommandContext
     {

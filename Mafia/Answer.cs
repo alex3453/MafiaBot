@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DiscordBot.Mafia
+namespace Mafia
 {
     public enum Answers
     {
