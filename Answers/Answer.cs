@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Mafia
+namespace Answers
 {
-    public enum Answers
+    public enum AnswerType
     {
         NeedMorePlayer,
         GameStart, 
@@ -19,21 +19,22 @@ namespace Mafia
         EndDay,
         EndNight,
         None,
-        DayKill,
-        NotMafia
+        NotMafia,
+        DayKill
     }
+    
     public class Answer
     {
         public bool NeedToInteract { get; }
-        public Answers Answers { get; }
+        public AnswerType AnswerType { get; }
         public IReadOnlyList<string> Args { get; private set; }
         public bool ToPlayer { get; }
  
-        public Answer(bool needToInteract, Answers answer = Answers.None, 
+        public Answer(bool needToInteract, AnswerType answerType = AnswerType.None, 
             IReadOnlyList<string> args = null, bool toPlayer = false)
         {
             NeedToInteract = needToInteract;
-            Answers = answer;
+            AnswerType = answerType;
             Args = args;
             ToPlayer = toPlayer;
         }
@@ -41,6 +42,6 @@ namespace Mafia
         public void SetArgs(List<string> list)
         {
             Args = list;
-        }
+        } 
     }
 }

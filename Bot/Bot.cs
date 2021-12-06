@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
+using Answers;
 
 namespace Bot
 {
@@ -76,34 +76,34 @@ namespace Bot
         {
             if (answer.NeedToInteract)
                 msg.Channel.SendMessageAsync(ParseAnswer(answer));
-            if (!(answer.Answers is Answers.GameStart)) return;
+            if (!(answer.AnswerType is AnswerType.GameStart)) return;
             foreach (var str in answer.Args)
             {
                 var info = str.Split();
                 var role = info.Last();
-                var name = string.Join(' ',info.Take(info.Length - 1));
+                var name = string.Join(' ', info.Take(info.Length - 1));
                 members.First(x => x.Username == name).SendMessageAsync($"Ты {role}");
             }
         }
 
         private static string ParseAnswer(Answer answer)
         {
-            return answer.Answers switch
+            return answer.AnswerType switch
             {
-                Answers.GameStart => "Игра началась",
-                Answers.GetRules => "Вот тебе правила",
-                Answers.MafiaWins => $"Ой-ой...Кажется, {answer.Args.First()} и пистолета в руках не держал. " +
+                AnswerType.GameStart => "Игра началась",
+                AnswerType.GetRules => "Вот тебе правила",
+                AnswerType.MafiaWins => $"Ой-ой...Кажется, {answer.Args.First()} и пистолета в руках не держал. " +
                                      "Стало очевидно, что это конец...",
-                Answers.PeacefulWins => $"{answer.Args.First()} оказался мафией. Больше никто не умрет.", 
-                Answers.SuccessfullyRegistered => $"{answer.Args.First()}, ты в игре!",
-                Answers.NeedMorePlayer => "Ролей указано больше, чем игроков, перезапустите игру, " +
+                AnswerType.PeacefulWins => $"{answer.Args.First()} оказался мафией. Больше никто не умрет.", 
+                AnswerType.SuccessfullyRegistered => $"{answer.Args.First()}, ты в игре!",
+                AnswerType.NeedMorePlayer => "Ролей указано больше, чем игроков, перезапустите игру, " +
                                           "либо добавьте игроков.",
-                Answers.UnsuccessfullyRegistered => $"{answer.Args.First()}, ты уже регистрировался...Позови друзей:(",
-                Answers.SuccessfullyVoted => "Твой голос учтён!",
-                Answers.UnsuccessfullyVoted => "Ты не можешь голосовать дважды",
-                Answers.EndDay => "Наступает ночь",
-                Answers.DayKill => "Нельзя убивать днем",
-                Answers.NotMafia => "Я не могу этого допустить:( Ты не мафия",
+                AnswerType.UnsuccessfullyRegistered => $"{answer.Args.First()}, ты уже регистрировался...Позови друзей:(",
+                AnswerType.SuccessfullyVoted => "Твой голос учтён!",
+                AnswerType.UnsuccessfullyVoted => "Ты не можешь голосовать дважды",
+                AnswerType.EndDay => "Наступает ночь",
+                AnswerType.DayKill => "Нельзя убивать днем",
+                AnswerType.NotMafia => "Я не могу этого допустить:( Ты не мафия",
                 _ => "Я не знаю такой команды;( Давай попробуем еще раз?"
             };
         }

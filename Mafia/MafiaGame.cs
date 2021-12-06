@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Answers;
 
 namespace Mafia
 {
@@ -20,23 +21,23 @@ namespace Mafia
         public Answer Vote(Player voter, Player target)
         {
             if (votedPlayers.Contains(voter))
-                return new Answer(true, Answers.UnsuccessfullyVoted);
+                return new Answer(true, AnswerType.UnsuccessfullyVoted);
             votedPlayers.Add(voter);
             target.VoteMe();
             return allPlayers.Sum(player => player.VoteCount) == allPlayers.Count ? 
                 EndDay() : 
-                new Answer(true, Answers.SuccessfullyVoted);
+                new Answer(true, AnswerType.SuccessfullyVoted);
         }
 
         public Answer Kill(Player killer, Player target)
         {
             if (toKillPlayers.Contains(killer))
-                return new Answer(true, Answers.UnsuccessfullyKill);
+                return new Answer(true, AnswerType.UnsuccessfullyKill);
             toKillPlayers.Add(killer);
             target.KillMe();
             return mafiozyPlayers.Sum(player => player.KillCount) == mafiozyPlayers.Count ? 
                 EndNight() : 
-                new Answer(true, Answers.SuccessfullyKill);
+                new Answer(true, AnswerType.SuccessfullyKill);
         }
 
         public void RegisterPlayer(Player player)
@@ -70,7 +71,7 @@ namespace Mafia
             }
 
             Status = Status.Voting;
-            return new Answer(true, Answers.GameStart);
+            return new Answer(true, AnswerType.GameStart);
         }
 
         public bool IsPlayerInGame(ulong id)
@@ -87,7 +88,7 @@ namespace Mafia
         
         public Answer GetRules()
         {
-            return new Answer(true, Answers.GetRules);
+            return new Answer(true, AnswerType.GetRules);
         }
         
         public Answer EndDay()
@@ -99,10 +100,10 @@ namespace Mafia
                 mafiozyPlayers.Remove(died);
             Status = Status.Night;
             if (mafiozyPlayers.Count == 0)
-                return new Answer(true, Answers.PeacefulWins, new List<string>{died.Name});
+                return new Answer(true, AnswerType.PeacefulWins, new List<string>{died.Name});
             if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
-                return new Answer(true, Answers.MafiaWins, new List<string>{died.Name});
-            return new Answer(true, Answers.EndDay, new List<string>());
+                return new Answer(true, AnswerType.MafiaWins, new List<string>{died.Name});
+            return new Answer(true, AnswerType.EndDay, new List<string>());
         }
         
         public Answer EndNight()
@@ -114,10 +115,10 @@ namespace Mafia
                 mafiozyPlayers.Remove(died);
             Status = Status.Day;
             if (mafiozyPlayers.Count == 0)
-                return new Answer(true, Answers.PeacefulWins, new List<string>{died.Name});
+                return new Answer(true, AnswerType.PeacefulWins, new List<string>{died.Name});
             if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
-                return new Answer(true, Answers.MafiaWins, new List<string>{died.Name});
-            return new Answer(true, Answers.EndNight, new List<string>());
+                return new Answer(true, AnswerType.MafiaWins, new List<string>{died.Name});
+            return new Answer(true, AnswerType.EndNight, new List<string>());
         }
 
         public IReadOnlyList<Player> GetAllPlayers => allPlayers;

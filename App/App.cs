@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Mafia;
+using Answers;
 
 namespace App
 {
@@ -21,7 +22,7 @@ namespace App
                 RegCommand regCommand => regCommand.RegPlayer(mafia, ctx.AuthorName),
                 KillCommand killCommand => killCommand.KillPlayer(mafia, ctx.AuthorName, ctx.MentionedPlayers.First()),
                 StartCommand startCommand => startCommand.StartGame(mafia),
-                _ => new Answer(true, Answers.UnknownCommand)
+                _ => new Answer(true, AnswerType.UnknownCommand)
             };
         }
     }

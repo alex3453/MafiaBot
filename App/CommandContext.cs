@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Mafia;
+using Answers;
 
 namespace App
 {
@@ -56,7 +57,7 @@ namespace App
         {
             var player = new Player(name);
             mafia.RegisterPlayer(player);
-            return new Answer(true, Answers.SuccessfullyRegistered, new List<string> {name});
+            return new Answer(true, AnswerType.SuccessfullyRegistered, new List<string> {name});
         }
     }
 
@@ -65,11 +66,11 @@ namespace App
         public Answer KillPlayer(IMafia mafia, string killerName, string victimName)
         {
             if (mafia.Status != Status.Night)
-                return new Answer(true, Answers.DayKill);
+                return new Answer(true, AnswerType.DayKill);
 
             var target = mafia.GetAllPlayers.First(x => x.Name == victimName);
             var killer = mafia.GetAllPlayers.First(x => x.Name == killerName);
-            return !(killer.Role is MafiaRole) ? new Answer(true, Answers.NotMafia) : mafia.Kill(killer, target);
+            return !(killer.Role is MafiaRole) ? new Answer(true, AnswerType.NotMafia) : mafia.Kill(killer, target);
         }
     }
 }

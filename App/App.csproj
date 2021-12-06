@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AnswerLib\AnswerLib.csproj" />
       <ProjectReference Include="..\Mafia\Mafia.csproj" />
     </ItemGroup>
 
