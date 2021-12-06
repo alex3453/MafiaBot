@@ -1,6 +1,4 @@
-﻿using DiscordBot.Mafia;
-
-namespace DiscordBot.Application
+﻿namespace App
 {
     public interface ICommand
     {

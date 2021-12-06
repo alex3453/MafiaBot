@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Mafia
+﻿namespace Mafia
 {
     public class Player
     {

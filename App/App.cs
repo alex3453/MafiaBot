@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using DiscordBot.Mafia;
 
-namespace DiscordBot.Application
+namespace App
 {
     public class App
     {
