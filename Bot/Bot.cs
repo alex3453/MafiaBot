@@ -14,7 +14,7 @@ namespace Bot
     {
         DiscordSocketClient client;
         private App application;
-        private HashSet<SocketUser> members = new HashSet<SocketUser>();
+        private HashSet<SocketUser> members = new();
 
         public async Task MainAsync()
         {
