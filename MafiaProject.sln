@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mafia", "Mafia\Mafia.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Answers", "Answers\Answers.csproj", "{72EEB97B-A957-4813-8902-E36BFD3A7671}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Commands\Commands.csproj", "{6D9C3E9D-16B5-44CF-8083-006470A09425}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{72EEB97B-A957-4813-8902-E36BFD3A7671}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72EEB97B-A957-4813-8902-E36BFD3A7671}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72EEB97B-A957-4813-8902-E36BFD3A7671}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9C3E9D-16B5-44CF-8083-006470A09425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9C3E9D-16B5-44CF-8083-006470A09425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9C3E9D-16B5-44CF-8083-006470A09425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9C3E9D-16B5-44CF-8083-006470A09425}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

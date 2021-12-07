@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Discord;
 using Discord.WebSocket;
 using Answers;
+using Commands;
 
 namespace Bot
 {
@@ -41,32 +41,30 @@ namespace Bot
         {
             if (msg.Author.IsBot || msg.Content.First() != '!') return Task.CompletedTask;
             var stringsCommand = msg.Content.Remove(0, 1).Split();
-            var command = stringsCommand.First();
-            ICommand commandClass = null;
-            switch (command)
+            var commandType = CommandType.None;
+            switch (stringsCommand.First())
             {
                 case "rules":
-                    commandClass = new RulesCommand();
+                    commandType = CommandType.RulesCommand;
                     break;
                 case "vote":
-                    commandClass = new VoteCommand();
+                    commandType = CommandType.VoteCommand;
                     break;
                 case "reg":
                     members.Add(msg.Author);
-                    commandClass = new RegCommand();
+                    commandType = CommandType.RegCommand;
                     break;
                 case "kill" when msg.Channel.GetType() == typeof(SocketTextChannel):
                     msg.Channel.SendMessageAsync("Нельзя убивать в текстовом канале. Пойдём лучше в лс:)");
                     return Task.CompletedTask;
                 case "kill":
-                    commandClass = new KillCommand();
+                    commandType = CommandType.KillCommand;
                     break;
                 case "start":
-                    commandClass = new StartCommand();
+                    commandType = CommandType.StartCommand;
                     break;
             }
-            var ctx = new CommandContext(commandClass, msg.Author.Id,
-                msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
+            var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
                 msg.Author.Username);
             SendMessage(application.ReproduceСommand(ctx), msg);
             return Task.CompletedTask;
