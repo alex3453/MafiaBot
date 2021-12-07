@@ -7,21 +7,26 @@ using Discord;
 using Discord.WebSocket;
 using Answers;
 using Commands;
+using NotifyInterfaces;
 
 namespace Bot
 {
-    public class Bot
+    public class Bot : IBot
     {
         DiscordSocketClient client;
-        private App application;
+        public event Func<Command, Answer> Notify;
         private HashSet<SocketUser> members = new();
+        
+        public void Run()
+        {
+            MainAsync().GetAwaiter().GetResult();
+        }
 
         public async Task MainAsync()
         {
             client = new DiscordSocketClient();
             client.MessageReceived += CommandsHandler;
             client.Log += Log;
-            application = new App();
 
             var token = Environment.GetEnvironmentVariable("MAFIATOKEN", EnvironmentVariableTarget.User);
 
@@ -66,7 +71,7 @@ namespace Bot
             }
             var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
                 msg.Author.Username);
-            SendMessage(application.ReproduceСommand(ctx), msg);
+            SendMessage(Notify?.Invoke(ctx), msg);
             return Task.CompletedTask;
         }
         

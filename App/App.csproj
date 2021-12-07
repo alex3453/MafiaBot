@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AnswerLib\AnswerLib.csproj" />
       <ProjectReference Include="..\Commands\Commands.csproj" />
       <ProjectReference Include="..\Mafia\Mafia.csproj" />
+      <ProjectReference Include="..\NotifyInterfaces\NotifyInterfaces.csproj" />
     </ItemGroup>
 
 </Project>

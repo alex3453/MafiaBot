@@ -6,9 +6,9 @@ namespace Answers
     public enum AnswerType
     {
         NeedMorePlayer,
-        GameStart, 
-        GetRules, 
-        MafiaWins, 
+        GameStart,
+        GetRules,
+        MafiaWins,
         PeacefulWins,
         SuccessfullyRegistered,
         UnsuccessfullyRegistered,
@@ -23,15 +23,15 @@ namespace Answers
         NotMafia,
         DayKill
     }
-    
+
     public class Answer
     {
         public bool NeedToInteract { get; }
         public AnswerType AnswerType { get; }
         public IReadOnlyList<string> Args { get; private set; }
         public bool ToPlayer { get; }
- 
-        public Answer(bool needToInteract, AnswerType answerType = AnswerType.None, 
+
+        public Answer(bool needToInteract, AnswerType answerType = AnswerType.None,
             IReadOnlyList<string> args = null, bool toPlayer = false)
         {
             NeedToInteract = needToInteract;
@@ -43,11 +43,6 @@ namespace Answers
         public void SetArgs(List<string> list)
         {
             Args = list;
-        } 
-    }
-}namespace Answers
-{
-    public class Class1
-    {
+        }
     }
 }

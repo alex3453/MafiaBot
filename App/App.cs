@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mafia;
 using Answers;
 using Commands;
+using NotifyInterfaces;
 
 namespace App
 {
-    public class App
+    public class App : IApp
     {
         private readonly IMafia mafia;
 
-        public App()
+        public App(IMafia mafia)
         {
-            mafia = new MafiaGame();
+            this.mafia = mafia;
         }
 
-        public Answer ReproduceСommand (Command ctx)
+        private Answer ReproduceCommand (Command ctx)
         {
             return ctx.CommandType switch
             {
@@ -65,6 +67,7 @@ namespace App
                 ? mafia.Kill(killer, target)
                 : new Answer(true, AnswerType.NotMafia);
         }
-        
+
+        public Func<Command, Answer> Register() => ReproduceCommand;
     }
 }
