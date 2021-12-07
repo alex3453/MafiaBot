@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Answers
 {
@@ -43,5 +44,10 @@ namespace Answers
         {
             Args = list;
         } 
+    }
+}namespace Answers
+{
+    public class Class1
+    {
     }
 }
