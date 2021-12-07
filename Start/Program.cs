@@ -1,5 +1,4 @@
-﻿using System;
-using Mafia;
+﻿using Mafia;
 using Ninject;
 using NotifyInterfaces;
 
@@ -7,14 +6,14 @@ namespace Start
 {
     internal static class Program
     {
-        private static void Main()
+        public static void Main()
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
             entryPoint.Bot.Run();
         }
-        
-        public static StandardKernel ConfigureContainer()
+
+        private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
             container.Bind<IBot>().To<Bot.Bot>();

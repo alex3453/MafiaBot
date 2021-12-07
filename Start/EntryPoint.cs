@@ -2,7 +2,7 @@ using NotifyInterfaces;
 
 namespace Start
 {
-    public class EntryPoint
+    internal class EntryPoint
     {
         public readonly IBot Bot;
         public readonly IApp App;
