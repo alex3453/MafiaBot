@@ -80,14 +80,9 @@ namespace UserInterface
         {
             if (answer.NeedToInteract)
                 message.Channel.SendMessageAsync(ParseAnswer(answer));
-            if (!(answer.AnswerType is AnswerType.GameStart)) return;
-            foreach (var str in answer.Args)
-            {
-                var info = str.Split();
-                var role = info.Last();
-                var name = string.Join(' ', info.Take(info.Length - 1));
-                members.First(x => x.Username == name).SendMessageAsync($"Ты {role}");
-            }
+            if (answer.AnswerType is not AnswerType.GameStart) return;
+            foreach (var name in answer.Dict.Keys)
+                members.First(x => x.Username == name).SendMessageAsync($"Ты {answer.Dict[name]}");
         }
 
         private static string ParseAnswer(Answer answer)

@@ -29,21 +29,23 @@ namespace CommonInteraction
     {
         public bool NeedToInteract { get; }
         public AnswerType AnswerType { get; }
-        public IReadOnlyList<string> Args { get; private set; }
-        public bool ToPlayer { get; }
+        public IReadOnlyList<string> Args { get; }
+        public IReadOnlyDictionary<string, string> Dict { get; }
 
-        public Answer(bool needToInteract, AnswerType answerType = AnswerType.None,
-            IReadOnlyList<string> args = null, bool toPlayer = false)
+        public Answer(bool needToInteract, AnswerType answerType,
+            IReadOnlyList<string> args = null)
         {
             NeedToInteract = needToInteract;
             AnswerType = answerType;
             Args = args;
-            ToPlayer = toPlayer;
         }
-
-        public void SetArgs(List<string> list)
+        
+        public Answer(bool needToInteract, AnswerType answerType,
+            IReadOnlyDictionary<string, string> dict)
         {
-            Args = list;
+            NeedToInteract = needToInteract;
+            AnswerType = answerType;
+            Dict = dict;
         }
     }
 }

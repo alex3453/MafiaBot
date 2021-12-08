@@ -47,8 +47,8 @@ namespace App
         private Answer StartGame()
         {
             mafia.StartGame();
-            var ans = new Answer(true, AnswerType.GameStart);
-            ans.SetArgs(mafia.GetAllPlayers.Select(player => $"{player.Name} {player.Role}").ToList());
+            var ans = new Answer(true, AnswerType.GameStart, 
+                mafia.GetAllPlayers.ToDictionary(player => player.Name, player => player.Role.ToString()));
             return ans;
         }
 
