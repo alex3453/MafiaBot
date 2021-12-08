@@ -10,8 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\App\App.csproj" />
       <ProjectReference Include="..\Bot\Bot.csproj" />
+      <ProjectReference Include="..\View\View.csproj" />
       <ProjectReference Include="..\NotifyInterfaces\NotifyInterfaces.csproj" />
     </ItemGroup>
 

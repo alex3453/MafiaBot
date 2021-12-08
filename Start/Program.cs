@@ -10,14 +10,14 @@ namespace Start
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
-            entryPoint.Bot.Run();
+            entryPoint.View.Run();
         }
 
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
+            container.Bind<IView>().To<View.View>();
             container.Bind<IBot>().To<Bot.Bot>();
-            container.Bind<IApp>().To<App.App>();
             container.Bind<IMafia>().To<MafiaGame>();
 
             return container;

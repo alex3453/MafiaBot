@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
-
-namespace Commands
+namespace CommonInteraction
 {
     public enum CommandType
     {

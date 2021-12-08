@@ -2,15 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>App</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Discord.Net" Version="2.4.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Answers\Answers.csproj" />
       <ProjectReference Include="..\Commands\Commands.csproj" />
+      <ProjectReference Include="..\CommonInteraction\CommonInteraction.csproj" />
+      <ProjectReference Include="..\Mafia\Mafia.csproj" />
       <ProjectReference Include="..\NotifyInterfaces\NotifyInterfaces.csproj" />
     </ItemGroup>
 

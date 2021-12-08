@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Answers;
+using CommonInteraction;
 
 namespace Mafia
 {
     public class MafiaGame : IMafia
     {
-        private readonly List<Player> allPlayers = new List<Player>();
-        private readonly List<Player> playersInGame = new List<Player>();
-        private readonly List<Player> deadPlayers = new List<Player>();
-        private readonly List<Player> kickedPlayers = new List<Player>();
-        private readonly List<Player> mafiozyPlayers = new List<Player>();
-        private List<Player> toKillPlayers = new List<Player>();
-        private List<Player> votedPlayers = new List<Player>();
-        private readonly List<Role> roles = new List<Role>();
+        private readonly List<Player> allPlayers = new();
+        private readonly List<Player> playersInGame = new();
+        private readonly List<Player> deadPlayers = new();
+        private readonly List<Player> kickedPlayers = new();
+        private readonly List<Player> mafiozyPlayers = new();
+        private List<Player> toKillPlayers = new();
+        private List<Player> votedPlayers = new();
+        private readonly List<Role> roles = new();
 
         public Status Status { get; private set; }
         public int NightNumber { get; }
+        
         public Answer Vote(Player voter, Player target)
         {
             if (votedPlayers.Contains(voter))
@@ -74,16 +75,6 @@ namespace Mafia
             return new Answer(true, AnswerType.GameStart);
         }
 
-        public bool IsPlayerInGame(ulong id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool PerformAction(Player author, object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Player> Winners { get; }
         
         public Answer GetRules()
@@ -103,9 +94,9 @@ namespace Mafia
                 return new Answer(true, AnswerType.PeacefulWins, new List<string>{died.Name});
             if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
                 return new Answer(true, AnswerType.MafiaWins, new List<string>{died.Name});
-            return new Answer(true, AnswerType.EndDay, new List<string>());
+            return new Answer(true, AnswerType.EndDay, new List<string>{died.Name, died.Role.ToString()});
         }
-        
+
         public Answer EndNight()
         {
             toKillPlayers = new List<Player>();
@@ -118,9 +109,8 @@ namespace Mafia
                 return new Answer(true, AnswerType.PeacefulWins, new List<string>{died.Name});
             if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
                 return new Answer(true, AnswerType.MafiaWins, new List<string>{died.Name});
-            return new Answer(true, AnswerType.EndNight, new List<string>());
+            return new Answer(true, AnswerType.EndNight, new List<string>{died.Name, died.Role.ToString()});
         }
-
         public IReadOnlyList<Player> GetAllPlayers => allPlayers;
         public IReadOnlyCollection<Player> GetPlayersInGame => playersInGame;
         public IReadOnlyCollection<Player> GetDeadPlayers => deadPlayers;

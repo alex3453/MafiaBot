@@ -1,12 +1,10 @@
 using System;
-using Answers;
-using Commands;
+using CommonInteraction;
 
 namespace NotifyInterfaces
 {
     public interface IBot
     {
-        void Run();
-        event Func<Command, Answer> Notify;
+        Func<Command, Answer> Register();
     }
 }

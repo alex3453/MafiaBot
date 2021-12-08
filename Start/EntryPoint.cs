@@ -4,14 +4,14 @@ namespace Start
 {
     internal class EntryPoint
     {
+        public readonly IView View;
         public readonly IBot Bot;
-        public readonly IApp App;
         
-        public EntryPoint(IBot bot, IApp app)
+        public EntryPoint(IView view, IBot bot)
         {
+            View = view;
             Bot = bot;
-            App = app;
-            Bot.Notify += App.Register();
+            View.Notify += Bot.Register();
         }
     }
 }

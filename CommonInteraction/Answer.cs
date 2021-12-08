@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Answers
+namespace CommonInteraction
 {
     public enum AnswerType
     {
@@ -21,7 +21,8 @@ namespace Answers
         EndNight,
         None,
         NotMafia,
-        DayKill
+        DayKill,
+        Died
     }
 
     public class Answer

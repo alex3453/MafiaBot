@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Answers;
+using CommonInteraction;
 
 namespace Mafia
 {
@@ -10,8 +10,6 @@ namespace Mafia
         IReadOnlyList<Player> GetAllPlayers { get; }
         void RegisterPlayer(Player player);
         Answer StartGame();
-        bool IsPlayerInGame(ulong id);
-        bool PerformAction(Player author, object[] args);
         Answer EndDay();
         Answer EndNight();
         List<Player> Winners { get; }
