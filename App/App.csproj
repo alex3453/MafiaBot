@@ -6,10 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Commands\Commands.csproj" />
       <ProjectReference Include="..\CommonInteraction\CommonInteraction.csproj" />
       <ProjectReference Include="..\Mafia\Mafia.csproj" />
-      <ProjectReference Include="..\NotifyInterfaces\NotifyInterfaces.csproj" />
     </ItemGroup>
 
 </Project>

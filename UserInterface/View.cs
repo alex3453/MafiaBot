@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using CommonInteraction;
-using NotifyInterfaces;
 
-namespace View
+namespace UserInterface
 {
-    public class View : IView
+    public class View 
     {
         DiscordSocketClient client;
         public event Func<Command, Answer> Notify;
@@ -31,6 +30,8 @@ namespace View
 
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
+
+            Console.ReadLine();
         }
 
         private Task Log(LogMessage msg)

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mafia;
-using NotifyInterfaces;
 using CommonInteraction;
 
-namespace Bot
+namespace App
 {
-    public class Bot : IBot
+    public class Bot 
     {
         private readonly IMafia mafia;
 

@@ -1,13 +1,14 @@
-using NotifyInterfaces;
+using UserInterface;
+using App;
 
 namespace Start
 {
     internal class EntryPoint
     {
-        public readonly IView View;
-        public readonly IBot Bot;
+        public readonly View View;
+        public readonly Bot Bot;
         
-        public EntryPoint(IView view, IBot bot)
+        public EntryPoint(View view, Bot bot)
         {
             View = view;
             Bot = bot;

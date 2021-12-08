@@ -1,6 +1,7 @@
 ﻿using Mafia;
 using Ninject;
-using NotifyInterfaces;
+using UserInterface;
+using App;
 
 namespace Start
 {
@@ -16,8 +17,6 @@ namespace Start
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-            container.Bind<IView>().To<View.View>();
-            container.Bind<IBot>().To<Bot.Bot>();
             container.Bind<IMafia>().To<MafiaGame>();
 
             return container;

@@ -2,11 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Bot</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Answers\Answers.csproj" />
-      <ProjectReference Include="..\Commands\Commands.csproj" />
+      <PackageReference Include="Discord.Net" Version="2.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\CommonInteraction\CommonInteraction.csproj" />
     </ItemGroup>
 

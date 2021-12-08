@@ -5,7 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Answers\Answers.csproj" />
       <ProjectReference Include="..\CommonInteraction\CommonInteraction.csproj" />
     </ItemGroup>
 
