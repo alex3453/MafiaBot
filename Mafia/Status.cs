@@ -6,6 +6,9 @@
         Day,
         Voting,
         Night,
+        StopVoting,
+        MafiaWins,
+        PeacefulWins,
         GameEnd
     }
 }

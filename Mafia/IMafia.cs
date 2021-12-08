@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CommonInteraction;
 
 namespace Mafia
 {
@@ -9,13 +8,13 @@ namespace Mafia
         int NightNumber { get; }
         IReadOnlyList<Player> GetAllPlayers { get; }
         void RegisterPlayer(Player player);
-        Answer StartGame();
-        Answer EndDay();
-        Answer EndNight();
+        void StartGame();
+        void EndDay();
+        void EndNight();
         List<Player> Winners { get; }
-        Answer Vote(Player voter, Player target);
-        Answer Kill(Player killer, Player target);
-        Answer GetRules();
+        Player Dead { get; }
+        bool Vote(Player voter, Player target);
+        //bool Kill(Player killer, Player target);
         IReadOnlyList<Role> GetRoles { get; }
     };
     }

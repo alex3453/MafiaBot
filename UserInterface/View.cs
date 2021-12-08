@@ -12,9 +12,11 @@ namespace UserInterface
     public class View 
     {
         DiscordSocketClient client;
-        public event Func<Command, Answer> Notify;
+        public event Action<Command> Notify;
+        public Action<Answer> Register() => SendMessage;
         private HashSet<SocketUser> members = new();
-        
+        private SocketMessage message;
+
         public void Run()
         {
             StartAsync().GetAwaiter().GetResult();
@@ -42,8 +44,9 @@ namespace UserInterface
 
         private Task CommandsHandler(SocketMessage msg)
         {
-            if (msg.Author.IsBot || msg.Content.First() != '!') return Task.CompletedTask;
-            var stringsCommand = msg.Content.Remove(0, 1).Split();
+            message = msg; 
+            if (message.Author.IsBot || message.Content.First() != '!') return Task.CompletedTask;
+            var stringsCommand = message.Content.Remove(0, 1).Split();
             var commandType = CommandType.None;
             switch (stringsCommand.First())
             {
@@ -67,16 +70,16 @@ namespace UserInterface
                     commandType = CommandType.StartCommand;
                     break;
             }
-            var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
-                msg.Author.Username);
-            SendMessage(Notify?.Invoke(ctx), msg);
+            var ctx = new Command(commandType, message.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
+                message.Author.Username);
+            Notify?.Invoke(ctx);
             return Task.CompletedTask;
         }
         
-        private void SendMessage(Answer answer, SocketMessage msg)
+        private void SendMessage(Answer answer)
         {
             if (answer.NeedToInteract)
-                msg.Channel.SendMessageAsync(ParseAnswer(answer));
+                message.Channel.SendMessageAsync(ParseAnswer(answer));
             if (!(answer.AnswerType is AnswerType.GameStart)) return;
             foreach (var str in answer.Args)
             {

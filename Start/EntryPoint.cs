@@ -13,6 +13,7 @@ namespace Start
             View = view;
             Bot = bot;
             View.Notify += Bot.Register();
+            Bot.Notify += View.Register();
         }
     }
 }
