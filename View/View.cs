@@ -18,10 +18,10 @@ namespace View
         
         public void Run()
         {
-            MainAsync().GetAwaiter().GetResult();
+            StartAsync().GetAwaiter().GetResult();
         }
 
-        public async Task MainAsync()
+        private async Task StartAsync()
         {
             client = new DiscordSocketClient();
             client.MessageReceived += CommandsHandler;
