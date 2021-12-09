@@ -6,63 +6,131 @@ using CommonInteraction;
 
 namespace App
 {
-    public class Bot 
+    public class Bot
     {
-        private IMafia mafia;
-        
-        public Action<User, Command> Register() => ReproduceCommand;
-        public event Action<User, Answer> ExCommand;
-        public event Action<User> DeleteUser; 
+        private readonly IDictionary<ulong, UsersTeam> usersTeams = new Dictionary<ulong, UsersTeam>();
 
-        public Answer StartNewGame()
+        public Action<User, Command> Register() => ReproduceCommand;
+        public event Action<User, Answer> SendMassage;
+        public event Action<User> DeleteUser;
+
+        private void CreateNewUsersTeam(User user)
         {
-            mafia = new MafiaGame();
-            return new Answer(AnswerType.NewGame);
+            if (user.IsCommonChat)
+                usersTeams[user.Id] = new UsersTeam(user);
+            else
+            {
+                var comChat = new User(user.ComChatId, user.ComChatId, true);
+                var usTeam = new UsersTeam(comChat);
+                usTeam.AddUser(user);
+                usersTeams[comChat.Id] = usTeam;
+            }
+        }
+
+        private void CreateNewGame(User user)
+        {
+            if (!user.IsCommonChat) throw new ArgumentException("Игру создать можно только в чате");
+            usersTeams[user.ComChatId].SetMafia(new MafiaGame());
+            SendMassage?.Invoke(usersTeams[user.ComChatId].CommonChat, new Answer(AnswerType.NewGame));
         }
 
         private void ReproduceCommand (User user, Command ctx)
         {
-            var ans = ctx.CommandType switch
+            if (!usersTeams.Keys.Contains(user.ComChatId))
+                CreateNewUsersTeam(user);
+            else
+                usersTeams[user.ComChatId].AddUser(user);
+            switch (ctx.CommandType)
             {
-                CommandType.Rules => GetRules(),
-                CommandType.Vote => Vote(ctx.AuthorName, ctx.MentionedPlayers.First()),
-                CommandType.Start => StartGame(),
-                CommandType.Reg => RegPlayer(ctx.AuthorName),
-                CommandType.StartNewGame => StartNewGame(),
-                _ => new Answer(AnswerType.UnknownCommand)
-            };
-
-            ExCommand?.Invoke(ans);
+                case CommandType.Vote:
+                    Vote(user, ctx.MentionedPlayers);
+                    break;
+                case CommandType.Rules:
+                    SendRules(user);
+                    break;
+                case CommandType.Start:
+                    StartGame(user);
+                    break;
+                case CommandType.Reg:
+                    RegPlayer(user);
+                    break;
+                case CommandType.Kill:
+                    break;
+                case CommandType.None:
+                    break;
+                case CommandType.CreateNewGame:
+                    CreateNewGame(user);
+                    break;
+                default:
+                    SendUnknownCom(user);
+                    break;
+            }
         }
 
-        private Answer Vote(string voterName, string targetName)
+        private void SendUnknownCom(User user)
         {
+            SendMassage?.Invoke(user, new Answer(AnswerType.UnknownCommand));
+        }
+
+        private void Vote(User user, IEnumerable<string> mentionedPlayers)
+        {
+            if (user.IsCommonChat) throw new ArgumentException("Чат не может голосовать");
+            var targetName = mentionedPlayers.First();
+            var mafia = usersTeams[user.ComChatId].Mafia;
             var target = mafia.GetAllPlayers.First(x => x.Name == targetName);
-            var voter = mafia.GetAllPlayers.First(x => x.Name == voterName);
+            var voter = mafia.GetAllPlayers.First(x => x.Name == user.Name);
             var res = mafia.Vote(voter, target);
-            return mafia.Status switch
+            Answer answ;
+            switch (mafia.Status)
             {
-                Status.MafiaWins => new Answer(AnswerType.MafiaWins, new List<string> {mafia.Dead.Name}),
-                Status.PeacefulWins => new Answer(AnswerType.PeacefulWins, new List<string> {mafia.Dead.Name}),
-                _ => new Answer(res ? AnswerType.SuccessfullyVoted : AnswerType.UnsuccessfullyVoted)
-            };
+                case Status.MafiaWins:
+                    answ = new Answer(AnswerType.MafiaWins, new List<string> {mafia.Dead.Name});
+                    break;
+                case Status.PeacefulWins:
+                    answ = new Answer(AnswerType.PeacefulWins, new List<string> {mafia.Dead.Name});
+                    break;
+                default:
+                    answ = new Answer(res ? AnswerType.SuccessfullyVoted : AnswerType.UnsuccessfullyVoted);
+                        break;
+            }
+            SendMassage?.Invoke(user, answ);
         }
 
-        private Answer GetRules() => new(AnswerType.GetRules);
+        private void SendRules(User user) => SendMassage?.Invoke(user, new Answer(AnswerType.GetRules));
 
-        private Answer StartGame()
+        private void StartGame(User user)
         {
+            if (!user.IsCommonChat) throw new ArgumentException("Игру можно начать только в чате");
+            var userTeam = usersTeams[user.ComChatId];
+            var mafia = usersTeams[user.ComChatId].Mafia;
             mafia.StartGame();
-            var ans = new Answer(AnswerType.GameStart, 
-                mafia.GetAllPlayers.ToDictionary(player => player.Name, player => player.Role.ToString()));
-            return ans;
+            var players = mafia.GetAllPlayers;
+            foreach (var player in players)
+            {
+                var usr = userTeam.Users.First(u => u.Name == player.Name);
+                SendMassage?.Invoke(usr, new Answer(GetRoleAnswerType(player)));
+            }
+            SendMassage?.Invoke(usersTeams[user.ComChatId].CommonChat, new Answer(AnswerType.GameStart));
         }
 
-        private Answer RegPlayer(string name)
+        private AnswerType GetRoleAnswerType(Player player)
         {
-            var player = new Player(name);
+            if (player.Role.GetType() == typeof(PeacefulRole))
+                return AnswerType.YouArePeaceful;
+            if (player.Role.GetType() == typeof(MafiaRole))
+                return AnswerType.YouAreMafia;
+            throw new ArgumentException("Неопознанная роль");
+        }
+
+        private void RegPlayer(User user)
+        {
+            if (!user.IsCommonChat) throw new ArgumentException("Регестрироваться можно только в чате");
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            var player = new Player(user.Name);
             mafia.RegisterPlayer(player);
-            return new Answer(true, AnswerType.SuccessfullyRegistered, new List<string> {name});
+            SendMassage?.Invoke(
+                usersTeams[user.ComChatId].CommonChat, 
+                new Answer(AnswerType.SuccessfullyRegistered, new List<string> {user.Name}));
         }
 
         // private Answer KillPlayer(string killerName, string victimName)

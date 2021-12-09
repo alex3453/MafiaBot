@@ -8,8 +8,7 @@ namespace CommonInteraction
         public AnswerType AnswerType { get; }
         public IReadOnlyList<string> Args { get; }
 
-        public Answer(AnswerType answerType,
-            IReadOnlyList<string> args = null)
+        public Answer(AnswerType answerType, IReadOnlyList<string> args = null)
         {
             AnswerType = answerType;
             Args = args;

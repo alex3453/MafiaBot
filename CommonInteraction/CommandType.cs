@@ -8,6 +8,6 @@ namespace CommonInteraction
         Reg,
         Kill,
         None,
-        StartNewGame
+        CreateNewGame
     }
 }

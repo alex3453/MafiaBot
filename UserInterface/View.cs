@@ -76,15 +76,22 @@ namespace UserInterface
                     commandType = CommandType.Start;
                     break;
                 case "startnew":
-                    commandType = CommandType.StartNewGame;
+                    commandType = CommandType.CreateNewGame;
                     break;
             }
             var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
             User user;
             if (msg.Channel.GetType() == typeof(SocketTextChannel))
-                user = new User(msg.Channel.Id, true);
+                user = new User(msg.Channel.Id, msg.Channel.Id, true);
             else
-                user = new User(msg.Author.Id, false, msg.Author.Username);
+            {
+                user = new User(msg.Author.Id, msg.Channel.Id, false, msg.Author.Username);
+                if (userSockets.Select(u => u.Key.Id).All(id => id != msg.Channel.Id))
+                {
+                    msg.Author.SendMessageAsync("Чтобы начать игру, напишите команду в игровом канале:)");
+                    return Task.CompletedTask;
+                }
+            }
             userSockets[user] = msg;
             ExCommand?.Invoke(user, ctx);
             return Task.CompletedTask;
@@ -92,7 +99,7 @@ namespace UserInterface
         
         private void SendMessage(User user, Answer answer)
         {
-            if (user.IsChannel)
+            if (user.IsCommonChat)
                 userSockets[user].Channel.SendMessageAsync(ParseAnswer(answer));
             else
                 userSockets[user].Author.SendMessageAsync(ParseAnswer(answer));
@@ -120,6 +127,8 @@ namespace UserInterface
                 AnswerType.NotMafia => "Я не могу этого допустить:( Ты не мафия",
                 AnswerType.EndNight =>$"Ночь забрала с собой {answer.Args[0]}",
                 AnswerType.NewGame => "И снова все по новой...Добро пожаловать!",
+                AnswerType.YouArePeaceful => "Ты мирный! Земля тебе пухом...",
+                AnswerType.YouAreMafia => "Ты мафия! не жалей никого...",
                 _ => "Я не знаю такой команды;( Давай попробуем еще раз?"
             };
         }
