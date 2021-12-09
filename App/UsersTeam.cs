@@ -8,15 +8,12 @@ namespace App
 {
     public class UsersTeam
     {
-        public readonly User CommonChat;
-        private readonly IList<User> users = new List<User>();
+        private readonly ISet<User> users = new HashSet<User>();
         public IMafia Mafia { get; private set; }
-        public IReadOnlyList<User> Users => (IReadOnlyList<User>) users;
-
-        public UsersTeam(User commonChat) => CommonChat = commonChat;
+        public IReadOnlySet<User> Users => (IReadOnlySet<User>) users;
 
         public void AddUser(User user) => users.Add(user);
-
+        public bool IsContainsUser(User user) => users.Contains(user);
         public void DeleteUserByName(string name, Action<User> deleteUser)
         {
             var user = GetUserByName(name);

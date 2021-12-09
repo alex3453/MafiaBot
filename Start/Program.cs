@@ -1,5 +1,4 @@
 ﻿using System;
-using Mafia;
 using Ninject;
 using UserInterface;
 

@@ -12,12 +12,13 @@ namespace UserInterface
     public class View 
     {
         DiscordSocketClient client;
-        public event Action<User, Command> ExCommand;
-        public Action<User, Answer> RegisterSending() => SendMessage;
+        public event Action<User, bool, Command> ExCommand;
+        public Action<User, bool, Answer> RegisterSending() => SendMessage;
         public Action<User> RegisterDelUser() => DeleteUser;
         
         private ITokenProvider provider;
         private IDictionary<User, SocketMessage> userSockets = new Dictionary<User, SocketMessage>();
+        private IDictionary<ulong, User> users = new Dictionary<ulong, User>();
 
         public View(ITokenProvider provider)
         {
@@ -53,7 +54,7 @@ namespace UserInterface
         {
             if (msg.Author.IsBot || msg.Content.First() != '!') return Task.CompletedTask;
             var stringsCommand = msg.Content.Remove(0, 1).Split();
-            var commandType = CommandType.None;
+            CommandType commandType;
             switch (stringsCommand.First())
             {
                 case "rules":
@@ -78,28 +79,26 @@ namespace UserInterface
                 case "startnew":
                     commandType = CommandType.CreateNewGame;
                     break;
+                default:
+                    msg.Channel.SendMessageAsync("Я не знаю такой команды");
+                    return Task.CompletedTask;
             }
             var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
-            User user;
-            if (msg.Channel.GetType() == typeof(SocketTextChannel))
-                user = new User(msg.Channel.Id, msg.Channel.Id, true);
-            else
+            if (!users.Keys.Contains(msg.Author.Id))
             {
-                user = new User(msg.Author.Id, msg.Channel.Id, false, msg.Author.Username);
-                if (userSockets.Select(u => u.Key.Id).All(id => id != msg.Channel.Id))
-                {
-                    msg.Author.SendMessageAsync("Чтобы начать игру, напишите команду в игровом канале:)");
-                    return Task.CompletedTask;
-                }
+                var usr = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);
+                users[msg.Author.Id] = usr;
+                userSockets[usr] = msg;
             }
-            userSockets[user] = msg;
-            ExCommand?.Invoke(user, ctx);
+            var user = users[msg.Author.Id];
+            var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
+            ExCommand?.Invoke(user, isCommonChat, ctx);
             return Task.CompletedTask;
         }
         
-        private void SendMessage(User user, Answer answer)
+        private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
-            if (user.IsCommonChat)
+            if (isCommonChat)
                 userSockets[user].Channel.SendMessageAsync(ParseAnswer(answer));
             else
                 userSockets[user].Author.SendMessageAsync(ParseAnswer(answer));

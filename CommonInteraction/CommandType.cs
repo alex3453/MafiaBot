@@ -7,7 +7,6 @@ namespace CommonInteraction
         Start,
         Reg,
         Kill,
-        None,
         CreateNewGame
     }
 }
