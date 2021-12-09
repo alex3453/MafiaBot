@@ -1,4 +1,5 @@
-﻿using Mafia;
+﻿using System;
+using Mafia;
 using Ninject;
 using UserInterface;
 using App;
@@ -11,7 +12,9 @@ namespace Start
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
+            entryPoint.RegisterMethods();
             entryPoint.View.Run();
+            Console.ReadLine();
         }
 
         private static StandardKernel ConfigureContainer()

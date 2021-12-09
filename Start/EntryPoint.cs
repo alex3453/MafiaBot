@@ -12,6 +12,10 @@ namespace Start
         {
             View = view;
             Bot = bot;
+        }
+
+        public void RegisterMethods()
+        {
             View.Notify += Bot.Register();
             Bot.Notify += View.Register();
         }

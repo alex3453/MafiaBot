@@ -33,7 +33,7 @@ namespace UserInterface
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
 
-            Console.ReadLine();
+           
         }
 
         private Task Log(LogMessage msg)

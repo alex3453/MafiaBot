@@ -3,28 +3,6 @@ using System.Collections.Generic;
 
 namespace CommonInteraction
 {
-    public enum AnswerType
-    {
-        NeedMorePlayer,
-        GameStart,
-        GetRules,
-        MafiaWins,
-        PeacefulWins,
-        SuccessfullyRegistered,
-        UnsuccessfullyRegistered,
-        SuccessfullyVoted,
-        UnsuccessfullyVoted,
-        SuccessfullyKill,
-        UnsuccessfullyKill,
-        UnknownCommand,
-        EndDay,
-        EndNight,
-        None,
-        NotMafia,
-        DayKill,
-        Died
-    }
-
     public class Answer
     {
         public bool NeedToInteract { get; }
