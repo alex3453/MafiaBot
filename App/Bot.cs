@@ -10,14 +10,17 @@ namespace App
     {
         private IMafia mafia;
         
+        public Action<User, Command> Register() => ReproduceCommand;
+        public event Action<User, Answer> ExCommand;
+        public event Action<User> DeleteUser; 
 
         public Answer StartNewGame()
         {
             mafia = new MafiaGame();
-            return new Answer(true, AnswerType.NewGame);
+            return new Answer(AnswerType.NewGame);
         }
 
-        private void ReproduceCommand (Command ctx)
+        private void ReproduceCommand (User user, Command ctx)
         {
             var ans = ctx.CommandType switch
             {
@@ -26,10 +29,10 @@ namespace App
                 CommandType.Start => StartGame(),
                 CommandType.Reg => RegPlayer(ctx.AuthorName),
                 CommandType.StartNewGame => StartNewGame(),
-                _ => new Answer(true, AnswerType.UnknownCommand)
+                _ => new Answer(AnswerType.UnknownCommand)
             };
 
-            Notify?.Invoke(ans);
+            ExCommand?.Invoke(ans);
         }
 
         private Answer Vote(string voterName, string targetName)
@@ -39,18 +42,18 @@ namespace App
             var res = mafia.Vote(voter, target);
             return mafia.Status switch
             {
-                Status.MafiaWins => new Answer(true, AnswerType.MafiaWins, new List<string> {mafia.Dead.Name}),
-                Status.PeacefulWins => new Answer(true, AnswerType.PeacefulWins, new List<string> {mafia.Dead.Name}),
-                _ => new Answer(true, res ? AnswerType.SuccessfullyVoted : AnswerType.UnsuccessfullyVoted)
+                Status.MafiaWins => new Answer(AnswerType.MafiaWins, new List<string> {mafia.Dead.Name}),
+                Status.PeacefulWins => new Answer(AnswerType.PeacefulWins, new List<string> {mafia.Dead.Name}),
+                _ => new Answer(res ? AnswerType.SuccessfullyVoted : AnswerType.UnsuccessfullyVoted)
             };
         }
 
-        private Answer GetRules() => new(true, AnswerType.GetRules);
+        private Answer GetRules() => new(AnswerType.GetRules);
 
         private Answer StartGame()
         {
             mafia.StartGame();
-            var ans = new Answer(true, AnswerType.GameStart, 
+            var ans = new Answer(AnswerType.GameStart, 
                 mafia.GetAllPlayers.ToDictionary(player => player.Name, player => player.Role.ToString()));
             return ans;
         }
@@ -73,9 +76,5 @@ namespace App
         //         ? mafia.Kill(killer, target)
         //         : new Answer(true, AnswerType.NotMafia);
         // }
-
-        public Action<Command> Register() => ReproduceCommand;
-        public event Action<Answer> Notify;
-        
     }
 }

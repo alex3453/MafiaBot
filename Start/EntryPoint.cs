@@ -16,8 +16,9 @@ namespace Start
 
         public void RegisterMethods()
         {
-            View.Notify += Bot.Register();
-            Bot.Notify += View.Register();
+            View.ExCommand += Bot.Register();
+            Bot.ExCommand += View.RegisterSending();
+            Bot.DeleteUser += View.RegisterDelUser();
         }
     }
 }

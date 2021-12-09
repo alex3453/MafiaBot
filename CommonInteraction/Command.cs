@@ -5,14 +5,12 @@ namespace CommonInteraction
     public class Command
     {
         public CommandType CommandType { get; }
-        public string AuthorName { get; }
         public IReadOnlyCollection<string> MentionedPlayers { get; }
 
-        public Command(CommandType command, IReadOnlyCollection<string> mentionedPlayers, string authorName)
+        public Command(CommandType command, IReadOnlyCollection<string> mentionedPlayers)
         {
             CommandType = command;
             MentionedPlayers = mentionedPlayers;
-            AuthorName = authorName;
         }
     }
 }

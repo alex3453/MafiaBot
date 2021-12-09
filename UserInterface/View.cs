@@ -12,11 +12,12 @@ namespace UserInterface
     public class View 
     {
         DiscordSocketClient client;
-        public event Action<Command> Notify;
-        public Action<Answer> Register() => SendMessage;
-        private HashSet<SocketUser> members = new();
-        private SocketMessage message;
+        public event Action<User, Command> ExCommand;
+        public Action<User, Answer> RegisterSending() => SendMessage;
+        public Action<User> RegisterDelUser() => DeleteUser;
+        
         private ITokenProvider provider;
+        private IDictionary<User, SocketMessage> userSockets = new Dictionary<User, SocketMessage>();
 
         public View(ITokenProvider provider)
         {
@@ -50,9 +51,8 @@ namespace UserInterface
 
         private Task CommandsHandler(SocketMessage msg)
         {
-            message = msg; 
-            if (message.Author.IsBot || message.Content.First() != '!') return Task.CompletedTask;
-            var stringsCommand = message.Content.Remove(0, 1).Split();
+            if (msg.Author.IsBot || msg.Content.First() != '!') return Task.CompletedTask;
+            var stringsCommand = msg.Content.Remove(0, 1).Split();
             var commandType = CommandType.None;
             switch (stringsCommand.First())
             {
@@ -63,7 +63,7 @@ namespace UserInterface
                     commandType = CommandType.Vote;
                     break;
                 case "reg":
-                    members.Add(msg.Author);
+                    // members.Add(msg.Author);
                     commandType = CommandType.Reg;
                     break;
                 case "kill" when msg.Channel.GetType() == typeof(SocketTextChannel):
@@ -79,21 +79,27 @@ namespace UserInterface
                     commandType = CommandType.StartNewGame;
                     break;
             }
-            var ctx = new Command(commandType, message.MentionedUsers.Select(x => x.Username).ToImmutableArray(),
-                message.Author.Username);
-            Notify?.Invoke(ctx);
+            var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
+            User user;
+            if (msg.Channel.GetType() == typeof(SocketTextChannel))
+                user = new User(msg.Id, true);
+            else
+                user = new User(msg.Id, false, msg.Author.Username);
+            userSockets[user] = msg;
+            ExCommand?.Invoke(user, ctx);
             return Task.CompletedTask;
         }
         
-        private void SendMessage(Answer answer)
+        private void SendMessage(User user, Answer answer)
         {
-            if (answer.NeedToInteract)
-                message.Channel.SendMessageAsync(ParseAnswer(answer));
-            if (answer.AnswerType is not AnswerType.GameStart) return;
-            foreach (var name in answer.Dict.Keys)
-                members.First(x => x.Username == name).SendMessageAsync($"Ты {answer.Dict[name]}");
+            if (user.IsChannel)
+                userSockets[user].Channel.SendMessageAsync(ParseAnswer(answer));
+            else
+                userSockets[user].Author.SendMessageAsync(ParseAnswer(answer));
         }
 
+        private void DeleteUser(User user) => userSockets.Remove(user);
+        
         private static string ParseAnswer(Answer answer)
         {
             return answer.AnswerType switch
