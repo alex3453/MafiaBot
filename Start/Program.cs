@@ -2,7 +2,6 @@
 using Mafia;
 using Ninject;
 using UserInterface;
-using App;
 
 namespace Start
 {
@@ -20,7 +19,7 @@ namespace Start
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-            container.Bind<IMafia>().To<MafiaGame>();
+            container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
 
             return container;
         }

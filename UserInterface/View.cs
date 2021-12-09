@@ -16,7 +16,13 @@ namespace UserInterface
         public Action<Answer> Register() => SendMessage;
         private HashSet<SocketUser> members = new();
         private SocketMessage message;
+        private ITokenProvider provider;
 
+        public View(ITokenProvider provider)
+        {
+            this.provider = provider;
+        }
+        
         public void Run()
         {
             StartAsync().GetAwaiter().GetResult();
@@ -28,7 +34,7 @@ namespace UserInterface
             client.MessageReceived += CommandsHandler;
             client.Log += Log;
 
-            var token = Environment.GetEnvironmentVariable("MAFIATOKEN", EnvironmentVariableTarget.User);
+            var token = provider.GetToken();
 
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
