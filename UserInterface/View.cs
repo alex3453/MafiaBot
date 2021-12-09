@@ -64,7 +64,6 @@ namespace UserInterface
                     commandType = CommandType.Vote;
                     break;
                 case "reg":
-                    // members.Add(msg.Author);
                     commandType = CommandType.Reg;
                     break;
                 case "kill" when msg.Channel.GetType() == typeof(SocketTextChannel):
