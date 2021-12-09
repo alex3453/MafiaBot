@@ -8,21 +8,24 @@ namespace App
 {
     public class Bot 
     {
-        private readonly IMafia mafia;
+        private IMafia mafia;
+        
 
-        public Bot(IMafia mafia)
+        public Answer StartNewGame()
         {
-            this.mafia = mafia;
+            mafia = new MafiaGame();
+            return new Answer(true, AnswerType.NewGame);
         }
 
         private void ReproduceCommand (Command ctx)
         {
             var ans = ctx.CommandType switch
             {
-                CommandType.RulesCommand => GetRules(),
-                CommandType.VoteCommand => Vote(ctx.AuthorName, ctx.MentionedPlayers.First()),
-                CommandType.StartCommand => StartGame(),
-                CommandType.RegCommand => RegPlayer(ctx.AuthorName),
+                CommandType.Rules => GetRules(),
+                CommandType.Vote => Vote(ctx.AuthorName, ctx.MentionedPlayers.First()),
+                CommandType.Start => StartGame(),
+                CommandType.Reg => RegPlayer(ctx.AuthorName),
+                CommandType.StartNewGame => StartNewGame(),
                 _ => new Answer(true, AnswerType.UnknownCommand)
             };
 

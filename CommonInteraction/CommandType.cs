@@ -2,11 +2,12 @@ namespace CommonInteraction
 {
     public enum CommandType
     {
-        VoteCommand,
-        RulesCommand,
-        StartCommand,
-        RegCommand,
-        KillCommand,
-        None
+        Vote,
+        Rules,
+        Start,
+        Reg,
+        Kill,
+        None,
+        StartNewGame
     }
 }

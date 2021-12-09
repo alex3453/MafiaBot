@@ -19,6 +19,7 @@ namespace CommonInteraction
         None,
         NotMafia,
         DayKill,
-        Died
+        Died,
+        NewGame
     }
 }
