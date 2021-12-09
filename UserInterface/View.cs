@@ -82,9 +82,9 @@ namespace UserInterface
             var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
             User user;
             if (msg.Channel.GetType() == typeof(SocketTextChannel))
-                user = new User(msg.Id, true);
+                user = new User(msg.Channel.Id, true);
             else
-                user = new User(msg.Id, false, msg.Author.Username);
+                user = new User(msg.Author.Id, false, msg.Author.Username);
             userSockets[user] = msg;
             ExCommand?.Invoke(user, ctx);
             return Task.CompletedTask;
