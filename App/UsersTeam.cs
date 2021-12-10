@@ -8,7 +8,7 @@ namespace App
 {
     public class UsersTeam
     {
-        private readonly ISet<User> users = new HashSet<User>();
+        private ISet<User> users = new HashSet<User>();
         public IMafia Mafia { get; private set; }
         public IReadOnlySet<User> Users => (IReadOnlySet<User>) users;
 
@@ -19,6 +19,11 @@ namespace App
             var user = GetUserByName(name);
             users.Remove(user);
             deleteUser(user);
+        }
+
+        public void DeleteAllUsers()
+        {
+            users = new HashSet<User>();
         }
 
         public User GetUserByName(string name) => users.First(u => u.Name == name);

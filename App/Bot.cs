@@ -17,16 +17,13 @@ namespace App
         private void CreateNewUsersTeam(User user)
         {
             usersTeams[user.ComChatId] = new UsersTeam();
-            usersTeams[user.ComChatId].AddUser(user);
         }
 
         private void ReproduceCommand (User user, bool isCommonChat, Command ctx)
         {
             if (!usersTeams.Keys.Contains(user.ComChatId))
                 CreateNewUsersTeam(user);
-            if (!usersTeams[user.ComChatId].IsContainsUser(user))
-                usersTeams[user.ComChatId].AddUser(user);
-            
+
             switch (ctx.CommandType)
             {
                 case CommandType.Vote:
@@ -87,6 +84,7 @@ namespace App
         private void CreateNewGame(User user, bool isCommonChat)
         {
             if (!isCommonChat) throw new ArgumentException("Игру создать можно только в чате");
+            usersTeams[user.ComChatId].DeleteAllUsers();
             usersTeams[user.ComChatId].SetMafia(new MafiaGame());
             SendMassage?.Invoke(user, true, new Answer(AnswerType.NewGame));
         }
@@ -118,6 +116,8 @@ namespace App
         private void RegPlayer(User user, bool isCommonChat)
         {
             if (!isCommonChat) throw new ArgumentException("Регестрироваться можно только в чате");
+            if (!usersTeams[user.ComChatId].IsContainsUser(user))
+                usersTeams[user.ComChatId].AddUser(user);
             var mafia = usersTeams[user.ComChatId].Mafia;
             var player = new Player(user.Name);
             mafia.RegisterPlayer(player);
