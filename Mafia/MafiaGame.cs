@@ -14,14 +14,17 @@ namespace Mafia
         private List<Player> toKillPlayers = new();
         private List<Player> votedPlayers = new();
         private List<Role> roles = new();
+        private IRoleDistribution roleDist;
         public Player Dead { get; private set; }
 
-
+        public MafiaGame(IRoleDistribution roleDist)
+        {
+            this.roleDist = roleDist;
+        }
+        
         public Status Status { get; private set; }
         public int NightNumber { get; }
-
         
-
         public bool Vote(Player voter, Player target)
         {
             if (votedPlayers.Contains(voter))
@@ -53,7 +56,7 @@ namespace Mafia
         
         public void StartGame()
         {
-            roles = RolesDistribution.DistributeRoles(allPlayers.Count);
+            roles = roleDist.DistributeRoles(allPlayers.Count);
             for (var i = 0; i < roles.Count; i++)
             {
                 allPlayers[i].SetRole(roles[i]);
