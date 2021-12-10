@@ -85,7 +85,7 @@ namespace App
         {
             if (!isCommonChat) throw new ArgumentException("Игру создать можно только в чате");
             usersTeams[user.ComChatId].DeleteAllUsers();
-            usersTeams[user.ComChatId].SetMafia(new MafiaGame());
+            usersTeams[user.ComChatId].SetMafia();
             SendMassage?.Invoke(user, true, new Answer(AnswerType.NewGame));
         }
 
