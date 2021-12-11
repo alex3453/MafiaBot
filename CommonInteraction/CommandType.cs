@@ -3,7 +3,7 @@ namespace CommonInteraction
     public enum CommandType
     {
         Vote,
-        Rules,
+        Help,
         Start,
         Reg,
         Kill,

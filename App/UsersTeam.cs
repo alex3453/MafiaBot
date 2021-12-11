@@ -14,15 +14,19 @@ namespace App
 
         public void AddUser(User user) => users.Add(user);
         public bool IsContainsUser(User user) => users.Contains(user);
-        public void DeleteUserByName(string name, Action<User> deleteUser)
+        public void DeleteUserByName(string name, Action<ulong> deleteUser)
         {
             var user = GetUserByName(name);
             users.Remove(user);
-            deleteUser(user);
+            deleteUser(user.Id);
         }
 
-        public void DeleteAllUsers()
+        public void DeleteAllUsers(Action<ulong> deleteUser)
         {
+            foreach (var user in users)
+            {
+                deleteUser(user.Id);
+            }
             users = new HashSet<User>();
         }
 

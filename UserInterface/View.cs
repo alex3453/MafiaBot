@@ -14,11 +14,12 @@ namespace UserInterface
         DiscordSocketClient client;
         public event Action<User, bool, Command> ExCommand;
         public Action<User, bool, Answer> RegisterSending() => SendMessage;
-        public Action<User> RegisterDelUser() => DeleteUser;
+        public Action<ulong> RegisterDelUser() => DeleteUserById;
         
         private ITokenProvider provider;
         private IDictionary<User, SocketMessage> userSockets = new Dictionary<User, SocketMessage>();
         private IDictionary<ulong, User> users = new Dictionary<ulong, User>();
+        private ISet<ulong> channels = new HashSet<ulong>();
 
         public View(ITokenProvider provider)
         {
@@ -52,14 +53,23 @@ namespace UserInterface
 
         private Task CommandsHandler(SocketMessage msg)
         {
-            if (msg.Author.IsBot || msg.Content.First() != '!') return Task.CompletedTask;
+            if (msg.Author.IsBot) return Task.CompletedTask;
+            if (msg.Content.First() != '!')
+            {
+                if (!channels.Contains(msg.Channel.Id))
+                {
+                    channels.Add(msg.Channel.Id);
+                    msg.Channel.SendMessageAsync("Привет, я бот для игры в мафию, напишите !help");
+                }
+                return Task.CompletedTask;
+            }
             var stringsCommand = msg.Content.Remove(0, 1).Split();
             CommandType commandType;
             switch (stringsCommand.First())
             {
-                case "rules":
-                    commandType = CommandType.Rules;
-                    break;
+                case "help":
+                    msg.Channel.SendMessageAsync(GetHelpMessage());
+                    return Task.CompletedTask;
                 case "vote":
                     commandType = CommandType.Vote;
                     break;
@@ -75,7 +85,7 @@ namespace UserInterface
                 case "start":
                     commandType = CommandType.Start;
                     break;
-                case "startnew":
+                case "createnew":
                     commandType = CommandType.CreateNewGame;
                     break;
                 default:
@@ -94,6 +104,23 @@ namespace UserInterface
             ExCommand?.Invoke(user, isCommonChat, ctx);
             return Task.CompletedTask;
         }
+
+        private string GetHelpMessage()
+        {
+            return "Привет, я бот для игры в мафию, и у меня есть следующие команды:\n" +
+                   "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
+                   "!vote {имя игрока на сервере, лучше через @} - позволяет голосовать во время самой игры.\n" +
+                   "!reg - позволяет зарегестрироваться на игру.\n" +
+                   "!kill {номер игрока из отправленного вам списка} - позволяет мафии убивать игроков во время игры. " +
+                   "Пишется только в личку боту.\n" +
+                   "!start - позволяет начать игру.\n" +
+                   "!createnew - создает для вас новую игру.\n\n" +
+                   "Алгоритм действий следующий:\n" +
+                   "1. Создайте новую игру командой !createnew\n" +
+                   "2. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
+                   "3. Начните игру командой !start\n" +
+                   "4. Играйте:)";
+        }
         
         private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
@@ -103,8 +130,13 @@ namespace UserInterface
                 userSockets[user].Author.SendMessageAsync(ParseAnswer(answer));
         }
 
-        private void DeleteUser(User user) => userSockets.Remove(user);
-        
+        private void DeleteUserById(ulong userId)
+        {
+            var user = users[userId];
+            users.Remove(userId);
+            userSockets.Remove(user);
+        }
+
         private static string ParseAnswer(Answer answer)
         {
             return answer.AnswerType switch

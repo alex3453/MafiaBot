@@ -12,7 +12,7 @@ namespace App
 
         public Action<User, bool, Command> Register() => ReproduceCommand;
         public event Action<User, bool, Answer> SendMassage;
-        public event Action<User> DeleteUser;
+        public event Action<ulong> DeleteUser;
 
         private void CreateNewUsersTeam(User user)
         {
@@ -23,13 +23,15 @@ namespace App
         {
             if (!usersTeams.Keys.Contains(user.ComChatId))
                 CreateNewUsersTeam(user);
+            if (!usersTeams[user.ComChatId].IsContainsUser(user))
+                usersTeams[user.ComChatId].AddUser(user);
 
             switch (ctx.CommandType)
             {
                 case CommandType.Vote:
                     Vote(user, isCommonChat, ctx.MentionedPlayers);
                     break;
-                case CommandType.Rules:
+                case CommandType.Help:
                     SendRules(user, isCommonChat);
                     break;
                 case CommandType.Start:
@@ -84,7 +86,7 @@ namespace App
         private void CreateNewGame(User user, bool isCommonChat)
         {
             if (!isCommonChat) throw new ArgumentException("Игру создать можно только в чате");
-            usersTeams[user.ComChatId].DeleteAllUsers();
+            usersTeams[user.ComChatId].DeleteAllUsers(DeleteUser);
             usersTeams[user.ComChatId].SetMafia(new MafiaGame());
             SendMassage?.Invoke(user, true, new Answer(AnswerType.NewGame));
         }
@@ -116,8 +118,6 @@ namespace App
         private void RegPlayer(User user, bool isCommonChat)
         {
             if (!isCommonChat) throw new ArgumentException("Регестрироваться можно только в чате");
-            if (!usersTeams[user.ComChatId].IsContainsUser(user))
-                usersTeams[user.ComChatId].AddUser(user);
             var mafia = usersTeams[user.ComChatId].Mafia;
             var player = new Player(user.Name);
             mafia.RegisterPlayer(player);
