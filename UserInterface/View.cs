@@ -92,7 +92,8 @@ namespace UserInterface
             }
             if (!channels.Contains(msg.Channel.Id))
                 channels.Add(msg.Channel.Id);
-            var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
+            var ctx = new Command(commandType, 
+                msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(), stringsCommand.Skip(1).ToList());
             if (!users.Keys.Contains(msg.Author.Id))
             {
                 var usr = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);

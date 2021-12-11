@@ -41,7 +41,7 @@ namespace App
                     Vote(user, isCommonChat, ctx.MentionedPlayers);
                     break;
                 case CommandType.Kill:
-                    KillPlayer(user, isCommonChat, ctx.MentionedPlayers);
+                    KillPlayer(user, isCommonChat, ctx.Content);
                     break;
             }
         }
@@ -171,7 +171,7 @@ namespace App
                 EndDay(user);
         }
 
-        private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
+        private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> content)
         {
             if (isCommonChat)
             {
@@ -190,7 +190,7 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.NotTimeToKill));
                 return;
             }
-            if (!mentionedPlayers.Any() || int.TryParse(mentionedPlayers.First(), out target))
+            if (!content.Any() || !int.TryParse(content.First(), out target))
             {
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.EnterNumber));
                 return;
