@@ -65,6 +65,12 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
                 return;
             }
+
+            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
+                return;
+            }
             var mafia = usersTeams[user.ComChatId].Mafia;
             if (mafia.Status != Status.WaitingPlayers && mafia.Status != Status.ReadyToStart)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.GameIsGoing));
@@ -84,6 +90,11 @@ namespace App
             if (!isCommonChat)
             {
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
+                return;
+            }
+            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
             var userTeam = usersTeams[user.ComChatId];
@@ -124,6 +135,11 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
                 return;
             }
+            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
+                return;
+            }
             var target = mentionedPlayers.First();
             var mafia = usersTeams[user.ComChatId].Mafia;
             if (mafia.Status != Status.Voting)
@@ -139,6 +155,10 @@ namespace App
                     new List<string> {user.Name, target}));
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.AlreadyVoted));
+            if(IsSomeBodyWin(user))
+                return;
+            if(IsDayEnd(user))
+                EndDay(user);
         }
 
         private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
@@ -148,11 +168,103 @@ namespace App
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.OnlyInLocal));
                 return;
             }
+            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
+                return;
+            }
             int target;
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            if (mafia.Status != Status.MafiaKilling)
+            {
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.NotTimeToKill));
+                return;
+            }
             if (!mentionedPlayers.Any() || int.TryParse(mentionedPlayers.First(), out target))
             {
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.EnterNumber));
+                return;
             }
+
+            string targetName;
+            if (mafia.PlayersNumbers.Values.Contains(target))
+            {
+                targetName = mafia.PlayersNumbers
+                    .Where(kv => kv.Value == target)
+                    .Select(kv => kv.Key)
+                    .First();
+            }
+            else
+            {
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.IncorrectNumber));
+                return;
+            }
+            if (!mafia.PlayersInGame.Contains(user.Name))
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.YouAreNotInGame,
+                    new List<string> {user.Name}));
+            else if (!mafia.MafiozyPlayers.Contains(user.Name))
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.YouAreNotMafia));
+            else if (!mafia.PlayersInGame.Contains(targetName))
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.YouCantKillThisPl));
+            else if (mafia.Act(user.Name, targetName))
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.SuccessfullyKilled,
+                    new List<string> {user.Name, targetName}));
+            else
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.AlreadyKilled));
+            if(IsSomeBodyWin(user))
+                return;
+            if(IsNightEnd(user))
+                EndNight(user);
+        }
+
+        private void EndDay(User user)
+        {
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            if (mafia.IsSomeBodyDied)
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.DayKill));
+            else
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.DayAllAlive));
+            SendMassage?.Invoke(user, true, new Answer(AnswerType.EndDay));
+        }
+
+        private void EndNight(User user)
+        {
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            if (mafia.IsSomeBodyDied)
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NightKill));
+            else
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NightAllAlive));
+            SendMassage?.Invoke(user, true, new Answer(AnswerType.EndNight));
+        }
+
+        private bool IsDayEnd(User user)
+        {
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            return mafia.Status == Status.MafiaKilling;
+        }
+
+        private bool IsNightEnd(User user)
+        {
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            return mafia.Status == Status.Voting;
+        }
+
+        private bool IsSomeBodyWin(User user)
+        {
+            var mafia = usersTeams[user.ComChatId].Mafia;
+            if (mafia.Status == Status.PeacefulWins)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.PeacefulWins));
+                return true;
+            }
+
+            if (mafia.Status == Status.MafiaWins)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.MafiaWins));
+                return true;
+            }
+
+            return false;
         }
     }
 }

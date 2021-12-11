@@ -136,27 +136,63 @@ namespace UserInterface
 
         private static string ParseAnswer(Answer answer)
         {
+            // return answer.AnswerType switch
+            // {
+            //     AnswerType.GameStarted => "Игра началась",
+            //     AnswerType.GetRules => "Вот тебе правила",
+            //     AnswerType.MafiaWins => $"Ой-ой...Кажется, {answer.Args[0]} и пистолета в руках не держал. " +
+            //                          "Стало очевидно, что это конец...",
+            //     AnswerType.PeacefulWins => $"{answer.Args[0]} оказался мафией. Больше никто не умрет.", 
+            //     AnswerType.SuccessfullyRegistered => $"{answer.Args[0]}, ты в игре!",
+            //     AnswerType.NeedMorePlayer => "Ролей указано больше, чем игроков, перезапустите игру, " +
+            //                               "либо добавьте игроков.",
+            //     AnswerType.AlreadyRegistered => $"{answer.Args[0]}, ты уже регистрировался...Позови друзей:(",
+            //     AnswerType.SuccessfullyVoted => "Твой голос учтён!",
+            //     AnswerType.AlreadyVoted => "Ты не можешь голосовать дважды",
+            //     AnswerType.EndDay => $"{answer.Args[0]} был выгнан...Отведенная роль - {answer.Args[1]}.Наступает ночь",
+            //     AnswerType.DayKill => "Нельзя убивать днем",
+            //     AnswerType.EndNight =>$"Ночь забрала с собой {answer.Args[0]}",
+            //     AnswerType.NewGame => "И снова все по новой...Добро пожаловать!",
+            //     AnswerType.YouArePeaceful => "Ты мирный! Земля тебе пухом...",
+            //     AnswerType.YouAreMafia => "Ты мафия! не жалей никого...",
+            //     _ => "Я не знаю такой команды;( Давай попробуем еще раз?"
+            // };
             return answer.AnswerType switch
             {
-                AnswerType.GameStarted => "Игра началась",
-                AnswerType.GetRules => "Вот тебе правила",
-                AnswerType.MafiaWins => $"Ой-ой...Кажется, {answer.Args[0]} и пистолета в руках не держал. " +
-                                     "Стало очевидно, что это конец...",
-                AnswerType.PeacefulWins => $"{answer.Args[0]} оказался мафией. Больше никто не умрет.", 
-                AnswerType.SuccessfullyRegistered => $"{answer.Args[0]}, ты в игре!",
-                AnswerType.NeedMorePlayer => "Ролей указано больше, чем игроков, перезапустите игру, " +
-                                          "либо добавьте игроков.",
-                AnswerType.AlreadyRegistered => $"{answer.Args[0]}, ты уже регистрировался...Позови друзей:(",
-                AnswerType.SuccessfullyVoted => "Твой голос учтён!",
-                AnswerType.AlreadyVoted => "Ты не можешь голосовать дважды",
-                AnswerType.EndDay => $"{answer.Args[0]} был выгнан...Отведенная роль - {answer.Args[1]}.Наступает ночь",
-                AnswerType.DayKill => "Нельзя убивать днем",
-                AnswerType.EndNight =>$"Ночь забрала с собой {answer.Args[0]}",
-                AnswerType.NewGame => "И снова все по новой...Добро пожаловать!",
-                AnswerType.YouArePeaceful => "Ты мирный! Земля тебе пухом...",
-                AnswerType.YouAreMafia => "Ты мафия! не жалей никого...",
-                _ => "Я не знаю такой команды;( Давай попробуем еще раз?"
-            };
+                AnswerType.GameStarted => expr,
+                AnswerType.GetRules => expr,
+                AnswerType.MafiaWins => expr,
+                AnswerType.PeacefulWins => expr,
+                AnswerType.SuccessfullyRegistered => expr,
+                AnswerType.AlreadyRegistered => expr,
+                AnswerType.SuccessfullyVoted => expr,
+                AnswerType.AlreadyVoted => expr,
+                AnswerType.EndDay => expr,
+                AnswerType.EndNight => expr,
+                AnswerType.DayKill => expr,
+                AnswerType.DayAllAlive => expr,
+                AnswerType.NightKill => expr,
+                AnswerType.NightAllAlive => expr,
+                AnswerType.NewGame => expr,
+                AnswerType.YouAreMafia => expr,
+                AnswerType.YouArePeaceful => expr,
+                AnswerType.OnlyInLocal => expr,
+                AnswerType.OnlyInCommon => expr,
+                AnswerType.GameIsGoing => expr,
+                AnswerType.NeedMorePlayers => expr,
+                AnswerType.YouAreNotInGame => expr,
+                AnswerType.YouCantVoteThisPl => expr,
+                AnswerType.YouCantKillThisPl => expr,
+                AnswerType.NotTimeToVote => expr,
+                AnswerType.NotTimeToKill => expr,
+                AnswerType.EnterNumber => expr,
+                AnswerType.IncorrectNumber => expr,
+                AnswerType.YouAreNotMafia => expr,
+                AnswerType.SuccessfullyKilled => expr,
+                AnswerType.AlreadyKilled => expr,
+                AnswerType.NeedToCreateGame => expr,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         }
     }
 }

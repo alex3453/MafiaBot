@@ -25,8 +25,14 @@ namespace CommonInteraction
         NeedMorePlayers,
         YouAreNotInGame,
         YouCantVoteThisPl,
+        YouCantKillThisPl,
         NotTimeToVote,
         NotTimeToKill,
-        EnterNumber
+        EnterNumber,
+        IncorrectNumber,
+        YouAreNotMafia,
+        SuccessfullyKilled,
+        AlreadyKilled,
+        NeedToCreateGame
     }
 }
