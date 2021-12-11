@@ -15,13 +15,10 @@ namespace Mafia
         private List<Player> votedPlayers = new();
         private readonly List<Role> roles = new();
         public Player Dead { get; private set; }
-
-
+        
         public Status Status { get; private set; }
         public int NightNumber { get; }
-
         
-
         public bool Vote(Player voter, Player target)
         {
             if (votedPlayers.Contains(voter))
@@ -47,6 +44,7 @@ namespace Mafia
         public void RegisterPlayer(Player player)
         {
             allPlayers.Add(player);
+            if ()
             Status = Status.ReadyToStart;
         }
         
@@ -104,14 +102,12 @@ namespace Mafia
             Status = Status.Day;
         }
 
-        private void CheckWin(Status nextStep)
+        private void CheckWin()
         {
             if (mafiozyPlayers.Count == 0)
                 Status = Status.PeacefulWins;
             else if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
                 Status = Status.MafiaWins;
-            else
-                Status = nextStep;
         }
         public IReadOnlyList<Player> GetAllPlayers => allPlayers;
         public IReadOnlyCollection<Player> GetPlayersInGame => playersInGame;

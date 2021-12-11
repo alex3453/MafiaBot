@@ -22,6 +22,7 @@ namespace CommonInteraction
         Died,
         NewGame,
         YouAreMafia,
-        YouArePeaceful
+        YouArePeaceful,
+        VoteOnlyCom
     }
 }

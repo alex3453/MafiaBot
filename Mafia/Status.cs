@@ -2,13 +2,11 @@
 {
     public enum Status
     {
+        WaitingPlayers,
         ReadyToStart,
-        Day,
+        MafiaKilling,
         Voting,
-        Night,
-        StopVoting,
         MafiaWins,
-        PeacefulWins,
-        GameEnd
+        PeacefulWins
     }
 }

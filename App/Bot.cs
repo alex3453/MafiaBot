@@ -58,7 +58,11 @@ namespace App
 
         private void Vote(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
         {
-            if (!isCommonChat) throw new ArgumentException("Голосовать можно только в чате");
+            if (!isCommonChat)
+            {
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.VoteOnlyCom));
+                return;
+            }
             var targetName = mentionedPlayers.First();
             var mafia = usersTeams[user.ComChatId].Mafia;
             var target = mafia.GetAllPlayers.First(x => x.Name == targetName);
