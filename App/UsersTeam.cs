@@ -32,6 +32,9 @@ namespace App
 
         public User GetUserByName(string name) => users.First(u => u.Name == name);
 
-        public void SetMafia(IMafia mafia) => Mafia = mafia;
+        public void SetMafia()
+        {
+            Mafia = new MafiaGame(new SimpleRoleDist());
+        }
     }
 }

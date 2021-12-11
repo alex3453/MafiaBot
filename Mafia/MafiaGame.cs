@@ -13,9 +13,15 @@ namespace Mafia
         private readonly List<Player> mafiozyPlayers = new();
         private List<Player> toKillPlayers = new();
         private List<Player> votedPlayers = new();
-        private readonly List<Role> roles = new();
+        private List<Role> roles = new();
+        private IRoleDistribution roleDist;
         public Player Dead { get; private set; }
         
+        public MafiaGame(IRoleDistribution roleDist)
+        {
+            this.roleDist = roleDist;
+        }
+
         public Status Status { get; private set; }
         public int NightNumber { get; }
         
@@ -51,19 +57,7 @@ namespace Mafia
         
         public void StartGame()
         {
-            var mafiaCount = allPlayers.Count / 5 + 1;
-            for (var i = 0; i < mafiaCount; i++)
-                roles.Add(new MafiaRole());
-            for (var i = 0; i < allPlayers.Count - mafiaCount; i++)
-                roles.Add(new PeacefulRole());
-
-            var random = new Random();
-            for (var i = roles.Count - 1; i >= 1; i--)
-            {
-                var j = random.Next(i + 1);
-                (roles[j], roles[i]) = (roles[i], roles[j]);
-            }
-
+            roles = roleDist.DistributeRoles(allPlayers.Count);
             for (var i = 0; i < roles.Count; i++)
             {
                 allPlayers[i].SetRole(roles[i]);
@@ -71,7 +65,6 @@ namespace Mafia
                     mafiozyPlayers.Add(allPlayers[i]);
                 playersInGame.Add(allPlayers[i]);
             }
-
             Status = Status.Voting;
         }
 
