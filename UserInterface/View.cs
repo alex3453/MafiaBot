@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -159,40 +160,53 @@ namespace UserInterface
             // };
             return answer.AnswerType switch
             {
-                AnswerType.GameStarted => expr,
-                AnswerType.GetRules => expr,
-                AnswerType.MafiaWins => expr,
-                AnswerType.PeacefulWins => expr,
-                AnswerType.SuccessfullyRegistered => expr,
-                AnswerType.AlreadyRegistered => expr,
-                AnswerType.SuccessfullyVoted => expr,
-                AnswerType.AlreadyVoted => expr,
-                AnswerType.EndDay => expr,
-                AnswerType.EndNight => expr,
-                AnswerType.DayKill => expr,
-                AnswerType.DayAllAlive => expr,
-                AnswerType.NightKill => expr,
-                AnswerType.NightAllAlive => expr,
-                AnswerType.NewGame => expr,
-                AnswerType.YouAreMafia => expr,
-                AnswerType.YouArePeaceful => expr,
-                AnswerType.OnlyInLocal => expr,
-                AnswerType.OnlyInCommon => expr,
-                AnswerType.GameIsGoing => expr,
-                AnswerType.NeedMorePlayers => expr,
-                AnswerType.YouAreNotInGame => expr,
-                AnswerType.YouCantVoteThisPl => expr,
-                AnswerType.YouCantKillThisPl => expr,
-                AnswerType.NotTimeToVote => expr,
-                AnswerType.NotTimeToKill => expr,
-                AnswerType.EnterNumber => expr,
-                AnswerType.IncorrectNumber => expr,
-                AnswerType.YouAreNotMafia => expr,
-                AnswerType.SuccessfullyKilled => expr,
-                AnswerType.AlreadyKilled => expr,
-                AnswerType.NeedToCreateGame => expr,
+                AnswerType.GameStarted => "Игра началась",
+                AnswerType.MafiaWins => "Мафия победила",
+                AnswerType.PeacefulWins => "Победили мирные",
+                AnswerType.SuccessfullyRegistered => $"{answer.Args[0]}, ты в игре!",
+                AnswerType.AlreadyRegistered => $"{answer.Args[0]}, ты уже зарегестрировался, одного раза хватит!",
+                AnswerType.SuccessfullyVoted => $"{answer.Args[0]}, ты успешно проголосовал за {answer.Args[1]}!",
+                AnswerType.AlreadyVoted => $"{answer.Args[0]}, ты уже проголосовал, одного раза хватит!",
+                AnswerType.EndDay => "День закончился, начинается ночь!",
+                AnswerType.EndNight => "Ночь закончена, начинается день!",
+                AnswerType.DayKill => $"{answer.Args[0]} был выгнан.",
+                AnswerType.DayAllAlive => "Сегодня никого не выгнали",
+                AnswerType.NightKill => $"{answer.Args[0]} умер этой ночью.",
+                AnswerType.NightAllAlive => "Все остались живы.",
+                AnswerType.NewGame => "Новая игра создана, регистрируйтесь!",
+                AnswerType.YouAreMafia => "Ты мафия",
+                AnswerType.YouArePeaceful => "Ты мирный",
+                AnswerType.OnlyInLocal => "Это можно делать только в личку",
+                AnswerType.OnlyInCommon => "Это можно делать только в общем чате",
+                AnswerType.GameIsGoing => "Игра уже началась",
+                AnswerType.NeedMorePlayers => "Чтобы начать игру нужно больше игроков",
+                AnswerType.YouAreNotInGame => $"{answer.Args[1]}, ты уже выбыл из игры!",
+                AnswerType.YouCantVoteThisPl => $"{answer.Args[0]}, ты не можешь проголосовать за {answer.Args[1]}!",
+                AnswerType.YouCantKillThisPl => "Ты не можешь убить этого игрока!",
+                AnswerType.NotTimeToVote => "Сейчас нельзя голосовать!",
+                AnswerType.NotTimeToKill => "Сейчас нельзя убивать!",
+                AnswerType.EnterNumber => "Введите число",
+                AnswerType.IncorrectNumber => "Неверное число",
+                AnswerType.YouAreNotMafia => "Вы не мафия!",
+                AnswerType.SuccessfullyKilled => "Ваш голос учтён!",
+                AnswerType.AlreadyKilled => "Вы уже выбрали свою жертву!",
+                AnswerType.NeedToCreateGame => "Сначала надо создать игру",
+                AnswerType.MafiaKilling => "Введи !kill X, и вместо X номер того, кого хочешь убить:\n" +
+                                           ParseKillList(answer.Args),
                 _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private static string ParseKillList(IReadOnlyList<string> killList)
+        {
+            var res = new StringBuilder();
+            for (var i = 0; i < killList.Count; i += 2)
+            {
+                res.Append(killList[i] + " - ");
+                res.Append(killList[i + 1] + "\n");
             }
+
+            return res.ToString();
         }
     }
 }

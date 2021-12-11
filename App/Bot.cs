@@ -225,6 +225,21 @@ namespace App
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.DayAllAlive));
             SendMassage?.Invoke(user, true, new Answer(AnswerType.EndDay));
+            var userTeam = usersTeams[user.ComChatId];
+            var mafiaKillList = new List<string>();
+            foreach (var playerNumber in mafia.PlayersNumbers)
+            {
+                if (mafia.PlayersInGame.Contains(playerNumber.Key))
+                {
+                    mafiaKillList.Add(playerNumber.Key);
+                    mafiaKillList.Add(playerNumber.Value.ToString());
+                }
+            }
+            foreach (var player in mafia.MafiozyPlayers)
+            {
+                var usr = userTeam.Users.First(u => u.Name == player);
+                SendMassage?.Invoke(usr, false, new Answer(AnswerType.MafiaKilling, mafiaKillList));
+            }
         }
 
         private void EndNight(User user)

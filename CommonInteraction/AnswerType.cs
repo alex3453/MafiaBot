@@ -3,7 +3,6 @@ namespace CommonInteraction
     public enum AnswerType
     {
         GameStarted,
-        GetRules,
         MafiaWins,
         PeacefulWins,
         SuccessfullyRegistered,
@@ -33,6 +32,7 @@ namespace CommonInteraction
         YouAreNotMafia,
         SuccessfullyKilled,
         AlreadyKilled,
-        NeedToCreateGame
+        NeedToCreateGame,
+        MafiaKilling
     }
 }
