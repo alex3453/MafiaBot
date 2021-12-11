@@ -76,9 +76,6 @@ namespace UserInterface
                 case "reg":
                     commandType = CommandType.Reg;
                     break;
-                case "kill" when msg.Channel.GetType() == typeof(SocketTextChannel):
-                    msg.Channel.SendMessageAsync("Нельзя убивать в текстовом канале. Пойдём лучше в лс:)");
-                    return Task.CompletedTask;
                 case "kill":
                     commandType = CommandType.Kill;
                     break;
@@ -141,7 +138,7 @@ namespace UserInterface
         {
             return answer.AnswerType switch
             {
-                AnswerType.GameStart => "Игра началась",
+                AnswerType.GameStarted => "Игра началась",
                 AnswerType.GetRules => "Вот тебе правила",
                 AnswerType.MafiaWins => $"Ой-ой...Кажется, {answer.Args[0]} и пистолета в руках не держал. " +
                                      "Стало очевидно, что это конец...",
@@ -149,12 +146,11 @@ namespace UserInterface
                 AnswerType.SuccessfullyRegistered => $"{answer.Args[0]}, ты в игре!",
                 AnswerType.NeedMorePlayer => "Ролей указано больше, чем игроков, перезапустите игру, " +
                                           "либо добавьте игроков.",
-                AnswerType.UnsuccessfullyRegistered => $"{answer.Args[0]}, ты уже регистрировался...Позови друзей:(",
+                AnswerType.AlreadyRegistered => $"{answer.Args[0]}, ты уже регистрировался...Позови друзей:(",
                 AnswerType.SuccessfullyVoted => "Твой голос учтён!",
-                AnswerType.UnsuccessfullyVoted => "Ты не можешь голосовать дважды",
+                AnswerType.AlreadyVoted => "Ты не можешь голосовать дважды",
                 AnswerType.EndDay => $"{answer.Args[0]} был выгнан...Отведенная роль - {answer.Args[1]}.Наступает ночь",
                 AnswerType.DayKill => "Нельзя убивать днем",
-                AnswerType.NotMafia => "Я не могу этого допустить:( Ты не мафия",
                 AnswerType.EndNight =>$"Ночь забрала с собой {answer.Args[0]}",
                 AnswerType.NewGame => "И снова все по новой...Добро пожаловать!",
                 AnswerType.YouArePeaceful => "Ты мирный! Земля тебе пухом...",

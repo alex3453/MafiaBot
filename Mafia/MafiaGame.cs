@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace Mafia
@@ -9,55 +10,30 @@ namespace Mafia
         private readonly List<Player> allPlayers = new();
         private readonly List<Player> playersInGame = new();
         private readonly List<Player> deadPlayers = new();
-        private readonly List<Player> kickedPlayers = new();
         private readonly List<Player> mafiozyPlayers = new();
-        private List<Player> toKillPlayers = new();
-        private List<Player> votedPlayers = new();
-        private List<Role> roles = new();
+        private HashSet<Player> votedPlayers = new();
         private IRoleDistribution roleDist;
-        public Player Dead { get; private set; }
-        
+        public string Dead { get; private set; }
+        public bool IsSomeBodyDied { get; private set; }
+
+        public Status Status { get; private set; } = Status.WaitingPlayers;
+
         public MafiaGame(IRoleDistribution roleDist)
         {
             this.roleDist = roleDist;
         }
 
-        public Status Status { get; private set; }
-        public int NightNumber { get; }
-        
-        public bool Vote(Player voter, Player target)
+        public void RegisterPlayer(string name)
         {
-            if (votedPlayers.Contains(voter))
-                return false;
-            votedPlayers.Add(voter);
-            target.VoteMe();
-            if (allPlayers.Sum(player => player.VoteCount) == allPlayers.Count)
-                EndDay();
-            return true;
-        }
-
-        // public Answer Kill(Player killer, Player target)
-        // {
-        //     if (toKillPlayers.Contains(killer))
-        //         return new Answer(true, AnswerType.UnsuccessfullyKill);
-        //     toKillPlayers.Add(killer);
-        //     target.KillMe();
-        //     return mafiozyPlayers.Sum(player => player.KillCount) == mafiozyPlayers.Count ? 
-        //         EndNight() : 
-        //         new Answer(true, AnswerType.SuccessfullyKill);
-        // }
-
-        public void RegisterPlayer(Player player)
-        {
+            var player = new Player(name);
             allPlayers.Add(player);
-            if ()
-            Status = Status.ReadyToStart;
+            if (allPlayers.Count >= 2)
+                Status = Status.ReadyToStart;
         }
-        
-        
+
         public void StartGame()
         {
-            roles = roleDist.DistributeRoles(allPlayers.Count);
+            var roles = roleDist.DistributeRoles(allPlayers.Count);
             for (var i = 0; i < roles.Count; i++)
             {
                 allPlayers[i].SetRole(roles[i]);
@@ -65,47 +41,95 @@ namespace Mafia
                     mafiozyPlayers.Add(allPlayers[i]);
                 playersInGame.Add(allPlayers[i]);
             }
-            Status = Status.Voting;
+            Status = Status.MafiaKilling;
         }
-
-        public List<Player> Winners { get; }
         
 
-
-        public void EndDay()
+        private void EndDay()
         {
-            votedPlayers = new List<Player>();
-            var died = allPlayers.OrderByDescending(x => x.VoteCount).First();
-            deadPlayers.Add(died);
-            Dead = died;
-            if (died.Role is MafiaRole)
-                mafiozyPlayers.Remove(died);
-            CheckWin(Status.Night);
+            IsSomeBodyDied = false;
+            votedPlayers = new HashSet<Player>();
+            var deadP = playersInGame.OrderByDescending(x => x.VoteCount).First();
+            if (deadP.VoteCount >= playersInGame.Count / 2)
+            {
+                IsSomeBodyDied = true;
+                KillPlayer(deadP);
+            }
+            Status = Status.MafiaKilling;
+            CheckWin();
         }
 
-        public void EndNight()
+        private void EndNight()
         {
-            toKillPlayers = new List<Player>();
-            var died = allPlayers.OrderByDescending(x => x.KillCount).First();
-            deadPlayers.Add(died);
-            Dead = died;
-            if (died.Role is MafiaRole)
-                mafiozyPlayers.Remove(died);
-            CheckWin(Status.Day);
-            Status = Status.Day;
+            var deadP = playersInGame.OrderByDescending(x => x.KillCount).First();
+            IsSomeBodyDied = true;
+            KillPlayer(deadP);
+            Status = Status.Voting;
+            CheckWin();
+        }
+        
+        public bool Vote(string voter, string target)
+        {
+            var voterP = playersInGame.First(x => x.Name == voter);
+            var targetP = playersInGame.First(x => x.Name == target);
+            if (votedPlayers.Contains(voterP))
+                return false;
+            votedPlayers.Add(voterP);
+            targetP.VoteMe();
+            if (playersInGame.Sum(player => player.VoteCount) == playersInGame.Count)
+                EndDay();
+            return true;
+        }
+
+        public bool Act(string killer, string target)
+        {
+            var killerP = playersInGame.First(x => x.Name == killer);
+            var targetP = playersInGame.First(x => x.Name == target);
+            if (killerP.Role is MafiaRole)
+                return false;
+            targetP.KillMe();
+            if (playersInGame.Sum(player => player.KillCount) == mafiozyPlayers.Count)
+                EndNight();
+            return true;
+        }
+
+        private void KillPlayer(Player deadP)
+        {
+            deadPlayers.Add(deadP);
+            Dead = deadP.Name;
+            playersInGame.Remove(deadP);
+            mafiozyPlayers.Remove(deadP);
         }
 
         private void CheckWin()
         {
             if (mafiozyPlayers.Count == 0)
                 Status = Status.PeacefulWins;
-            else if (mafiozyPlayers.Count >= allPlayers.Count / 2.0)
+            else if (mafiozyPlayers.Count >= playersInGame.Count / 2)
                 Status = Status.MafiaWins;
         }
-        public IReadOnlyList<Player> GetAllPlayers => allPlayers;
-        public IReadOnlyCollection<Player> GetPlayersInGame => playersInGame;
-        public IReadOnlyCollection<Player> GetDeadPlayers => deadPlayers;
-        public IReadOnlyCollection<Player> GetKickedPlayers => kickedPlayers;
-        public IReadOnlyList<Role> GetRoles => roles;
+
+        public IReadOnlyCollection<string> GetWinners()
+        {
+            if (Status == Status.PeacefulWins)
+            {
+                return allPlayers
+                    .Where(p => p.Role is PeacefulRole)
+                    .Select(p => p.Name).ToArray();
+            }
+            if (Status == Status.MafiaWins)
+            {
+                return allPlayers
+                    .Where(p => p.Role is MafiaRole)
+                    .Select(p => p.Name).ToArray();
+            }
+
+            return Array.Empty<string>();
+        }
+
+        public IReadOnlyCollection<string> AllPlayers => allPlayers.Select(p => p.Name).ToArray();
+        public IReadOnlyCollection<string> PlayersInGame => playersInGame.Select(p => p.Name).ToArray();
+        public IDictionary<string, Role> PlayersRoles => allPlayers.ToDictionary(p => p.Name, p => p.Role);
+        public IReadOnlyCollection<string> DeadPlayers => deadPlayers.Select(p => p.Name).ToArray();
     }
 }
