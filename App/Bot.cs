@@ -66,16 +66,11 @@ namespace App
                 return;
             }
             var mafia = usersTeams[user.ComChatId].Mafia;
-            if (mafia.Status != Status.WaitingPlayers)
-            {
+            if (mafia.Status != Status.WaitingPlayers && mafia.Status != Status.ReadyToStart)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.GameIsGoing));
-                return;
-            }
-            if (mafia.AllPlayers.Contains(user.Name))
-            {
+            else if (mafia.AllPlayers.Contains(user.Name))
                 SendMassage?.Invoke(user, true,
                     new Answer(AnswerType.AlreadyRegistered, new List<string> {user.Name}));
-            }
             else
             {
                 mafia.RegisterPlayer(user.Name);
@@ -131,35 +126,33 @@ namespace App
             }
             var target = mentionedPlayers.First();
             var mafia = usersTeams[user.ComChatId].Mafia;
-            var target = mafia.GetAllPlayers.First(x => x.Name == targetName);
-            var voter = mafia.GetAllPlayers.First(x => x.Name == user.Name);
-            var res = mafia.Vote(voter, target);
-            Answer answ;
-            switch (mafia.Status)
-            {
-                case Status.MafiaWins:
-                    answ = new Answer(AnswerType.MafiaWins, new List<string> {mafia.Dead.Name});
-                    break;
-                case Status.PeacefulWins:
-                    answ = new Answer(AnswerType.PeacefulWins, new List<string> {mafia.Dead.Name});
-                    break;
-                default:
-                    answ = new Answer(res ? AnswerType.SuccessfullyVoted : AnswerType.UnsuccessfullyVoted);
-                        break;
-            }
-            SendMassage?.Invoke(user, true, answ);
+            if (mafia.Status != Status.Voting)
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NotTimeToVote));
+            else if (!mafia.PlayersInGame.Contains(user.Name))
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.YouAreNotInGame,
+                    new List<string> {user.Name}));
+            else if (!mafia.PlayersInGame.Contains(target))
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.YouCantVoteThisPl,
+                    new List<string> {user.Name, target}));
+            else if (mafia.Vote(user.Name, target))
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.SuccessfullyVoted,
+                    new List<string> {user.Name, target}));
+            else
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.AlreadyVoted));
         }
 
         private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
         {
-            if (mafia.Status != Status.Night)
-                return new Answer(true, AnswerType.DayKill);
-        
-            var target = mafia.GetAllPlayers.First(x => x.Name == victimName);
-            var killer = mafia.GetAllPlayers.First(x => x.Name == killerName);
-            return killer.Role is MafiaRole 
-                ? mafia.Kill(killer, target)
-                : new Answer(true, AnswerType.NotMafia);
+            if (isCommonChat)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.OnlyInLocal));
+                return;
+            }
+            int target;
+            if (!mentionedPlayers.Any() || int.TryParse(mentionedPlayers.First(), out target))
+            {
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.EnterNumber));
+            }
         }
     }
 }

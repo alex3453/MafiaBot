@@ -11,7 +11,8 @@ namespace Mafia
         private readonly List<Player> playersInGame = new();
         private readonly List<Player> deadPlayers = new();
         private readonly List<Player> mafiozyPlayers = new();
-        private HashSet<Player> votedPlayers = new();
+        private HashSet<string> votedPlayers = new();
+        private Dictionary<string, int> playersNumbers = new();
         private IRoleDistribution roleDist;
         public string Dead { get; private set; }
         public bool IsSomeBodyDied { get; private set; }
@@ -40,6 +41,7 @@ namespace Mafia
                 if (roles[i] is MafiaRole)
                     mafiozyPlayers.Add(allPlayers[i]);
                 playersInGame.Add(allPlayers[i]);
+                playersNumbers[allPlayers[i].Name] = i + 1;
             }
             Status = Status.MafiaKilling;
         }
@@ -48,7 +50,7 @@ namespace Mafia
         private void EndDay()
         {
             IsSomeBodyDied = false;
-            votedPlayers = new HashSet<Player>();
+            votedPlayers = new HashSet<string>();
             var deadP = playersInGame.OrderByDescending(x => x.VoteCount).First();
             if (deadP.VoteCount >= playersInGame.Count / 2)
             {
@@ -70,11 +72,11 @@ namespace Mafia
         
         public bool Vote(string voter, string target)
         {
+            if (votedPlayers.Contains(voter))
+                return false;
             var voterP = playersInGame.First(x => x.Name == voter);
             var targetP = playersInGame.First(x => x.Name == target);
-            if (votedPlayers.Contains(voterP))
-                return false;
-            votedPlayers.Add(voterP);
+            votedPlayers.Add(voter);
             targetP.VoteMe();
             if (playersInGame.Sum(player => player.VoteCount) == playersInGame.Count)
                 EndDay();
@@ -129,7 +131,8 @@ namespace Mafia
 
         public IReadOnlyCollection<string> AllPlayers => allPlayers.Select(p => p.Name).ToArray();
         public IReadOnlyCollection<string> PlayersInGame => playersInGame.Select(p => p.Name).ToArray();
-        public IDictionary<string, Role> PlayersRoles => allPlayers.ToDictionary(p => p.Name, p => p.Role);
+        public IReadOnlyDictionary<string, Role> PlayersRoles => allPlayers.ToDictionary(p => p.Name, p => p.Role)
+        public IReadOnlyDictionary<string, int> PlayersNumbers => playersNumbers;
         public IReadOnlyCollection<string> DeadPlayers => deadPlayers.Select(p => p.Name).ToArray();
     }
 }

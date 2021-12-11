@@ -5,16 +5,15 @@ namespace Mafia
     public interface IMafia
     {
         Status Status { get; }
-        int NightNumber { get; }
-        IReadOnlyList<Player> GetAllPlayers { get; }
-        void RegisterPlayer(Player player);
+        IReadOnlyCollection<string> AllPlayers { get; }
+        IReadOnlyCollection<string> PlayersInGame { get; }
+        IReadOnlyDictionary<string, Role> PlayersRoles { get; }
+        IReadOnlyDictionary<string, int> PlayersNumbers { get; }
+        void RegisterPlayer(string name);
         void StartGame();
-        void EndDay();
-        void EndNight();
-        List<Player> Winners { get; }
-        Player Dead { get; }
-        bool Vote(Player voter, Player target);
-        //bool Kill(Player killer, Player target);
-        IReadOnlyList<Role> GetRoles { get; }
-    };
+        string Dead { get; }
+        bool Vote(string voter, string target);
+        bool Act(string killer, string target);
+        IReadOnlyCollection<string> GetWinners();
     }
+}

@@ -2,27 +2,31 @@ namespace CommonInteraction
 {
     public enum AnswerType
     {
-        NeedMorePlayer,
-        GameStart,
+        GameStarted,
         GetRules,
         MafiaWins,
         PeacefulWins,
         SuccessfullyRegistered,
-        UnsuccessfullyRegistered,
+        AlreadyRegistered,
         SuccessfullyVoted,
-        UnsuccessfullyVoted,
-        SuccessfullyKill,
-        UnsuccessfullyKill,
-        UnknownCommand,
+        AlreadyVoted,
         EndDay,
         EndNight,
-        None,
-        NotMafia,
         DayKill,
-        Died,
+        DayAllAlive,
+        NightKill,
+        NightAllAlive,
         NewGame,
         YouAreMafia,
         YouArePeaceful,
-        VoteOnlyCom
+        OnlyInLocal,
+        OnlyInCommon,
+        GameIsGoing,
+        NeedMorePlayers,
+        YouAreNotInGame,
+        YouCantVoteThisPl,
+        NotTimeToVote,
+        NotTimeToKill,
+        EnterNumber
     }
 }
