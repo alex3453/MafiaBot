@@ -53,8 +53,10 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
                 return;
             }
-            usersTeams[user.ComChatId].DeleteAllUsers(DeleteUser);
-            usersTeams[user.ComChatId].SetMafia();
+
+            var usersTeam = usersTeams[user.ComChatId];
+            usersTeam.LeaveOneUser(DeleteUser, user);
+            usersTeam.SetMafia();
             SendMassage?.Invoke(user, true, new Answer(AnswerType.NewGame));
         }
         
@@ -140,7 +142,15 @@ namespace App
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
-            var target = mentionedPlayers.First();
+
+            string target;
+            if (!mentionedPlayers.Any())
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.IncorrectVote, new List<string> {user.Name}));
+                return;
+            }
+            target = mentionedPlayers.First();
+            
             var mafia = usersTeams[user.ComChatId].Mafia;
             if (mafia.Status != Status.Voting)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NotTimeToVote));

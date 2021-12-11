@@ -22,13 +22,15 @@ namespace App
             deleteUser(user.Id);
         }
 
-        public void DeleteAllUsers(Action<ulong> deleteUser)
+        public void LeaveOneUser(Action<ulong> deleteUser, User user)
         {
-            foreach (var user in users)
+            foreach (var usr in users)
             {
-                deleteUser(user.Id);
+                if (usr != user)
+                    deleteUser(user.Id);
             }
             users = new HashSet<User>();
+            users.Add(user);
         }
 
         public User GetUserByName(string name) => users.First(u => u.Name == name);

@@ -90,6 +90,8 @@ namespace UserInterface
                     msg.Channel.SendMessageAsync("Я не знаю такой команды");
                     return Task.CompletedTask;
             }
+            if (!channels.Contains(msg.Channel.Id))
+                channels.Add(msg.Channel.Id);
             var ctx = new Command(commandType, msg.MentionedUsers.Select(x => x.Username).ToImmutableArray());
             if (!users.Keys.Contains(msg.Author.Id))
             {
@@ -160,7 +162,12 @@ namespace UserInterface
             // };
             return answer.AnswerType switch
             {
-                AnswerType.GameStarted => "Игра началась",
+                AnswerType.GameStarted => "Игра началась! Сейчас у вас день, игроки уже знают свои роли(они были " +
+                                          "высланы в личку). Можете спокойно общаться и пытаться вывести друг друга на " +
+                                          "чистую воду, но в первый день велика вероятность ошибиться... Для того чтобы " +
+                                          "игра продолжилась, необходимо проголосовать. Игрок вылетает из игры, если за " +
+                                          "него проголосовало не меньше половины. Поэтому рекомендую в первую ночь всем " +
+                                          "проголосовать за себя, чтобы не вылетел кто-то невинный...)",
                 AnswerType.MafiaWins => "Мафия победила",
                 AnswerType.PeacefulWins => "Победили мирные",
                 AnswerType.SuccessfullyRegistered => $"{answer.Args[0]}, ты в игре!",
@@ -191,6 +198,7 @@ namespace UserInterface
                 AnswerType.SuccessfullyKilled => "Ваш голос учтён!",
                 AnswerType.AlreadyKilled => "Вы уже выбрали свою жертву!",
                 AnswerType.NeedToCreateGame => "Сначала надо создать игру",
+                AnswerType.IncorrectVote => $"{answer.Args[0]}, нужно ввести имя человека за которого ты хочешь проголосовать!",
                 AnswerType.MafiaKilling => "Введи !kill X, и вместо X номер того, кого хочешь убить:\n" +
                                            ParseKillList(answer.Args),
                 _ => throw new ArgumentOutOfRangeException()

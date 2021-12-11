@@ -33,6 +33,7 @@ namespace CommonInteraction
         SuccessfullyKilled,
         AlreadyKilled,
         NeedToCreateGame,
-        MafiaKilling
+        MafiaKilling,
+        IncorrectVote
     }
 }
