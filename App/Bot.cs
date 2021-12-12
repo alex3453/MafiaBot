@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Mafia;
 using CommonInteraction;
 
@@ -42,7 +43,23 @@ namespace App
                 case CommandType.Kill:
                     NightControlKilling(user, isCommonChat, ctx.Content);
                     break;
+                case CommandType.Help:
+                    GetHelp(user, isCommonChat);
+                    break;
+                case CommandType.Unknown:
+                    Unknown(user, isCommonChat);
+                    break;
             }
+        }
+
+        private void Unknown(User user, bool isCommonChat)
+        {
+            SendMassage?.Invoke(user, isCommonChat, new Answer(AnswerType.Unknown));
+        }
+
+        private void GetHelp(User user, bool isCommonChat)
+        {
+            SendMassage?.Invoke(user, isCommonChat, new Answer(AnswerType.GetHelp));
         }
         
         private void CreateNewGame(User user, bool isCommonChat)

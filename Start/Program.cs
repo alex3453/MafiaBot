@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Discord.WebSocket;
 using Ninject;
 using UserInterface;
 
@@ -18,7 +19,8 @@ namespace Start
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-            container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            container.Bind<ITokenProvider>().To<FromEnvVarProvider>().WhenInjectedInto<View>();
+            container.Bind<IParserAnswers>().To<DefaultAnswers>().WhenInjectedInto<View>();
 
             return container;
         }

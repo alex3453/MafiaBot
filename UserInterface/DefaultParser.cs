@@ -7,28 +7,27 @@ namespace UserInterface
 {
     public class DefaultAnswers : IParserAnswers
     {
-        public string Help => "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
-                              "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
-                              "!vote {имя игрока на сервере, лучше через @} - позволяет голосовать во время самой игры.\n" +
-                              "!reg - позволяет зарегестрироваться на игру.\n" +
-                              "!kill {номер игрока из отправленного вам списка} - позволяет мафии убивать игроков во время игры. " +
-                              "Пишется только в личку боту.\n" +
-                              "!start - позволяет начать игру.\n" +
-                              "!createnew - создает для вас новую игру.\n\n" +
-                              "Алгоритм действий следующий:\n" +
-                              "1. Создайте новую игру командой !createnew\n" +
-                              "2. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
-                              "3. Начните игру командой !start\n" +
-                              "4. Играйте:)";
-
-        private string startGame, mafiaWins, peacefulWins, successfullyRegistered, alreadyRegistered,
+        private string help, startGame, mafiaWins, peacefulWins, successfullyRegistered, alreadyRegistered,
             successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, nightAllAlive,
             newGame, youAreMafia, youArePeaceful, onlyInLocal, onlyInCommon, gameIsGoing, needMorePlayers,
             youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, enterNumber,
             incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, mafiaKilling,
-            incorrectVote;
+            incorrectVote, unknownCommand;
         public DefaultAnswers()
         {
+            help = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
+                   "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
+                   "!vote {имя игрока на сервере, лучше через @} - позволяет голосовать во время самой игры.\n" +
+                   "!reg - позволяет зарегестрироваться на игру.\n" +
+                   "!kill {номер игрока из отправленного вам списка} - позволяет мафии убивать игроков во время игры. " +
+                   "Пишется только в личку боту.\n" +
+                   "!start - позволяет начать игру.\n" +
+                   "!createnew - создает для вас новую игру.\n\n" +
+                   "Алгоритм действий следующий:\n" +
+                   "1. Создайте новую игру командой !createnew\n" +
+                   "2. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
+                   "3. Начните игру командой !start\n" +
+                   "4. Играйте:)";
             mafiaWins = "Игра окончена. Мафия победила. Да будет пир в честь павших и победивших.";
             peacefulWins = "Игра окончена. На сей раз победа за мирными. " +
                            "Наконец-то в этом городе воцарил мир и спокойствие...";
@@ -75,6 +74,7 @@ namespace UserInterface
                         "игра продолжилась, необходимо проголосовать. Игрок вылетает из игры, если за " +
                         "него проголосовало не меньше половины. Поэтому рекомендую в первую ночь всем " +
                         "проголосовать за себя, чтобы не вылетел кто-то невинный...)";
+            unknownCommand = "Кажется, мы друг друга не поняли...Я таких команд не знаю:(";
         }
 
         public string ParseAnswer(Answer answer)
@@ -114,6 +114,8 @@ namespace UserInterface
                 AnswerType.NeedToCreateGame => needToCreateGame,
                 AnswerType.IncorrectVote => string.Format(incorrectVote, answer.Args[0]),
                 AnswerType.MafiaKilling => mafiaKilling + ParseKillList(answer.Args),
+                AnswerType.GetHelp => help,
+                AnswerType.Unknown => unknownCommand,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

@@ -19,15 +19,10 @@ namespace UserInterface
         private ITokenProvider provider;
         private IParserAnswers answersParser;
 
-        public View(ITokenProvider provider)
+        public View(ITokenProvider provider, IParserAnswers parser)
         {
             this.provider = provider;
-            answersParser = new DefaultAnswers();
-        }
-        
-        public void Run()
-        {
-            StartAsync().GetAwaiter().GetResult();
+            answersParser = parser;
         }
 
         public async Task StartAsync()
@@ -52,37 +47,8 @@ namespace UserInterface
         {
             if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!') return Task.CompletedTask;
             var stringsCommand = msg.Content.Remove(0, 1).Split();
-            CommandType commandType;
-            switch (stringsCommand.First())
-            {
-                case "help":
-                case "рудз":
-                    msg.Channel.SendMessageAsync(answersParser.Help);
-                    return Task.CompletedTask;
-                case "vote":
-                case "мщеу":
-                    commandType = CommandType.Vote;
-                    break;
-                case "reg":
-                case "куп":
-                    commandType = CommandType.Reg;
-                    break;
-                case "kill":
-                case "лшдд":
-                    commandType = CommandType.Kill;
-                    break;
-                case "start":
-                case "ыефке":
-                    commandType = CommandType.Start;
-                    break;
-                case "createnew":
-                case "скуфеутуц":
-                    commandType = CommandType.CreateNewGame;
-                    break;
-                default:
-                    msg.Channel.SendMessageAsync("Кажется, мы друг друга не поняли...Я таких команд не знаю:(");
-                    return Task.CompletedTask;
-            }
+            var parser = new CommandParser(stringsCommand.First());
+            var commandType = parser.Parse();
             var ctx = new Command(commandType, 
                 msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(), stringsCommand.Skip(1).ToList());
             var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
