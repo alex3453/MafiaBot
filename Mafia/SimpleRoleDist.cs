@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mafia
 {
@@ -13,14 +14,9 @@ namespace Mafia
                 result.Add(new MafiaRole());
             for (var i = 0; i < playersCount - mafiaCount; i++)
                 result.Add(new PeacefulRole());
-            
+
             var random = new Random();
-            for (var i = result.Count - 1; i >= 1; i--)
-            {
-                var j = random.Next(i + 1);
-                (result[j], result[i]) = (result[i], result[j]);
-            }
-            return result;
+            return result.OrderBy(r => random.Next()).ToList();
         }
     }
 }
