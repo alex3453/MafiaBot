@@ -54,11 +54,14 @@ namespace Mafia
             IsSomeBodyDied = false;
             votedPlayers = new HashSet<string>();
             var deadP = playersInGame.OrderByDescending(x => x.VoteCount).First();
-            if (deadP.VoteCount == playersInGame.Count)
+            if (deadP.VoteCount >= playersInGame.Count / 2.0)
             {
                 IsSomeBodyDied = true;
                 KillPlayer(deadP);
             }
+
+            foreach (var player in playersInGame)
+                player.ResetVoteCount();
             Status = Status.MafiaKilling;
             CheckWin();
         }
@@ -68,6 +71,8 @@ namespace Mafia
             deadPlayers.Clear();
             murderedPlayers = new HashSet<string>();
             var deadP = playersInGame.OrderByDescending(x => x.KillCount).First();
+            foreach (var player in playersInGame)
+                player.ResetKillCount();
             IsSomeBodyDied = true;
             KillPlayer(deadP);
             Status = Status.Voting;
@@ -111,7 +116,7 @@ namespace Mafia
                 Status = Status.PeacefulWins;
             // if (mafiozyPlayers.Count == playersInGame.Count)
             //     Status = Status.PeacefulWins;
-            else if (mafiozyPlayers.Count >= playersInGame.Count / 2)
+            else if (mafiozyPlayers.Count >= playersInGame.Count / 2.0)
                 Status = Status.MafiaWins;
         }
 

@@ -243,7 +243,8 @@ namespace App
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
             if (mafia.IsSomeBodyDied)
-                SendMassage?.Invoke(user, true, new Answer(AnswerType.DayKill));
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.DayKill,
+                    mafia.Dead.ToList()));
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.DayAllAlive));
             SendMassage?.Invoke(user, true, new Answer(AnswerType.EndDay));
@@ -268,7 +269,8 @@ namespace App
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
             if (mafia.IsSomeBodyDied)
-                SendMassage?.Invoke(user, true, new Answer(AnswerType.NightKill));
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NightKill,
+                    mafia.Dead.ToList()));
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NightAllAlive));
             SendMassage?.Invoke(user, true, new Answer(AnswerType.EndNight));

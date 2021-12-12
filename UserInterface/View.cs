@@ -54,7 +54,7 @@ namespace UserInterface
 
         private Task CommandsHandler(SocketMessage msg)
         {
-            if (msg.Author.IsBot) return Task.CompletedTask;
+            if (msg.Author.IsBot || !msg.Content.Any()) return Task.CompletedTask;
             if (msg.Content.First() != '!')
             {
                 if (!channels.Contains(msg.Channel.Id))
@@ -188,7 +188,7 @@ namespace UserInterface
                 AnswerType.OnlyInCommon => "Это можно делать только в общем чате",
                 AnswerType.GameIsGoing => "Игра уже началась",
                 AnswerType.NeedMorePlayers => "Чтобы начать игру нужно больше игроков",
-                AnswerType.YouAreNotInGame => $"{answer.Args[1]}, ты уже выбыл из игры!",
+                AnswerType.YouAreNotInGame => $"{answer.Args[0]}, ты уже выбыл из игры!",
                 AnswerType.YouCantVoteThisPl => $"{answer.Args[0]}, ты не можешь проголосовать за {answer.Args[1]}!",
                 AnswerType.YouCantKillThisPl => $"Ты не можешь убить {answer.Args[0]}!",
                 AnswerType.NotTimeToVote => "Сейчас нельзя голосовать!",
