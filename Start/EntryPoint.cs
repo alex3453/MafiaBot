@@ -14,11 +14,12 @@ namespace Start
             Bot = bot;
         }
 
-        public void RegisterMethods()
+        public void Run()
         {
             View.ExCommand += Bot.Register();
             Bot.SendMassage += View.RegisterSending();
             Bot.DeleteUser += View.RegisterDelUser();
+            View.Run();
         }
     }
 }

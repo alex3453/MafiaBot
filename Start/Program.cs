@@ -10,8 +10,7 @@ namespace Start
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
-            entryPoint.RegisterMethods();
-            entryPoint.View.Run();
+            entryPoint.Run();
             Console.ReadLine();
         }
 

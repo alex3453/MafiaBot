@@ -18,9 +18,6 @@ namespace UserInterface
         public Action<ulong> RegisterDelUser() => DeleteUserById;
         
         private ITokenProvider provider;
-        private IDictionary<User, SocketMessage> userSockets = new Dictionary<User, SocketMessage>();
-        private IDictionary<ulong, User> users = new Dictionary<ulong, User>();
-        private ISet<ulong> channels = new HashSet<ulong>();
         private IParserAnswers answersParser;
 
         public View(ITokenProvider provider)
@@ -116,17 +113,12 @@ namespace UserInterface
 
         private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
+            var msgChannel = client.GetChannel(userSockets[user].Channel.Id) as IMessageChannel;
             if (isCommonChat)
-                userSockets[user].Channel.SendMessageAsync(answersParser.ParseAnswer(answer));
+                msgChannel.SendMessageAsync(answersParser.ParseAnswer(answer));
             else
-                userSockets[user].Author.SendMessageAsync(answersParser.ParseAnswer(answer));
+                client.GetUser(userSockets[user].Id).SendMessageAsync(answersParser.ParseAnswer(answer));
         }
-
-        private void DeleteUserById(ulong userId)
-        {
-            var user = users[userId];
-            users.Remove(userId);
-            userSockets.Remove(user);
-        }
+        
     }
 }
