@@ -3,13 +3,13 @@ namespace CommonInteraction
     public class User
     {
         public ulong Id { get; }
-        public ulong ComChatId { get; }
+        public ulong CommonChannelId { get; }
         public string Name { get; }
 
-        public User(ulong id, ulong comChatId, string name = "")
+        public User(ulong id, ulong commonChannelId, string name = "")
         {
             Id = id;
-            ComChatId = comChatId;
+            CommonChannelId = commonChannelId;
             Name = name;
         }
     }

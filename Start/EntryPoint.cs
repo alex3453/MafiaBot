@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UserInterface;
 using App;
 
@@ -14,11 +15,11 @@ namespace Start
             Bot = bot;
         }
 
-        public void Run()
+        public async Task Run()
         {
             View.ExCommand += Bot.Register();
             Bot.SendMassage += View.RegisterSending();
-            View.Run();
+            await View.StartAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Ninject;
 using UserInterface;
 
@@ -6,11 +7,11 @@ namespace Start
 {
     internal static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
-            entryPoint.Run();
+            await entryPoint.Run();
             Console.ReadLine();
         }
 

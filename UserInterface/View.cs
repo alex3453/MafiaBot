@@ -30,7 +30,7 @@ namespace UserInterface
             StartAsync().GetAwaiter().GetResult();
         }
 
-        private async Task StartAsync()
+        public async Task StartAsync()
         {
             client = new DiscordSocketClient();
             client.MessageReceived += CommandsHandler;
@@ -40,8 +40,6 @@ namespace UserInterface
 
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
-
-           
         }
 
         private Task Log(LogMessage msg)
@@ -95,7 +93,7 @@ namespace UserInterface
 
         private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
-            var msgChannel = client.GetChannel(user.ComChatId) as IMessageChannel;
+            var msgChannel = client.GetChannel(user.CommonChannelId) as IMessageChannel;
             if (isCommonChat)
                 msgChannel.SendMessageAsync(answersParser.ParseAnswer(answer));
             else
