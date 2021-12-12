@@ -15,8 +15,7 @@ namespace UserInterface
         DiscordSocketClient client;
         public event Action<User, bool, Command> ExCommand;
         public Action<User, bool, Answer> RegisterSending() => SendMessage;
-        public Action<ulong> RegisterDelUser() => DeleteUserById;
-        
+
         private ITokenProvider provider;
         private IParserAnswers answersParser;
 
@@ -54,15 +53,6 @@ namespace UserInterface
         private Task CommandsHandler(SocketMessage msg)
         {
             if (msg.Author.IsBot || !msg.Content.Any()) return Task.CompletedTask;
-            if (msg.Content.First() != '!')
-            {
-                if (!channels.Contains(msg.Channel.Id))
-                {
-                    channels.Add(msg.Channel.Id);
-                    msg.Channel.SendMessageAsync("Привет, я бот для игры в мафию, напишите !help");
-                }
-                return Task.CompletedTask;
-            }
             var stringsCommand = msg.Content.Remove(0, 1).Split();
             CommandType commandType;
             switch (stringsCommand.First())
@@ -95,17 +85,8 @@ namespace UserInterface
                     msg.Channel.SendMessageAsync("Кажется, мы друг друга не поняли...Я таких команд не знаю:(");
                     return Task.CompletedTask;
             }
-            if (!channels.Contains(msg.Channel.Id))
-                channels.Add(msg.Channel.Id);
             var ctx = new Command(commandType, 
                 msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(), stringsCommand.Skip(1).ToList());
-            if (!users.Keys.Contains(msg.Author.Id))
-            {
-                var usr = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);
-                users[msg.Author.Id] = usr;
-                userSockets[usr] = msg;
-            }
-            var user = users[msg.Author.Id];
             var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
             ExCommand?.Invoke(user, isCommonChat, ctx);
             return Task.CompletedTask;
