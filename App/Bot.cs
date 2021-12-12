@@ -182,7 +182,7 @@ namespace App
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.SuccessfullyVoted,
                     new List<string> {user.Name, target}));
             else
-                SendMassage?.Invoke(user, true, new Answer(AnswerType.AlreadyVoted));
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.AlreadyVoted, new List<string>{user.Name}));
         }
 
         private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> content)
