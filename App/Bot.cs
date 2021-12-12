@@ -159,18 +159,20 @@ namespace App
                 return;
             }
 
+            var mafia = usersTeams[user.ComChatId].Mafia;
             string target;
+            if (mafia.Status != Status.Voting)
+            {
+                SendMassage?.Invoke(user, true, new Answer(AnswerType.NotTimeToVote));
+                return;
+            }
             if (!mentionedPlayers.Any())
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.IncorrectVote, new List<string> {user.Name}));
                 return;
             }
             target = mentionedPlayers.First();
-            
-            var mafia = usersTeams[user.ComChatId].Mafia;
-            if (mafia.Status != Status.Voting)
-                SendMassage?.Invoke(user, true, new Answer(AnswerType.NotTimeToVote));
-            else if (!mafia.PlayersInGame.Contains(user.Name))
+            if (!mafia.PlayersInGame.Contains(user.Name))
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.YouAreNotInGame,
                     new List<string> {user.Name}));
             else if (!mafia.PlayersInGame.Contains(target))
@@ -195,8 +197,9 @@ namespace App
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
-            int target;
+            
             var mafia = usersTeams[user.ComChatId].Mafia;
+            int target;
             if (mafia.Status != Status.MafiaKilling)
             {
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.NotTimeToKill));
@@ -227,10 +230,11 @@ namespace App
             else if (!mafia.MafiozyPlayers.Contains(user.Name))
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.YouAreNotMafia));
             else if (!mafia.PlayersInGame.Contains(targetName))
-                SendMassage?.Invoke(user, false, new Answer(AnswerType.YouCantKillThisPl));
+                SendMassage?.Invoke(user, false, new Answer(AnswerType.YouCantKillThisPl,
+                    new List<string> {targetName}));
             else if (mafia.Act(user.Name, targetName))
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.SuccessfullyKilled,
-                    new List<string> {user.Name, targetName}));
+                    new List<string> {targetName}));
             else
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.AlreadyKilled));
         }
@@ -273,13 +277,13 @@ namespace App
         private bool IsDayEnd(User user)
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
-            return mafia.Status != Status.Voting;
+            return mafia.Status is Status.MafiaKilling or Status.PeacefulWins or Status.MafiaWins;
         }
 
         private bool IsNightEnd(User user)
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
-            return mafia.Status != Status.MafiaKilling;
+            return mafia.Status is Status.Voting or Status.PeacefulWins or Status.MafiaWins;
         }
 
         private bool IsSomeBodyWin(User user)

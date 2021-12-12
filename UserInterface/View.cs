@@ -190,17 +190,17 @@ namespace UserInterface
                 AnswerType.NeedMorePlayers => "Чтобы начать игру нужно больше игроков",
                 AnswerType.YouAreNotInGame => $"{answer.Args[1]}, ты уже выбыл из игры!",
                 AnswerType.YouCantVoteThisPl => $"{answer.Args[0]}, ты не можешь проголосовать за {answer.Args[1]}!",
-                AnswerType.YouCantKillThisPl => "Ты не можешь убить этого игрока!",
+                AnswerType.YouCantKillThisPl => $"Ты не можешь убить {answer.Args[0]}!",
                 AnswerType.NotTimeToVote => "Сейчас нельзя голосовать!",
                 AnswerType.NotTimeToKill => "Сейчас нельзя убивать!",
                 AnswerType.EnterNumber => "Введите число",
                 AnswerType.IncorrectNumber => "Неверное число",
                 AnswerType.YouAreNotMafia => "Вы не мафия!",
-                AnswerType.SuccessfullyKilled => "Ваш голос учтён!",
+                AnswerType.SuccessfullyKilled => $"Ваш голос за {answer.Args[0]} учтён!",
                 AnswerType.AlreadyKilled => "Вы уже выбрали свою жертву!",
                 AnswerType.NeedToCreateGame => "Сначала надо создать игру",
                 AnswerType.IncorrectVote => $"{answer.Args[0]}, нужно ввести имя человека за которого ты хочешь проголосовать!",
-                AnswerType.MafiaKilling => "Введи !kill X, и вместо X номер того, кого хочешь убить:\n" +
+                AnswerType.MafiaKilling => "Введи !kill {Номер того, кого хочешь убить}:\n" +
                                            ParseKillList(answer.Args),
                 _ => throw new ArgumentOutOfRangeException()
             };
