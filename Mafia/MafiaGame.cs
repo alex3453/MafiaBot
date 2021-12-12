@@ -29,7 +29,7 @@ namespace Mafia
         {
             var player = new Player(name);
             allPlayers.Add(player);
-            if (allPlayers.Count >= 1)
+            if (allPlayers.Count >= 4)
                 Status = Status.ReadyToStart;
         }
 
@@ -45,12 +45,12 @@ namespace Mafia
                 playersNumbers[allPlayers[i].Name] = i + 1;
             }
             Status = Status.Voting;
-            CheckWin();
         }
         
 
         private void EndDay()
         {
+            deadPlayers.Clear();
             IsSomeBodyDied = false;
             votedPlayers = new HashSet<string>();
             var deadP = playersInGame.OrderByDescending(x => x.VoteCount).First();
@@ -65,6 +65,7 @@ namespace Mafia
 
         private void EndNight()
         {
+            deadPlayers.Clear();
             murderedPlayers = new HashSet<string>();
             var deadP = playersInGame.OrderByDescending(x => x.KillCount).First();
             IsSomeBodyDied = true;
@@ -99,7 +100,6 @@ namespace Mafia
 
         private void KillPlayer(Player deadP)
         {
-            deadPlayers.Clear();
             deadPlayers.Add(deadP);
             playersInGame.Remove(deadP);
             mafiozyPlayers.Remove(deadP);
@@ -109,10 +109,10 @@ namespace Mafia
         {
             if (mafiozyPlayers.Count == 0)
                 Status = Status.PeacefulWins;
-            if (mafiozyPlayers.Count == playersInGame.Count)
-                Status = Status.PeacefulWins;
-            // else if (mafiozyPlayers.Count > playersInGame.Count / 2)
-            //     Status = Status.MafiaWins;
+            // if (mafiozyPlayers.Count == playersInGame.Count)
+            //     Status = Status.PeacefulWins;
+            else if (mafiozyPlayers.Count >= playersInGame.Count / 2)
+                Status = Status.MafiaWins;
         }
 
         public IReadOnlyCollection<string> GetWinners()

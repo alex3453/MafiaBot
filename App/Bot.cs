@@ -38,10 +38,10 @@ namespace App
                     StartGame(user, isCommonChat);
                     break;
                 case CommandType.Vote:
-                    Vote(user, isCommonChat, ctx.MentionedPlayers);
+                    DayControlVoting(user, isCommonChat, ctx.MentionedPlayers);
                     break;
                 case CommandType.Kill:
-                    KillPlayer(user, isCommonChat, ctx.Content);
+                    NightControlKilling(user, isCommonChat, ctx.Content);
                     break;
             }
         }
@@ -130,6 +130,22 @@ namespace App
             throw new ArgumentException("Неопознанная роль");
         }
 
+        private void DayControlVoting(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
+        {
+            Vote(user, isCommonChat, mentionedPlayers);
+            if (!IsDayEnd(user)) return;
+            if (!IsSomeBodyWin(user))
+                EndDay(user);
+        }
+
+        private void NightControlKilling(User user, bool isCommonChat, IEnumerable<string> content)
+        {
+            KillPlayer(user, isCommonChat, content);
+            if (!IsNightEnd(user)) return;
+            if (!IsSomeBodyWin(user))
+                EndNight(user);
+        }
+
         private void Vote(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
         {
             if (!isCommonChat)
@@ -165,10 +181,6 @@ namespace App
                     new List<string> {user.Name, target}));
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.AlreadyVoted));
-            if(IsSomeBodyWin(user))
-                return;
-            if(IsDayEnd(user))
-                EndDay(user);
         }
 
         private void KillPlayer(User user, bool isCommonChat, IEnumerable<string> content)
@@ -221,10 +233,6 @@ namespace App
                     new List<string> {user.Name, targetName}));
             else
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.AlreadyKilled));
-            if(IsSomeBodyWin(user))
-                return;
-            if(IsNightEnd(user))
-                EndNight(user);
         }
 
         private void EndDay(User user)
@@ -265,13 +273,13 @@ namespace App
         private bool IsDayEnd(User user)
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
-            return mafia.Status == Status.MafiaKilling;
+            return mafia.Status != Status.Voting;
         }
 
         private bool IsNightEnd(User user)
         {
             var mafia = usersTeams[user.ComChatId].Mafia;
-            return mafia.Status == Status.Voting;
+            return mafia.Status != Status.MafiaKilling;
         }
 
         private bool IsSomeBodyWin(User user)
