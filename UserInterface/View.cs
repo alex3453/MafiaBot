@@ -21,12 +21,12 @@ namespace UserInterface
         private IDictionary<User, SocketMessage> userSockets = new Dictionary<User, SocketMessage>();
         private IDictionary<ulong, User> users = new Dictionary<ulong, User>();
         private ISet<ulong> channels = new HashSet<ulong>();
-        private IParserAnswers answers;
+        private IParserAnswers answersParser;
 
         public View(ITokenProvider provider)
         {
             this.provider = provider;
-            answers = new DefaultAnswers();
+            answersParser = new DefaultAnswers();
         }
         
         public void Run()
@@ -72,7 +72,7 @@ namespace UserInterface
             {
                 case "help":
                 case "рудз":
-                    msg.Channel.SendMessageAsync(answers.Help);
+                    msg.Channel.SendMessageAsync(answersParser.Help);
                     return Task.CompletedTask;
                 case "vote":
                 case "мщеу":
@@ -117,9 +117,9 @@ namespace UserInterface
         private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
             if (isCommonChat)
-                userSockets[user].Channel.SendMessageAsync(answers.ParseAnswer(answer));
+                userSockets[user].Channel.SendMessageAsync(answersParser.ParseAnswer(answer));
             else
-                userSockets[user].Author.SendMessageAsync(answers.ParseAnswer(answer));
+                userSockets[user].Author.SendMessageAsync(answersParser.ParseAnswer(answer));
         }
 
         private void DeleteUserById(ulong userId)
