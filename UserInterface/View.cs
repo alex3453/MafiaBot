@@ -52,7 +52,7 @@ namespace UserInterface
 
         private Task CommandsHandler(SocketMessage msg)
         {
-            if (msg.Author.IsBot || !msg.Content.Any()) return Task.CompletedTask;
+            if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!') return Task.CompletedTask;
             var stringsCommand = msg.Content.Remove(0, 1).Split();
             CommandType commandType;
             switch (stringsCommand.First())
@@ -88,17 +88,18 @@ namespace UserInterface
             var ctx = new Command(commandType, 
                 msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(), stringsCommand.Skip(1).ToList());
             var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
+            var user = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);
             ExCommand?.Invoke(user, isCommonChat, ctx);
             return Task.CompletedTask;
         }
 
         private void SendMessage(User user, bool isCommonChat, Answer answer)
         {
-            var msgChannel = client.GetChannel(userSockets[user].Channel.Id) as IMessageChannel;
+            var msgChannel = client.GetChannel(user.ComChatId) as IMessageChannel;
             if (isCommonChat)
                 msgChannel.SendMessageAsync(answersParser.ParseAnswer(answer));
             else
-                client.GetUser(userSockets[user].Id).SendMessageAsync(answersParser.ParseAnswer(answer));
+                client.GetUser(user.Id).SendMessageAsync(answersParser.ParseAnswer(answer));
         }
         
     }

@@ -18,7 +18,6 @@ namespace Start
         {
             View.ExCommand += Bot.Register();
             Bot.SendMassage += View.RegisterSending();
-            Bot.DeleteUser += View.RegisterDelUser();
             View.Run();
         }
     }
