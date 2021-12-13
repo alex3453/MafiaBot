@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommonInteraction;
 using Mafia;
@@ -7,61 +8,117 @@ namespace App
 {
     public class ResetGameCommand : ICommandHandler
     {
-        public AnswerType ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
+        public bool IsItMyCommand(CommandInfo commandInfo)
+        {
+            return commandInfo.CommandType == CommandType.CreateNewGame;
+        }
+
+        public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
             if (!commandInfo.IsCommonChannel)
-                return AnswerType.OnlyInCommon;
+            {
+                yield return AnswerType.OnlyInCommon;
+                yield break;
+            }
+
             usersTeam.ResetMafia();
-            return AnswerType.NewGame;
+            yield return AnswerType.NewGame;
         }
     }
-    
+
     public class RegPlayerCommand : ICommandHandler
     {
-        public AnswerType ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
+        public bool IsItMyCommand(CommandInfo commandInfo)
+        {
+            return commandInfo.CommandType == CommandType.Reg;
+        }
+
+        public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
             if (usersTeam.ContainsUser(commandInfo.User))
-                return AnswerType.AlreadyRegistered;
+            {
+                yield return AnswerType.AlreadyRegistered;
+                yield break;
+            }
+
             var status = usersTeam.Mafia.Status;
             if (status is not (Status.WaitingPlayers or Status.WaitingPlayers))
-                return AnswerType.GameIsGoing;
+            {
+                yield return AnswerType.GameIsGoing;
+                yield break;
+            }
+
             usersTeam.AddUser(commandInfo.User);
             usersTeam.Mafia.RegisterPlayer(commandInfo.User.Name);
-            return AnswerType.SuccessfullyRegistered;
+            yield return AnswerType.SuccessfullyRegistered;
         }
     }
 
     public class StartCommand : ICommandHandler
     {
-        public AnswerType ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
+        public bool IsItMyCommand(CommandInfo commandInfo)
+        {
+            return commandInfo.CommandType == CommandType.Start;
+        }
+
+        public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
             if (!commandInfo.IsCommonChannel)
-                return AnswerType.OnlyInCommon;
+            {
+                yield return AnswerType.OnlyInCommon;
+                yield break;
+            }
+
             var status = usersTeam.Mafia.Status;
-            if (status != Status.ReadyToStart) 
-                return status == Status.WaitingPlayers ? AnswerType.NeedMorePlayers : AnswerType.GameIsGoing;
+            if (status != Status.ReadyToStart)
+            {
+                yield return status == Status.WaitingPlayers ? AnswerType.NeedMorePlayers : AnswerType.GameIsGoing;
+                yield break;
+            }
+
             usersTeam.Mafia.StartGame();
-            return AnswerType.NewGame;
+            yield return AnswerType.NewGame;
         }
     }
-    
+
     public class VoteCommand : ICommandHandler
     {
-        public AnswerType ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
+        public bool IsItMyCommand(CommandInfo commandInfo)
+        {
+            return commandInfo.CommandType == CommandType.Vote;
+        }
+
+        public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
             if (!commandInfo.IsCommonChannel)
-                return AnswerType.OnlyInCommon;
+            {
+                yield return AnswerType.OnlyInCommon;
+                yield break;
+            }
+
             var status = usersTeam.Mafia.Status;
             if (status != Status.Voting)
-                return AnswerType.NotTimeToVote;
+            {
+                yield return AnswerType.NotTimeToVote;
+                yield break;
+            }
+
             if (!commandInfo.MentionedPlayers.Any())
-                return AnswerType.IncorrectVote;
+            {
+                yield return AnswerType.IncorrectVote;
+                yield break;
+            }
+
             if (!usersTeam.ContainsUser(commandInfo.User))
-                return AnswerType.YouAreNotInGame;
+            {
+                yield return AnswerType.YouAreNotInGame;
+                yield break;
+            }
+
             var voter = commandInfo.User.Name;
             var target = commandInfo.MentionedPlayers.First();
             var opStatus = usersTeam.Mafia.Vote(voter, target);
-            return opStatus switch
+            yield return opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyVoted,
                 OperationStatus.Already => AnswerType.AlreadyVoted,
@@ -69,26 +126,69 @@ namespace App
                 OperationStatus.Incorrect => AnswerType.IncorrectVote,
                 _ => throw new ArgumentOutOfRangeException()
             };
+            foreach (var answerType in CheckStatusChange(usersTeam)) yield return answerType;
+        }
+
+        private IEnumerable<AnswerType> CheckStatusChange(UsersTeam usersTeam)
+        {
+            if (usersTeam.Mafia.Status == Status.MafiaKilling)
+            {
+                if (usersTeam.Mafia.IsSomeBodyDied)
+                    yield return AnswerType.DayKill;
+                else
+                {
+                    yield return AnswerType.DayAllAlive;
+                }
+
+                yield return AnswerType.EndDay;
+                yield return AnswerType.MafiaKilling;
+            }
+
+            if (usersTeam.Mafia.Status == Status.PeacefulWins)
+                yield return AnswerType.PeacefulWins;
+            if (usersTeam.Mafia.Status == Status.MafiaWins)
+                yield return AnswerType.MafiaWins;
         }
     }
 
     public class KillCommand : ICommandHandler
     {
-        public AnswerType ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
+        public bool IsItMyCommand(CommandInfo commandInfo)
+        {
+            return commandInfo.CommandType == CommandType.Kill;
+        }
+
+        public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
             if (commandInfo.IsCommonChannel)
-                return AnswerType.OnlyInLocal;
+            {
+                yield return AnswerType.OnlyInLocal;
+                yield break;
+            }
+
             var status = usersTeam.Mafia.Status;
             if (status != Status.MafiaKilling)
-                return AnswerType.NotTimeToKill;
+            {
+                yield return AnswerType.NotTimeToKill;
+                yield break;
+            }
+
             if (!usersTeam.ContainsUser(commandInfo.User))
-                return AnswerType.YouAreNotInGame;
+            {
+                yield return AnswerType.YouAreNotInGame;
+                yield break;
+            }
+
             var killer = commandInfo.User.Name;
             int target;
             if (!commandInfo.Content.Any() || !int.TryParse(commandInfo.Content.First(), out target))
-                return AnswerType.IncorrectNumber;
+            {
+                yield return AnswerType.IncorrectNumber;
+                yield break;
+            }
+
             var opStatus = usersTeam.Mafia.Act(killer, target);
-            return opStatus switch
+            yield return opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyKilled,
                 OperationStatus.Already => AnswerType.AlreadyKilled,
@@ -96,6 +196,27 @@ namespace App
                 OperationStatus.Incorrect => AnswerType.IncorrectNumber,
                 _ => throw new ArgumentOutOfRangeException()
             };
+            foreach (var answerType in CheckStatusChange(usersTeam)) yield return answerType;
+        }
+
+        private IEnumerable<AnswerType> CheckStatusChange(UsersTeam usersTeam)
+        {
+            if (usersTeam.Mafia.Status == Status.Voting)
+            {
+                if (usersTeam.Mafia.IsSomeBodyDied)
+                    yield return AnswerType.NightKill;
+                else
+                {
+                    yield return AnswerType.NightAllAlive;
+                }
+
+                yield return AnswerType.EndNight;
+            }
+
+            if (usersTeam.Mafia.Status == Status.PeacefulWins)
+                yield return AnswerType.PeacefulWins;
+            if (usersTeam.Mafia.Status == Status.MafiaWins)
+                yield return AnswerType.MafiaWins;
         }
     }
 }
