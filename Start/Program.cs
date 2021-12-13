@@ -25,9 +25,14 @@ namespace Start
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
             container.Bind<ICommandsHandler>().To<CommandsHandler>();
             container.Bind<ICommandParser>().To<CommandParser>();
-            // container.Bind(c => c.FromThisAssembly().SelectAllClasses()
-            //     .InheritedFrom<Command>().BindAllBaseClasses());
+            
             container.Bind<Command>().To<HelpCommand>();
+            container.Bind<Command>().To<RegCommand>();
+            container.Bind<Command>().To<NewGameCommand>();
+            container.Bind<Command>().To<StartCommand>();
+            container.Bind<Command>().To<KillCommand>();
+            container.Bind<Command>().To<VoteCommand>();
+            
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IMessageSender>().To<MessageSender>();
