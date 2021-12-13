@@ -12,9 +12,9 @@ namespace UserInterface
         private readonly ICommandsHandler _commandsHandler;
         private readonly ILogger _logger;
         private readonly ITokenProvider _provider;
-        private readonly IAnswerParser _answerParser;
+        private readonly IMessageSender _messageSender;
         
-        public Action<User, bool, Answer> RegisterSending() => SendMessage;
+        public Action<User, bool, Answer> RegisterSending() => _messageSender.SendMessage;
         public void SubscribeOn(Action<User, bool, Command> exCommand) => _commandsHandler.ExCommand += exCommand;
 
         public View(
@@ -22,13 +22,13 @@ namespace UserInterface
             ICommandsHandler commandsHandler,
             ILogger logger,
             ITokenProvider provider, 
-            IAnswerParser answerParser)
+            IMessageSender messageSender)
         {
             _client = client;
             _commandsHandler = commandsHandler;
             _logger = logger;
             _provider = provider;
-            _answerParser = answerParser;
+            _messageSender = messageSender;
         }
 
         public async Task StartAsync()
@@ -38,17 +38,5 @@ namespace UserInterface
             await _client.LoginAsync(TokenType.Bot,  _provider.GetToken());
             await _client.StartAsync();
         }
-
-        private void SendMessage(User user, bool isCommonChat, Answer answer)
-        {
-            if (isCommonChat)
-            {
-                var msgChannel = _client.GetChannel(user.CommonChannelId) as IMessageChannel;
-                msgChannel?.SendMessageAsync(_answerParser.ParseAnswer(answer));
-            }
-            else
-                _client.GetUser(user.Id).SendMessageAsync(_answerParser.ParseAnswer(answer));
-        }
-        
     }
 }

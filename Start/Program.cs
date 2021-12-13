@@ -19,11 +19,13 @@ namespace Start
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-            
+
+            container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
             container.Bind<ICommandsHandler>().To<CommandsHandler>();
             container.Bind<ICommandParser>().To<CommandParser>();
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            container.Bind<IMessageSender>().To<MessageSender>();
             container.Bind<IAnswerParser>().To<DefaultParser>();
 
             return container;
