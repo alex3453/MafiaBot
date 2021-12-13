@@ -8,6 +8,7 @@ namespace App
 {
     public class Bot
     {
+        //избавиться от словарей. сделать фабрику юзертимов, в ней - фабрику мафий
         private readonly IDictionary<ulong, UsersTeam> usersTeams = new Dictionary<ulong, UsersTeam>();
 
         public Action<CommandInfo> Register() => ReproduceCommand;
@@ -145,7 +146,7 @@ namespace App
                 return AnswerType.YouAreMafia;
             throw new ArgumentException("Неопознанная роль");
         }
-
+        //доменная логика
         private void DayControlVoting(User user, bool isCommonChat, IEnumerable<string> mentionedPlayers)
         {
             Vote(user, isCommonChat, mentionedPlayers);
@@ -153,7 +154,7 @@ namespace App
             if (!IsSomeBodyWin(user))
                 EndDay(user);
         }
-
+        //доменная логика
         private void NightControlKilling(User user, bool isCommonChat, IEnumerable<string> content)
         {
             KillPlayer(user, isCommonChat, content);

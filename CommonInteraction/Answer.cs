@@ -5,7 +5,7 @@ namespace CommonInteraction
 {
     public class Answer
     {
-        public AnswerType AnswerType { get; }
+        public readonly AnswerType AnswerType;
         public IReadOnlyList<string> Args { get; }
 
         public Answer(AnswerType answerType, IReadOnlyList<string> args = null)

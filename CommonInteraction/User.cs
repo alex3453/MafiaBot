@@ -2,9 +2,9 @@ namespace CommonInteraction
 {
     public class User
     {
-        public ulong Id { get; }
-        public ulong CommonChannelId { get; }
-        public string Name { get; }
+        public readonly ulong Id;
+        public readonly ulong CommonChannelId;
+        public readonly string Name;
 
         public User(ulong id, ulong commonChannelId, string name = "")
         {

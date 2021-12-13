@@ -6,8 +6,8 @@ namespace UserInterface
 {
     public class MessageSender : IMessageSender
     {
-        private DiscordSocketClient _client;
-        private IAnswerParser _answerParser;
+        private readonly DiscordSocketClient _client;
+        private readonly IAnswerParser _answerParser;
 
         public MessageSender(DiscordSocketClient client, IAnswerParser answerParser)
         {
