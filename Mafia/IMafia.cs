@@ -10,7 +10,7 @@ namespace Mafia
         IReadOnlyCollection<string> PlayersInGame { get; }
         IReadOnlyCollection<string> MafiozyPlayers { get; }
         IReadOnlyDictionary<string, Role> PlayersRoles { get; }
-        IReadOnlyDictionary<string, int> PlayersNumbers { get; }
+        IReadOnlyDictionary<int, string> PlayersNumbers { get; }
         OperationStatus RegisterPlayer(string name);
         void StartGame();
         IReadOnlyCollection<string> Dead { get; }
