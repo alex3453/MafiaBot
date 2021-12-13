@@ -6,6 +6,8 @@ namespace CommonInteraction
         Start,
         Reg,
         Kill,
-        CreateNewGame
+        CreateNewGame,
+        Help,
+        Unknown
     }
 }

@@ -34,6 +34,8 @@ namespace CommonInteraction
         AlreadyKilled,
         NeedToCreateGame,
         MafiaKilling,
-        IncorrectVote
+        IncorrectVote,
+        GetHelp,
+        Unknown
     }
 }

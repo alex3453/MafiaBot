@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Discord.WebSocket;
 using Ninject;
 using UserInterface;
 
@@ -6,19 +8,25 @@ namespace Start
 {
     internal static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
-            entryPoint.RegisterMethods();
-            entryPoint.View.Run();
+            await entryPoint.Run();
             Console.ReadLine();
         }
 
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
+
+            container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
+            container.Bind<ICommandsHandler>().To<CommandsHandler>();
+            container.Bind<ICommandParser>().To<CommandParser>();
+            container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            container.Bind<IMessageSender>().To<MessageSender>();
+            container.Bind<IAnswerParser>().To<DefaultParser>();
 
             return container;
         }

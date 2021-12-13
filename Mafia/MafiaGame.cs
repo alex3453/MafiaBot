@@ -13,8 +13,8 @@ namespace Mafia
         private readonly List<Player> mafiozyPlayers = new();
         private HashSet<string> votedPlayers = new();
         private HashSet<string> murderedPlayers = new();
-        private Dictionary<string, int> playersNumbers = new();
-        private IRoleDistribution roleDist;
+        private readonly Dictionary<string, int> playersNumbers = new();
+        private readonly IRoleDistribution roleDist;
         
         public bool IsSomeBodyDied { get; private set; }
 

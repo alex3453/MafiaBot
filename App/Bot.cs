@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Mafia;
 using CommonInteraction;
 
@@ -12,19 +13,18 @@ namespace App
 
         public Action<User, bool, CommandInfo> Register() => ReproduceCommand;
         public event Action<User, bool, Answer> SendMassage;
-        public event Action<ulong> DeleteUser;
 
         private void CreateNewUsersTeam(User user)
         {
-            usersTeams[user.ComChatId] = new UsersTeam();
+            usersTeams[user.CommonChannelId] = new UsersTeam();
         }
 
         private void ReproduceCommand (User user, bool isCommonChat, CommandInfo ctx)
         {
-            if (!usersTeams.Keys.Contains(user.ComChatId))
+            if (!usersTeams.Keys.Contains(user.CommonChannelId))
                 CreateNewUsersTeam(user);
-            if (!usersTeams[user.ComChatId].IsContainsUser(user))
-                usersTeams[user.ComChatId].AddUser(user);
+            if (!usersTeams[user.CommonChannelId].IsContainsUser(user))
+                usersTeams[user.CommonChannelId].AddUser(user);
 
             switch (ctx.CommandType)
             {
@@ -43,7 +43,23 @@ namespace App
                 case CommandType.Kill:
                     NightControlKilling(user, isCommonChat, ctx.Content);
                     break;
+                case CommandType.Help:
+                    GetHelp(user, isCommonChat);
+                    break;
+                case CommandType.Unknown:
+                    Unknown(user, isCommonChat);
+                    break;
             }
+        }
+
+        private void Unknown(User user, bool isCommonChat)
+        {
+            SendMassage?.Invoke(user, isCommonChat, new Answer(AnswerType.Unknown));
+        }
+
+        private void GetHelp(User user, bool isCommonChat)
+        {
+            SendMassage?.Invoke(user, isCommonChat, new Answer(AnswerType.GetHelp));
         }
         
         private void CreateNewGame(User user, bool isCommonChat)
@@ -54,8 +70,7 @@ namespace App
                 return;
             }
 
-            var usersTeam = usersTeams[user.ComChatId];
-            usersTeam.LeaveOneUser(DeleteUser, user);
+            var usersTeam = usersTeams[user.CommonChannelId];
             usersTeam.SetMafia();
             SendMassage?.Invoke(user, true, new Answer(AnswerType.NewGame));
         }
@@ -68,12 +83,12 @@ namespace App
                 return;
             }
 
-            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            if (!usersTeams[user.CommonChannelId].IsMafiaSetted)
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             if (mafia.Status != Status.WaitingPlayers && mafia.Status != Status.ReadyToStart)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.GameIsGoing));
             else if (mafia.AllPlayers.Contains(user.Name))
@@ -94,13 +109,13 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
                 return;
             }
-            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            if (!usersTeams[user.CommonChannelId].IsMafiaSetted)
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
-            var userTeam = usersTeams[user.ComChatId];
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var userTeam = usersTeams[user.CommonChannelId];
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             if (mafia.Status != Status.ReadyToStart)
             {
                 if (mafia.Status == Status.WaitingPlayers)
@@ -153,13 +168,13 @@ namespace App
                 SendMassage?.Invoke(user, false, new Answer(AnswerType.OnlyInCommon));
                 return;
             }
-            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            if (!usersTeams[user.CommonChannelId].IsMafiaSetted)
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
 
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             string target;
             if (mafia.Status != Status.Voting)
             {
@@ -192,13 +207,13 @@ namespace App
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.OnlyInLocal));
                 return;
             }
-            if (!usersTeams[user.ComChatId].IsMafiaSetted)
+            if (!usersTeams[user.CommonChannelId].IsMafiaSetted)
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NeedToCreateGame));
                 return;
             }
             
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             int target;
             if (mafia.Status != Status.MafiaKilling)
             {
@@ -241,14 +256,14 @@ namespace App
 
         private void EndDay(User user)
         {
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             if (mafia.IsSomeBodyDied)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.DayKill,
                     mafia.Dead.ToList()));
             else
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.DayAllAlive));
             SendMassage?.Invoke(user, true, new Answer(AnswerType.EndDay));
-            var userTeam = usersTeams[user.ComChatId];
+            var userTeam = usersTeams[user.CommonChannelId];
             var mafiaKillList = new List<string>();
             foreach (var playerNumber in mafia.PlayersNumbers)
             {
@@ -267,7 +282,7 @@ namespace App
 
         private void EndNight(User user)
         {
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             if (mafia.IsSomeBodyDied)
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.NightKill,
                     mafia.Dead.ToList()));
@@ -278,19 +293,19 @@ namespace App
 
         private bool IsDayEnd(User user)
         {
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             return mafia.Status is Status.MafiaKilling or Status.PeacefulWins or Status.MafiaWins;
         }
 
         private bool IsNightEnd(User user)
         {
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             return mafia.Status is Status.Voting or Status.PeacefulWins or Status.MafiaWins;
         }
 
         private bool IsSomeBodyWin(User user)
         {
-            var mafia = usersTeams[user.ComChatId].Mafia;
+            var mafia = usersTeams[user.CommonChannelId].Mafia;
             if (mafia.Status == Status.PeacefulWins)
             {
                 SendMassage?.Invoke(user, true, new Answer(AnswerType.PeacefulWins));
