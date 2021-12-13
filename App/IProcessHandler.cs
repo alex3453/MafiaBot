@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using CommonInteraction;
 
 namespace App
@@ -7,6 +6,6 @@ namespace App
     public interface IProcessHandler
     {
         public event Action<User, bool, Answer> SendMassage;
-        public Task ProcessCommand(CommandInfo ctx);
+        public void ProcessCommand(CommandInfo ctx);
     }
 }

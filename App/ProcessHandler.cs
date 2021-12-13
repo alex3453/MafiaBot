@@ -8,7 +8,7 @@ namespace App
     {
         public event Action<User, bool, Answer> SendMassage;
 
-        public Task ProcessCommand(CommandInfo ctx)
+        public void ProcessCommand(CommandInfo ctx)
         {
             var user = ctx.User;
             var isCommonChat = ctx.IsCommonChat;
