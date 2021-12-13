@@ -2,16 +2,9 @@
 
 namespace UserInterface
 {
-    public class CommandParser
+    public class CommandParser : ICommandParser
     {
-        private string command;
-
-        public CommandParser(string command)
-        {
-            this.command = command;
-        }
-
-        public CommandType Parse()
+        public CommandType Parse(string command)
         {
             switch (command)
             {

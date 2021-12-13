@@ -21,6 +21,7 @@ namespace Start
             var container = new StandardKernel();
             
             container.Bind<ICommandsHandler>().To<CommandsHandler>();
+            container.Bind<ICommandParser>().To<CommandParser>();
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IAnswerParser>().To<DefaultParser>();
