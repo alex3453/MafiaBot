@@ -4,13 +4,19 @@ namespace CommonInteraction
 {
     public class CommandInfo
     {
-        public CommandType CommandType { get; }
-        public IReadOnlyCollection<string> MentionedPlayers { get; }
-        public IReadOnlyList<string> Content { get; }
+        public readonly User User;
+        public readonly bool IsCommonChat;
+        public readonly CommandType CommandType;
+        public readonly IEnumerable<string> MentionedPlayers;
+        public readonly IEnumerable<string> Content;
 
-        public CommandInfo(CommandType command, IReadOnlyCollection<string> mentionedPlayers, IReadOnlyList<string> content)
+        public CommandInfo(User user,  bool isCommonChat, CommandType command,
+            IEnumerable<string> mentionedPlayers = null, 
+            IEnumerable<string> content = null)
         {
             CommandType = command;
+            User = user;
+            IsCommonChat = isCommonChat;
             MentionedPlayers = mentionedPlayers;
             Content = content;
         }

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Ninject;
+using Ninject.Extensions.Conventions;
+using Ninject.Extensions.Factory;
 using UserInterface;
 
 namespace Start
@@ -23,6 +25,9 @@ namespace Start
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
             container.Bind<ICommandsHandler>().To<CommandsHandler>();
             container.Bind<ICommandParser>().To<CommandParser>();
+            // container.Bind(c => c.FromThisAssembly().SelectAllClasses()
+            //     .InheritedFrom<Command>().BindAllBaseClasses());
+            container.Bind<Command>().To<HelpCommand>();
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IMessageSender>().To<MessageSender>();

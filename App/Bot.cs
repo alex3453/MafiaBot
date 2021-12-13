@@ -11,7 +11,7 @@ namespace App
     {
         private readonly IDictionary<ulong, UsersTeam> usersTeams = new Dictionary<ulong, UsersTeam>();
 
-        public Action<User, bool, CommandInfo> Register() => ReproduceCommand;
+        public Action<CommandInfo> Register() => ReproduceCommand;
         public event Action<User, bool, Answer> SendMassage;
 
         private void CreateNewUsersTeam(User user)
@@ -19,8 +19,10 @@ namespace App
             usersTeams[user.CommonChannelId] = new UsersTeam();
         }
 
-        private void ReproduceCommand (User user, bool isCommonChat, CommandInfo ctx)
+        private void ReproduceCommand (CommandInfo ctx)
         {
+            var user = ctx.User;
+            var isCommonChat = ctx.IsCommonChat;
             if (!usersTeams.Keys.Contains(user.CommonChannelId))
                 CreateNewUsersTeam(user);
             if (!usersTeams[user.CommonChannelId].IsContainsUser(user))

@@ -1,9 +1,12 @@
+using System;
 using CommonInteraction;
+using Discord.WebSocket;
 
 namespace UserInterface
 {
     public interface ICommandParser
     {
-        public CommandType Parse(string command);
+        CommandInfo Parse(SocketMessage msg);
+        string GetCommandsDescription();
     }
 }

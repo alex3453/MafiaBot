@@ -1,34 +1,47 @@
-﻿using CommonInteraction;
+﻿using System;
+using System.Linq;
+using System.Text;
+using CommonInteraction;
+using Discord.WebSocket;
 
 namespace UserInterface
 {
     public class CommandParser : ICommandParser
     {
-        public CommandType Parse(string command)
+        private readonly Command[] _commands;
+
+        public CommandParser(Command[] commands)
         {
-            switch (command)
+            _commands = commands;
+        }
+ 
+        public CommandInfo Parse(SocketMessage msg)
+        {
+            foreach (var command in _commands)
             {
-                case "help":
-                case "рудз":
-                    return CommandType.Help;
-                case "vote":
-                case "мщеу":
-                    return CommandType.Vote;
-                case "reg":
-                case "куп":
-                    return CommandType.Reg;
-                case "kill":
-                case "лшдд":
-                    return CommandType.Kill;
-                case "start":
-                case "ыефке":
-                    return CommandType.Start;
-                case "createnew":
-                case "скуфеутуц":
-                    return CommandType.CreateNewGame;
-                default:
-                    return CommandType.Unknown;
+                if (command.IsItMyCommand(msg))
+                    return command.CreateCommandInfo(msg);
             }
+
+            return ParseUnknownCommand(msg);
+        }
+
+        private CommandInfo ParseUnknownCommand(SocketMessage msg)
+        {
+            var user = new User(msg.Author.Id, msg.Channel.Id);
+            var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
+            return new CommandInfo(user, isCommonChat, CommandType.Unknown);
+        }
+
+        public string GetCommandsDescription()
+        {
+            var des = new StringBuilder();
+            foreach (var command in _commands)
+            {
+                des.Append(command.GetDescription() + "\n");
+            }
+
+            return des.ToString();
         }
     }
 }

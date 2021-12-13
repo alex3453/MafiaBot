@@ -7,6 +7,8 @@
 
     <ItemGroup>
       <PackageReference Include="Discord.Net" Version="2.4.0" />
+      <PackageReference Include="Ninject.Extensions.Conventions" Version="3.3.0" />
+      <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     </ItemGroup>
 
     <ItemGroup>

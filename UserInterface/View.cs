@@ -15,7 +15,7 @@ namespace UserInterface
         private readonly IMessageSender _messageSender;
         
         public Action<User, bool, Answer> RegisterSending() => _messageSender.SendMessage;
-        public void SubscribeOn(Action<User, bool, CommandInfo> exCommand) => _commandsHandler.ExCommand += exCommand;
+        public void SubscribeOn(Action<CommandInfo> exCommand) => _commandsHandler.ExCommand += exCommand;
 
         public View(
             DiscordSocketClient client,
@@ -35,6 +35,7 @@ namespace UserInterface
         {
             _client.MessageReceived += _commandsHandler.ProcessMessage;
             _client.Log += _logger.Log;
+            _commandsHandler.SendMassage += RegisterSending();
             await _client.LoginAsync(TokenType.Bot,  _provider.GetToken());
             await _client.StartAsync();
         }
