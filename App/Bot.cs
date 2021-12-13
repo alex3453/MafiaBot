@@ -10,7 +10,7 @@ namespace App
     {
         private readonly IDictionary<ulong, UsersTeam> usersTeams = new Dictionary<ulong, UsersTeam>();
 
-        public Action<User, bool, Command> Register() => ReproduceCommand;
+        public Action<User, bool, CommandInfo> Register() => ReproduceCommand;
         public event Action<User, bool, Answer> SendMassage;
         public event Action<ulong> DeleteUser;
 
@@ -19,7 +19,7 @@ namespace App
             usersTeams[user.ComChatId] = new UsersTeam();
         }
 
-        private void ReproduceCommand (User user, bool isCommonChat, Command ctx)
+        private void ReproduceCommand (User user, bool isCommonChat, CommandInfo ctx)
         {
             if (!usersTeams.Keys.Contains(user.ComChatId))
                 CreateNewUsersTeam(user);

@@ -13,7 +13,7 @@ namespace UserInterface
     public class View 
     {
         DiscordSocketClient client;
-        public event Action<User, bool, Command> ExCommand;
+        public event Action<User, bool, CommandInfo> ExCommand;
         public Action<User, bool, Answer> RegisterSending() => SendMessage;
         public Action<ulong> RegisterDelUser() => DeleteUserById;
         
@@ -100,7 +100,7 @@ namespace UserInterface
             }
             if (!channels.Contains(msg.Channel.Id))
                 channels.Add(msg.Channel.Id);
-            var ctx = new Command(commandType, 
+            var ctx = new CommandInfo(commandType, 
                 msg.MentionedUsers.Select(x => x.Username).ToImmutableArray(), stringsCommand.Skip(1).ToList());
             if (!users.Keys.Contains(msg.Author.Id))
             {

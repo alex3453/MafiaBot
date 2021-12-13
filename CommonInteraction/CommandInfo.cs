@@ -2,13 +2,13 @@
 
 namespace CommonInteraction
 {
-    public class Command
+    public class CommandInfo
     {
         public CommandType CommandType { get; }
         public IReadOnlyCollection<string> MentionedPlayers { get; }
         public IReadOnlyList<string> Content { get; }
 
-        public Command(CommandType command, IReadOnlyCollection<string> mentionedPlayers, IReadOnlyList<string> content)
+        public CommandInfo(CommandType command, IReadOnlyCollection<string> mentionedPlayers, IReadOnlyList<string> content)
         {
             CommandType = command;
             MentionedPlayers = mentionedPlayers;
