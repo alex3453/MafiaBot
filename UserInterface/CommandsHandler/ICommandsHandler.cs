@@ -7,7 +7,7 @@ namespace UserInterface
 {
     public interface ICommandsHandler
     {
-        event Action<User, bool, Command> ExCommand;
+        event Action<User, bool, CommandInfo> ExCommand;
         Task ProcessMessage(SocketMessage msg);
     }
 }
