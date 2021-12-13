@@ -77,7 +77,7 @@ namespace App
             }
 
             usersTeam.Mafia.StartGame();
-            yield return AnswerType.NewGame;
+            yield return AnswerType.GameStarted;
         }
     }
 
