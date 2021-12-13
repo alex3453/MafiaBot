@@ -7,7 +7,7 @@ namespace UserInterface
 {
     public class DefaultParser : IAnswerParser
     {
-        private string help, startGame, mafiaWins, peacefulWins, successfullyRegistered, alreadyRegistered,
+        private string startGame, mafiaWins, peacefulWins, successfullyRegistered, alreadyRegistered,
             successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, nightAllAlive,
             newGame, youAreMafia, youArePeaceful, onlyInLocal, onlyInCommon, gameIsGoing, needMorePlayers,
             youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, enterNumber,
@@ -15,19 +15,19 @@ namespace UserInterface
             incorrectVote, unknownCommand;
         public DefaultParser()
         {
-            help = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
-                   "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
-                   "!vote {имя игрока на сервере, лучше через @} - позволяет голосовать во время самой игры.\n" +
-                   "!reg - позволяет зарегестрироваться на игру.\n" +
-                   "!kill {номер игрока из отправленного вам списка} - позволяет мафии убивать игроков во время игры. " +
-                   "Пишется только в личку боту.\n" +
-                   "!start - позволяет начать игру.\n" +
-                   "!createnew - создает для вас новую игру.\n\n" +
-                   "Алгоритм действий следующий:\n" +
-                   "1. Создайте новую игру командой !createnew\n" +
-                   "2. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
-                   "3. Начните игру командой !start\n" +
-                   "4. Играйте:)";
+            // help = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
+            //        "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
+            //        "!vote {имя игрока на сервере, лучше через @} - позволяет голосовать во время самой игры.\n" +
+            //        "!reg - позволяет зарегестрироваться на игру.\n" +
+            //        "!kill {номер игрока из отправленного вам списка} - позволяет мафии убивать игроков во время игры. " +
+            //        "Пишется только в личку боту.\n" +
+            //        "!start - позволяет начать игру.\n" +
+            //        "!createnew - создает для вас новую игру.\n\n" +
+            //        "Алгоритм действий следующий:\n" +
+            //        "1. Создайте новую игру командой !createnew\n" +
+            //        "2. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
+            //        "3. Начните игру командой !start\n" +
+            //        "4. Играйте:)";
             mafiaWins = "Игра окончена. Мафия победила. Да будет пир в честь павших и победивших.";
             peacefulWins = "Игра окончена. На сей раз победа за мирными. " +
                            "Наконец-то в этом городе воцарил мир и спокойствие...";
@@ -114,7 +114,7 @@ namespace UserInterface
                 AnswerType.NeedToCreateGame => needToCreateGame,
                 AnswerType.IncorrectVote => string.Format(incorrectVote, answer.Args[0]),
                 AnswerType.MafiaKilling => mafiaKilling + ParseKillList(answer.Args),
-                AnswerType.GetHelp => help,
+                AnswerType.GetHelp => answer.Args[0],
                 AnswerType.Unknown => unknownCommand,
                 _ => throw new ArgumentOutOfRangeException()
             };
