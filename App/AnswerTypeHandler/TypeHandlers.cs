@@ -97,10 +97,10 @@ namespace App
             var mafiaKillList = new List<string>();
             foreach (var playerNumber in mafia.PlayersNumbers)
             {
-                if (mafia.PlayersInGame.Contains(playerNumber.Key))
+                if (mafia.PlayersInGame.Contains(playerNumber.Value))
                 {
-                    mafiaKillList.Add(playerNumber.Key);
-                    mafiaKillList.Add(playerNumber.Value.ToString());
+                    mafiaKillList.Add(playerNumber.Key.ToString());
+                    mafiaKillList.Add(playerNumber.Value);
                 }
             }
             foreach (var player in mafia.MafiozyPlayers)

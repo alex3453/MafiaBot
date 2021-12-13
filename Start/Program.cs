@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using App;
 using Discord.WebSocket;
+using Mafia;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
@@ -32,6 +34,19 @@ namespace Start
             container.Bind<CommandMessage>().To<StartMessageMessage>();
             container.Bind<CommandMessage>().To<KillMessage>();
             container.Bind<CommandMessage>().To<VoteMessage>();
+
+            container.Bind<ICommandHandler>().To<ResetGameCommand>();
+            container.Bind<ICommandHandler>().To<RegPlayerCommand>();
+            container.Bind<ICommandHandler>().To<StartCommand>();
+            container.Bind<ICommandHandler>().To<VoteCommand>();
+            container.Bind<ICommandHandler>().To<KillCommand>();
+
+            container.Bind<IAnswerTypeHandler>().To<SimpleTypesHandler>();
+            container.Bind<IAnswerTypeHandler>().To<StartGameTypeHandler>();
+            container.Bind<IAnswerTypeHandler>().To<StartMafiaKillingTypeHandler>();
+
+            container.Bind<IMafia>().To<MafiaGame>();
+            container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
