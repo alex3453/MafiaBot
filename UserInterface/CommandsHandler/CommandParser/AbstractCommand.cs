@@ -19,9 +19,11 @@ namespace UserInterface
         
         public CommandInfo CreateCommandInfo(SocketMessage msg)
         {
+            var mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
+            var args = msg.Content.Split().Skip(1).ToArray();
             var user = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);
             var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
-            return new CommandInfo(user, isCommonChat, MyCommandType);
+            return new CommandInfo(user, isCommonChat, MyCommandType, mentionedUsers, args);
         }
 
         public abstract string GetDescription();
