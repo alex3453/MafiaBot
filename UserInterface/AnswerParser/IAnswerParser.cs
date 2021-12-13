@@ -2,7 +2,7 @@
 
 namespace UserInterface
 {
-    public interface IParserAnswers
+    public interface IAnswerParser
     {
         string ParseAnswer(Answer answer);
     }

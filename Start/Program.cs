@@ -19,8 +19,11 @@ namespace Start
         private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-            container.Bind<ITokenProvider>().To<FromEnvVarProvider>().WhenInjectedInto<View>();
-            container.Bind<IParserAnswers>().To<DefaultAnswers>().WhenInjectedInto<View>();
+            
+            container.Bind<ICommandsHandler>().To<CommandsHandler>();
+            container.Bind<ILogger>().To<ConsoleLogger>();
+            container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            container.Bind<IAnswerParser>().To<DefaultParser>();
 
             return container;
         }

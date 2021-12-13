@@ -5,7 +5,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class DefaultAnswers : IParserAnswers
+    public class DefaultParser : IAnswerParser
     {
         private string help, startGame, mafiaWins, peacefulWins, successfullyRegistered, alreadyRegistered,
             successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, nightAllAlive,
@@ -13,7 +13,7 @@ namespace UserInterface
             youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, enterNumber,
             incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, mafiaKilling,
             incorrectVote, unknownCommand;
-        public DefaultAnswers()
+        public DefaultParser()
         {
             help = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
                    "!help - выведет данное приветственное сообщение и покажет все команды, если вы вдруг забыли.\n" +
