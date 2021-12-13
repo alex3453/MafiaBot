@@ -58,9 +58,9 @@ namespace App
                 return AnswerType.IncorrectVote;
             if (!usersTeam.ContainsUser(commandInfo.User))
                 return AnswerType.YouAreNotInGame;
-            var user = commandInfo.User.Name;
+            var voter = commandInfo.User.Name;
             var target = commandInfo.MentionedPlayers.First();
-            var opStatus = usersTeam.Mafia.Vote(user, target);
+            var opStatus = usersTeam.Mafia.Vote(voter, target);
             return opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyVoted,
@@ -83,11 +83,19 @@ namespace App
                 return AnswerType.NotTimeToKill;
             if (!usersTeam.ContainsUser(commandInfo.User))
                 return AnswerType.YouAreNotInGame;
-            var user = commandInfo.User.Name;
+            var killer = commandInfo.User.Name;
             int target;
             if (!commandInfo.Content.Any() || !int.TryParse(commandInfo.Content.First(), out target))
                 return AnswerType.IncorrectNumber;
-            var opStatus = usersTeam.Mafia.Vote()
+            var opStatus = usersTeam.Mafia.Act(killer, target);
+            return opStatus switch
+            {
+                OperationStatus.Success => AnswerType.SuccessfullyKilled,
+                OperationStatus.Already => AnswerType.AlreadyKilled,
+                OperationStatus.Cant => AnswerType.YouCantKillThisPl,
+                OperationStatus.Incorrect => AnswerType.IncorrectNumber,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Mafia
         void StartGame();
         IReadOnlyCollection<string> Dead { get; }
         OperationStatus Vote(string voter, string target);
-        OperationStatus Act(string killer, string target);
+        OperationStatus Act(string killer, int target);
         IReadOnlyCollection<string> GetWinners();
     }
 }
