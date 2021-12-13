@@ -8,18 +8,24 @@ namespace App
 {
     public class UsersTeam
     {
-        private ISet<User> users = new HashSet<User>();
+        private ISet<User> _usersInGame = new HashSet<User>();
         public IMafia Mafia { get; private set; }
-        public bool IsMafiaSetted { get; private set; }
-        public IReadOnlySet<User> Users => (IReadOnlySet<User>) users;
+        private readonly Func<IMafia> _createMafiaFunc;
 
-        public void AddUser(User user) => users.Add(user);
-        public bool IsContainsUser(User user) => users.Contains(user);
-
-        public void SetMafia()
+        public UsersTeam(Func<IMafia> createMafiaFunc)
         {
-            Mafia = new MafiaGame(new SimpleRoleDist());
-            IsMafiaSetted = true;
+            _createMafiaFunc = createMafiaFunc;
+            Mafia = _createMafiaFunc();
+        }
+        public IReadOnlySet<User> Users => (IReadOnlySet<User>) _usersInGame;
+
+        public void AddUser(User user) => _usersInGame.Add(user);
+        public bool ContainsUser(User user) => _usersInGame.Contains(user);
+
+        public void ResetMafia()
+        {
+            Mafia = _createMafiaFunc();
+            _usersInGame = new HashSet<User>();
         }
     }
 }

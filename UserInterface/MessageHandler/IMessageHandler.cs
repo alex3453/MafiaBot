@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public interface ICommandsHandler
+    public interface IMessageHandler
     {
         event Action<CommandInfo> ExCommand;
         event Action<User, bool, Answer> SendMassage;

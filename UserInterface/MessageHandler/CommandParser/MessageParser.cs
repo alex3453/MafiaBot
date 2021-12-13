@@ -1,16 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using CommonInteraction;
 using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class CommandParser : ICommandParser
+    public class MessageParser : IMessageParser
     {
-        private readonly Command[] _commands;
+        private readonly CommandMessage[] _commands;
 
-        public CommandParser(Command[] commands)
+        public MessageParser(CommandMessage[] commands)
         {
             _commands = commands;
         }

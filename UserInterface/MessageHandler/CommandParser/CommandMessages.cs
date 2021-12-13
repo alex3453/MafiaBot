@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class HelpCommand : Command
+    public class HelpMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string> { "help", "рудз" };
         protected override ISet<string> PossibleStrings => _pos;
@@ -14,7 +14,7 @@ namespace UserInterface
         public override string GetDescription() => "команда !help";
     }
 
-    public class RegCommand : Command
+    public class RegMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string> {"reg", "куп"};
         protected override ISet<string> PossibleStrings => _pos;
@@ -22,7 +22,7 @@ namespace UserInterface
         public override string GetDescription() => "команда !reg";
     }
 
-    public class NewGameCommand : Command
+    public class ResetGameMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string> {"createnew", "скуфеутуц"};
 
@@ -32,7 +32,7 @@ namespace UserInterface
         public override string GetDescription() => "команда !createnew";
     }
     
-    public class StartCommand : Command
+    public class StartMessageMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string> {"start", "ыефке"};
 
@@ -42,7 +42,7 @@ namespace UserInterface
         public override string GetDescription() => "команда !start";
     }
 
-    public class VoteCommand : Command
+    public class VoteMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string>{"vote", "мщеу"};
 
@@ -52,7 +52,7 @@ namespace UserInterface
         public override string GetDescription() => "команда !vote";
     }
 
-    public class KillCommand : Command
+    public class KillMessage : CommandMessage
     {
         private readonly ISet<string> _pos = new HashSet<string> {"kill", "лшдд"};
 

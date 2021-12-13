@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public interface ICommandParser
+    public interface IMessageParser
     {
         CommandInfo Parse(SocketMessage msg);
         string GetCommandsDescription();

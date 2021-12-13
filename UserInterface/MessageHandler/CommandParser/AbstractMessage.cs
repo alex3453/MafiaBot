@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public abstract class Command
+    public abstract class CommandMessage
     {
         protected abstract ISet<string> PossibleStrings { get; }
         protected abstract CommandType MyCommandType { get; }

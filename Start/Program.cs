@@ -23,15 +23,15 @@ namespace Start
             var container = new StandardKernel();
 
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
-            container.Bind<ICommandsHandler>().To<CommandsHandler>();
-            container.Bind<ICommandParser>().To<CommandParser>();
+            container.Bind<IMessageHandler>().To<MessageHandler>();
+            container.Bind<IMessageParser>().To<MessageParser>();
             
-            container.Bind<Command>().To<HelpCommand>();
-            container.Bind<Command>().To<RegCommand>();
-            container.Bind<Command>().To<NewGameCommand>();
-            container.Bind<Command>().To<StartCommand>();
-            container.Bind<Command>().To<KillCommand>();
-            container.Bind<Command>().To<VoteCommand>();
+            container.Bind<CommandMessage>().To<HelpMessage>();
+            container.Bind<CommandMessage>().To<RegMessage>();
+            container.Bind<CommandMessage>().To<ResetGameMessage>();
+            container.Bind<CommandMessage>().To<StartMessageMessage>();
+            container.Bind<CommandMessage>().To<KillMessage>();
+            container.Bind<CommandMessage>().To<VoteMessage>();
             
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();

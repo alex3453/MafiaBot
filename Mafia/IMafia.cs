@@ -11,11 +11,11 @@ namespace Mafia
         IReadOnlyCollection<string> MafiozyPlayers { get; }
         IReadOnlyDictionary<string, Role> PlayersRoles { get; }
         IReadOnlyDictionary<string, int> PlayersNumbers { get; }
-        void RegisterPlayer(string name);
+        OperationStatus RegisterPlayer(string name);
         void StartGame();
         IReadOnlyCollection<string> Dead { get; }
-        bool Vote(string voter, string target);
-        bool Act(string killer, string target);
+        OperationStatus Vote(string voter, string target);
+        OperationStatus Act(string killer, string target);
         IReadOnlyCollection<string> GetWinners();
     }
 }

@@ -6,26 +6,33 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class CommandsHandler : ICommandsHandler
+    public class MessageHandler : IMessageHandler
     {
-        private readonly ICommandParser _commandParser;
+        private readonly IMessageParser _messageParser;
         public event Action<CommandInfo> ExCommand;
         public event Action<User, bool, Answer> SendMassage;
 
-        public CommandsHandler(ICommandParser commandParser)
+        public MessageHandler(IMessageParser messageParser)
         {
-            _commandParser = commandParser;
+            _messageParser = messageParser;
         }
 
         public Task ProcessMessage(SocketMessage msg)
         {
             if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!') return Task.CompletedTask;
-            var commandInfo = _commandParser.Parse(msg);
+            var commandInfo = _messageParser.Parse(msg);
             if (commandInfo.CommandType == CommandType.Help)
             {
                 SendMassage?.Invoke(commandInfo.User, 
-                    commandInfo.IsCommonChat, 
-                    new Answer(AnswerType.GetHelp, new []{ _commandParser.GetCommandsDescription() }));
+                    commandInfo.IsCommonChannel, 
+                    new Answer(AnswerType.GetHelp, new []{ _messageParser.GetCommandsDescription() }));
+                return Task.CompletedTask;
+            }
+            if (commandInfo.CommandType == CommandType.Unknown)
+            {
+                SendMassage?.Invoke(commandInfo.User, 
+                    commandInfo.IsCommonChannel, 
+                    new Answer(AnswerType.Unknown));
                 return Task.CompletedTask;
             }
             ExCommand?.Invoke(commandInfo);
