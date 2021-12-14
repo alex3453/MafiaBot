@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using CommonInteraction;
 using Discord.WebSocket;
 
@@ -13,23 +14,21 @@ namespace UserInterface
             _commands = commands;
         }
  
-        public CommandInfo Parse(SocketMessage msg)
+        public bool Parse(SocketMessage msg, out CommandInfo commandInfo)
         {
+            if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!')
+            {
+                commandInfo = null;
+                return false;
+            }
             foreach (var command in _commands)
             {
-                if (command.IsItMyCommand(msg))
-                    return command.CreateCommandInfo(msg);
+                if (!command.IsItMyCommand(msg)) continue;
+                commandInfo = command.CreateCommandInfo(msg);
+                return true;
             }
-
-            return ParseUnknownCommand(msg);
-        }
-
-        private CommandInfo ParseUnknownCommand(SocketMessage msg)
-        {
-            
-            var user = new User(msg.Author.Id, msg.Channel.Id);
-            var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
-            return new CommandInfo(user, isCommonChat, CommandType.Unknown);
+            commandInfo = null;
+            return false;
         }
 
         public string GetCommandsDescription()
@@ -39,7 +38,6 @@ namespace UserInterface
             {
                 des.Append(command.GetDescription() + "\n");
             }
-
             return des.ToString();
         }
     }

@@ -5,19 +5,24 @@ namespace CommonInteraction
     public class CommandInfo
     {
         public readonly User User;
-        public readonly bool IsCommonChannel;
         public readonly CommandType CommandType;
-        public readonly IEnumerable<string> MentionedPlayers;
+        public readonly bool IsComChat;
+        public readonly ulong ComChatId;
+        public readonly IEnumerable<string> MentPlayers;
         public readonly IEnumerable<string> Content;
 
-        public CommandInfo(User user,  bool isCommonChannel, CommandType command,
-            IEnumerable<string> mentionedPlayers = null, 
+        public CommandInfo(User user,
+            CommandType command,
+            bool isComChat,
+            ulong comChatId = 0,
+            IEnumerable<string> mentPlayers = null, 
             IEnumerable<string> content = null)
         {
             CommandType = command;
             User = user;
-            IsCommonChannel = isCommonChannel;
-            MentionedPlayers = mentionedPlayers;
+            IsComChat = isComChat;
+            ComChatId = comChatId;
+            MentPlayers = mentPlayers;
             Content = content;
         }
     }

@@ -12,13 +12,13 @@ namespace App
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
-            if (!commandInfo.IsCommonChannel)
+            if (!commandInfo.IsComChat)
             {
                 yield return AnswerType.OnlyInCommon;
                 yield break;
             }
 
-            usersTeam.ResetMafia();
+            usersTeam.Reset();
             yield return AnswerType.NewGame;
         }
     }
@@ -54,7 +54,7 @@ namespace App
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
-            if (!commandInfo.IsCommonChannel)
+            if (!commandInfo.IsComChat)
             {
                 yield return AnswerType.OnlyInCommon;
                 yield break;
@@ -78,7 +78,7 @@ namespace App
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
-            if (!commandInfo.IsCommonChannel)
+            if (!commandInfo.IsComChat)
             {
                 yield return AnswerType.OnlyInCommon;
                 yield break;
@@ -91,7 +91,7 @@ namespace App
                 yield break;
             }
 
-            if (!commandInfo.MentionedPlayers.Any())
+            if (!commandInfo.MentPlayers.Any())
             {
                 yield return AnswerType.IncorrectVote;
                 yield break;
@@ -104,7 +104,7 @@ namespace App
             }
 
             var voter = commandInfo.User.Name;
-            var target = commandInfo.MentionedPlayers.First();
+            var target = commandInfo.MentPlayers.First();
             var opStatus = usersTeam.Mafia.Vote(voter, target);
             yield return opStatus switch
             {
@@ -145,7 +145,7 @@ namespace App
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
-            if (commandInfo.IsCommonChannel)
+            if (commandInfo.IsComChat)
             {
                 yield return AnswerType.OnlyInLocal;
                 yield break;

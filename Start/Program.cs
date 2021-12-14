@@ -45,9 +45,9 @@ namespace Start
             container.Bind<IAnswerTypeHandler>().To<StartGameTypeHandler>();
             container.Bind<IAnswerTypeHandler>().To<StartMafiaKillingTypeHandler>();
 
-            // container.Bind<IMafiaFactory>().ToFactory();
-            // container.Bind<IMafia>().To<MafiaGame>();
-            // container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
+            container.Bind<IMafiaFactory>().ToFactory();
+            container.Bind<IMafia>().To<MafiaGame>();
+            container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();

@@ -48,10 +48,10 @@ namespace App
             args.Add(commandInfo.User.Name);
             if (commandInfo.Content.Any())
                 args.Add(commandInfo.Content.First());
-            else if (commandInfo.MentionedPlayers.Any())
-                args.Add(commandInfo.MentionedPlayers.First());
-            var id = commandInfo.IsCommonChannel ? usersTeam.ChatId : commandInfo.User.Id;
-            send(commandInfo.IsCommonChannel, new Answer(answerType, args), id);
+            else if (commandInfo.MentPlayers.Any())
+                args.Add(commandInfo.MentPlayers.First());
+            var id = commandInfo.IsComChat ? usersTeam.ChatId : commandInfo.User.Id;
+            send(commandInfo.IsComChat, new Answer(answerType, args), id);
         }
     }
 

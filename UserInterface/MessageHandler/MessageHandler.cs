@@ -19,17 +19,16 @@ namespace UserInterface
 
         public Task ProcessMessage(SocketMessage msg)
         {
-            if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!') return Task.CompletedTask;
-            var commandInfo = _messageParser.Parse(msg);
+            if (!_messageParser.Parse(msg, out var commandInfo))
+                return Task.CompletedTask;
             if (commandInfo.CommandType == CommandType.Help)
             {
-                SendMassage?.Invoke(commandInfo.IsCommonChannel,
-                    new Answer(AnswerType.GetHelp, new []{ _messageParser.GetCommandsDescription() }), msg.Channel.Id);
-                return Task.CompletedTask;
-            }
-            if (commandInfo.CommandType == CommandType.Unknown)
-            {
-                SendMassage?.Invoke(commandInfo.IsCommonChannel, new Answer(AnswerType.Unknown), msg.Channel.Id);
+                SendMassage?.Invoke(
+                    commandInfo.IsComChat,
+                    new Answer(
+                        AnswerType.GetHelp, 
+                        new []{ _messageParser.GetCommandsDescription() }), 
+                    commandInfo.IsComChat ? commandInfo.ComChatId : commandInfo.User.Id);
                 return Task.CompletedTask;
             }
             ExCommand?.Invoke(commandInfo);

@@ -21,9 +21,18 @@ namespace UserInterface
         {
             var mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
             var args = msg.Content.Split().Skip(1).ToArray();
-            var user = new User(msg.Author.Id, msg.Channel.Id, msg.Author.Username);
-            var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
-            return new CommandInfo(user, isCommonChat, MyCommandType, mentionedUsers, args);
+            var user = new User(msg.Author.Id, msg.Author.Username);
+            var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
+            ulong commonChannelId = 0;
+            if (isCommonChannel)
+                commonChannelId = msg.Channel.Id;
+            return new CommandInfo(
+                user, 
+                MyCommandType, 
+                isCommonChannel, 
+                commonChannelId, 
+                mentionedUsers, 
+                args);
         }
 
         public abstract string GetDescription();
