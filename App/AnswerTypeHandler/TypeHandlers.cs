@@ -42,7 +42,7 @@ namespace App
             AnswerType answerType, 
             UsersTeam usersTeam, 
             CommandInfo commandInfo,
-            Action<User, bool, Answer> send)
+            Action<User, bool, Answer, ulong> send)
         {
             var args = new List<string>();
             args.Add(commandInfo.User.Name);
@@ -50,7 +50,8 @@ namespace App
                 args.Add(commandInfo.Content.First());
             else if (commandInfo.MentionedPlayers.Any())
                 args.Add(commandInfo.MentionedPlayers.First());
-            send(commandInfo.User, commandInfo.IsCommonChannel, new Answer(answerType, args));
+            var id = commandInfo.IsCommonChannel ? usersTeam.ChatId : commandInfo.User.Id;
+            send(commandInfo.User, commandInfo.IsCommonChannel, new Answer(answerType, args), id);
         }
     }
 
@@ -61,17 +62,17 @@ namespace App
             return answerType == AnswerType.GameStarted;
         }
 
-        public void SendMessage(AnswerType answerType, UsersTeam usersTeam, CommandInfo commandInfo, Action<User, bool, Answer> send)
+        public void SendMessage(AnswerType answerType, UsersTeam usersTeam, CommandInfo commandInfo, Action<User, bool, Answer, ulong> send)
         {
             
             var playersRoles = usersTeam.Mafia.PlayersRoles;
             foreach (var player in playersRoles.Keys)
             {
                 var usr = usersTeam.Users.First(u => u.Name == player);
-                send(usr, false, new Answer(GetRoleAnswerType(playersRoles[player])));
+                send(usr, false, new Answer(GetRoleAnswerType(playersRoles[player])), usr.CommonChannelId);
             }
 
-            send(commandInfo.User, true, new Answer(AnswerType.GameStarted));
+            send(commandInfo.User, true, new Answer(AnswerType.GameStarted), usersTeam.ChatId);
         }
         
         private AnswerType GetRoleAnswerType(Role role)
@@ -91,7 +92,7 @@ namespace App
             return answerType == AnswerType.MafiaKilling;
         }
 
-        public void SendMessage(AnswerType answerType, UsersTeam usersTeam, CommandInfo commandInfo, Action<User, bool, Answer> send)
+        public void SendMessage(AnswerType answerType, UsersTeam usersTeam, CommandInfo commandInfo, Action<User, bool, Answer, ulong> send)
         {
             var mafia = usersTeam.Mafia;
             var mafiaKillList = new List<string>();
@@ -106,7 +107,7 @@ namespace App
             foreach (var player in mafia.MafiozyPlayers)
             {
                 var usr = usersTeam.Users.First(u => u.Name == player);
-                send(usr, false, new Answer(AnswerType.MafiaKilling, mafiaKillList));
+                send(usr, false, new Answer(AnswerType.MafiaKilling, mafiaKillList), usr.Id);
             }
         }
     }

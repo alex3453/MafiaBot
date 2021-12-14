@@ -8,10 +8,7 @@ namespace App
 {
     public class ResetGameCommand : ICommandHandler
     {
-        public bool IsItMyCommand(CommandInfo commandInfo)
-        {
-            return commandInfo.CommandType == CommandType.CreateNewGame;
-        }
+        public CommandType Type => CommandType.CreateNewGame;
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
@@ -28,10 +25,7 @@ namespace App
 
     public class RegPlayerCommand : ICommandHandler
     {
-        public bool IsItMyCommand(CommandInfo commandInfo)
-        {
-            return commandInfo.CommandType == CommandType.Reg;
-        }
+        public CommandType Type => CommandType.Reg;
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
@@ -56,10 +50,7 @@ namespace App
 
     public class StartCommand : ICommandHandler
     {
-        public bool IsItMyCommand(CommandInfo commandInfo)
-        {
-            return commandInfo.CommandType == CommandType.Start;
-        }
+        public CommandType Type => CommandType.Start;
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
@@ -83,10 +74,7 @@ namespace App
 
     public class VoteCommand : ICommandHandler
     {
-        public bool IsItMyCommand(CommandInfo commandInfo)
-        {
-            return commandInfo.CommandType == CommandType.Vote;
-        }
+        public CommandType Type => CommandType.Vote;
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {
@@ -153,10 +141,7 @@ namespace App
 
     public class KillCommand : ICommandHandler
     {
-        public bool IsItMyCommand(CommandInfo commandInfo)
-        {
-            return commandInfo.CommandType == CommandType.Kill;
-        }
+        public CommandType Type => CommandType.Kill;
 
         public IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo)
         {

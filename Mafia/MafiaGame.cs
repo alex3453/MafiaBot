@@ -96,6 +96,8 @@ namespace Mafia
         {
             if (murderedPlayers.Contains(killer))
                 return OperationStatus.Already;
+            if (target > playersInGame.Count || target <= 0)
+                return OperationStatus.Cant;
             murderedPlayers.Add(killer);
             var targetP = playersInGame.First(x => x.Name == playersNumbers[target]);
             targetP.KillMe();

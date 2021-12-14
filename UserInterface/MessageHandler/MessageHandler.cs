@@ -10,7 +10,7 @@ namespace UserInterface
     {
         private readonly IMessageParser _messageParser;
         public event Action<CommandInfo> ExCommand;
-        public event Action<User, bool, Answer> SendMassage;
+        public event Action<User, bool, Answer, ulong> SendMassage;
 
         public MessageHandler(IMessageParser messageParser)
         {
@@ -23,16 +23,13 @@ namespace UserInterface
             var commandInfo = _messageParser.Parse(msg);
             if (commandInfo.CommandType == CommandType.Help)
             {
-                SendMassage?.Invoke(commandInfo.User, 
-                    commandInfo.IsCommonChannel, 
-                    new Answer(AnswerType.GetHelp, new []{ _messageParser.GetCommandsDescription() }));
+                SendMassage?.Invoke(commandInfo.User, commandInfo.IsCommonChannel,
+                    new Answer(AnswerType.GetHelp, new []{ _messageParser.GetCommandsDescription() }), msg.Channel.Id);
                 return Task.CompletedTask;
             }
             if (commandInfo.CommandType == CommandType.Unknown)
             {
-                SendMassage?.Invoke(commandInfo.User, 
-                    commandInfo.IsCommonChannel, 
-                    new Answer(AnswerType.Unknown));
+                SendMassage?.Invoke(commandInfo.User, commandInfo.IsCommonChannel, new Answer(AnswerType.Unknown), msg.Channel.Id);
                 return Task.CompletedTask;
             }
             ExCommand?.Invoke(commandInfo);

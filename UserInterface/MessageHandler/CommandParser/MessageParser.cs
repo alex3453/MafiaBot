@@ -26,6 +26,7 @@ namespace UserInterface
 
         private CommandInfo ParseUnknownCommand(SocketMessage msg)
         {
+            
             var user = new User(msg.Author.Id, msg.Channel.Id);
             var isCommonChat = msg.Channel.GetType() == typeof(SocketTextChannel);
             return new CommandInfo(user, isCommonChat, CommandType.Unknown);

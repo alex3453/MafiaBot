@@ -15,11 +15,11 @@ namespace UserInterface
             _answerParser = answerParser;
         }
 
-        public void SendMessage(User user, bool isCommonChat, Answer answer)
+        public void SendMessage(User user, bool isCommonChat, Answer answer, ulong destinationId)
         {
             if (isCommonChat)
             {
-                var msgChannel = _client.GetChannel(user.CommonChannelId) as IMessageChannel;
+                var msgChannel = _client.GetChannel(destinationId) as IMessageChannel;
                 msgChannel?.SendMessageAsync(_answerParser.ParseAnswer(answer));
             }
             else

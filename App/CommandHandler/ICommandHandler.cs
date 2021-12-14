@@ -7,7 +7,7 @@ namespace App
 {
     public interface ICommandHandler
     {
-        bool IsItMyCommand(CommandInfo commandInfo);
+        CommandType Type { get; }
         IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo);
     }
 }

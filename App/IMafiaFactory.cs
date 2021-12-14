@@ -4,6 +4,6 @@ namespace App
 {
     public interface IMafiaFactory
     {
-        IMafia CreateMafiaFunc();
+        IMafia CreateMafiaFunc(IRoleDistribution roleDistribution);
     }
 }
