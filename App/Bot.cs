@@ -26,7 +26,8 @@ namespace App
         {
             if (ctx.IsComChat && !_gameTeams.Keys.Contains(ctx.ComChatId))
                 _gameTeams[ctx.ComChatId] = new GameTeam(ctx.ComChatId, _createMafiaFunc);
-            var gameTeam = _gameTeams.Values.FirstOrDefault(u => u.ContainsUser(ctx.User));
+            var gameTeam = _gameTeams.Values
+                .FirstOrDefault(u => ctx.IsComChat ? u.ChatId == ctx.ComChatId : u.ContainsUser(ctx.User));
             _commandHandlers
                 .FirstOrDefault(c => c.Type == ctx.CommandType)
                 ?.ExecuteCommand(gameTeam, ctx, SendMassage);

@@ -9,6 +9,7 @@ namespace App
     public class ResetGameCommand : ICommandHandler
     {
         public CommandType Type => CommandType.CreateNewGame;
+        
         public void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send)
         {
             if (!cI.IsComChat)
@@ -24,6 +25,7 @@ namespace App
     public class RegPlayerCommand : ICommandHandler
     {
         public CommandType Type => CommandType.Reg;
+        
         public void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send)
         {
             if (!cI.IsComChat)
@@ -44,179 +46,139 @@ namespace App
                 send(true, new Answer(AnswerType.SuccessfullyRegistered, cI.User.Name), cI.ComChatId);
             }
         }
-
-        public IEnumerable<AnswerType> ExecuteCommand(GameTeam gameTeam, CommandInfo commandInfo)
-        {
-            if (gameTeam.ContainsUser(commandInfo.User))
-            {
-                yield return AnswerType.AlreadyRegistered;
-                yield break;
-            }
-
-            var status = gameTeam.Mafia.Status;
-            if (status is not (Status.WaitingPlayers or Status.WaitingPlayers))
-            {
-                yield return AnswerType.GameIsGoing;
-                yield break;
-            }
-
-            gameTeam.AddUser(commandInfo.User);
-            gameTeam.Mafia.RegisterPlayer(commandInfo.User.Name);
-            yield return AnswerType.SuccessfullyRegistered;
-        }
     }
 
     public class StartCommand : ICommandHandler
     {
         public CommandType Type => CommandType.Start;
-
-        public IEnumerable<AnswerType> ExecuteCommand(GameTeam gameTeam, CommandInfo commandInfo)
+        
+        public void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send)
         {
-            if (!commandInfo.IsComChat)
+            if (!cI.IsComChat)
+                send(false, new Answer(AnswerType.OnlyInCommon, cI.User.Name), cI.User.Id);
+            else if (gT.Mafia.Status is not Status.ReadyToStart)
             {
-                yield return AnswerType.OnlyInCommon;
-                yield break;
+                send(true,
+                    gT.Mafia.Status is Status.WaitingPlayers
+                        ? new Answer(AnswerType.NeedMorePlayers, gT.Users.Select(u => u.Name).ToArray())
+                        : new Answer(AnswerType.GameIsGoing),
+                    cI.ComChatId);
             }
-
-            var status = gameTeam.Mafia.Status;
-            if (status != Status.ReadyToStart)
+            else
             {
-                yield return status == Status.WaitingPlayers ? AnswerType.NeedMorePlayers : AnswerType.GameIsGoing;
-                yield break;
+                gT.Mafia.StartGame();
+                var playersRoles = gT.Mafia.PlayersRoles;
+                foreach (var player in playersRoles.Keys)
+                {
+                    var usr = gT.Users.First(u => u.Name == player);
+                    send(false, new Answer(AnswerType.TellRole, playersRoles[usr.Name].ToString()), usr.Id);
+                }
+                send(true, new Answer(AnswerType.GameStarted, gT.Users.Select(u => u.Name).ToArray()), gT.ChatId);
             }
-
-            gameTeam.Mafia.StartGame();
-            yield return AnswerType.GameStarted;
         }
     }
 
     public class VoteCommand : ICommandHandler
     {
         public CommandType Type => CommandType.Vote;
-
-        public IEnumerable<AnswerType> ExecuteCommand(GameTeam gameTeam, CommandInfo commandInfo)
+        
+        public void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send)
         {
-            if (!commandInfo.IsComChat)
+            if (!cI.IsComChat)
             {
-                yield return AnswerType.OnlyInCommon;
-                yield break;
+                send(false, new Answer(AnswerType.OnlyInCommon, cI.User.Name), cI.User.Id);
+                return;
             }
-
-            var status = gameTeam.Mafia.Status;
-            if (status != Status.Voting)
+            if (!gT.ContainsUser(cI.User))
+                send(true, new Answer(AnswerType.YouAreNotInGame, cI.User.Name), cI.ComChatId);
+            else if (gT.Mafia.Status is not Status.Voting)
+                send(true, new Answer(AnswerType.NotTimeToVote, cI.User.Name), cI.ComChatId);
+            else if (!cI.MentPlayers.Any())
+                send(true, new Answer(AnswerType.IncorrectVote, cI.User.Name), cI.ComChatId);
+            else
             {
-                yield return AnswerType.NotTimeToVote;
-                yield break;
-            }
-
-            if (!commandInfo.MentPlayers.Any())
-            {
-                yield return AnswerType.IncorrectVote;
-                yield break;
-            }
-
-            if (!gameTeam.ContainsUser(commandInfo.User))
-            {
-                yield return AnswerType.YouAreNotInGame;
-                yield break;
-            }
-
-            var voter = commandInfo.User.Name;
-            var target = commandInfo.MentPlayers.First();
-            var opStatus = gameTeam.Mafia.Vote(voter, target);
-            yield return opStatus switch
-            {
-                OperationStatus.Success => AnswerType.SuccessfullyVoted,
-                OperationStatus.Already => AnswerType.AlreadyVoted,
-                OperationStatus.Cant => AnswerType.YouCantVoteThisPl,
-                OperationStatus.Incorrect => AnswerType.IncorrectVote,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            foreach (var answerType in CheckStatusChange(gameTeam)) yield return answerType;
-        }
-
-        private IEnumerable<AnswerType> CheckStatusChange(GameTeam gameTeam)
-        {
-            if (gameTeam.Mafia.Status == Status.MafiaKilling)
-            {
-                if (gameTeam.Mafia.IsSomeBodyDied)
-                    yield return AnswerType.DayKill;
-                else
+                var voter = cI.User.Name;
+                var target = cI.MentPlayers.First();
+                var opStatus = gT.Mafia.Vote(voter, target);
+                var answType = opStatus switch
                 {
-                    yield return AnswerType.DayAllAlive;
-                }
-
-                yield return AnswerType.EndDay;
-                yield return AnswerType.MafiaKilling;
+                    OperationStatus.Success => AnswerType.SuccessfullyVoted,
+                    OperationStatus.Already => AnswerType.AlreadyVoted,
+                    OperationStatus.Cant => AnswerType.YouCantVoteThisPl,
+                    OperationStatus.Incorrect => AnswerType.IncorrectVote
+                };
+                send(true, new Answer(answType, cI.User.Name, target), gT.ChatId);
             }
 
-            if (gameTeam.Mafia.Status == Status.PeacefulWins)
-                yield return AnswerType.PeacefulWins;
-            if (gameTeam.Mafia.Status == Status.MafiaWins)
-                yield return AnswerType.MafiaWins;
+            if (gT.Mafia.Status is Status.MafiaKilling)
+            {
+                if (gT.Mafia.IsSomeBodyDied)
+                    send(true, new Answer(AnswerType.DayKill, gT.Mafia.Dead.ToArray()), gT.ChatId);
+                else
+                    send(true, new Answer(AnswerType.DayAllAlive), gT.ChatId);
+                send(true, new Answer(AnswerType.EndDay), gT.ChatId);
+                var killList = gT.Mafia.PlayersInGame
+                    .Select((s, i) => (s, i.ToString()))
+                    .SelectMany(t => new[] {t.s, t.Item2})
+                    .ToArray();
+                foreach (var player in gT.Mafia.MafiozyPlayers)
+                {
+                    var usr = gT.Users.First(u => u.Name == player);
+                    send(false, new Answer(AnswerType.MafiaKilling, killList), usr.Id);
+                }
+            }
+            else if (gT.Mafia.Status is Status.MafiaWins)
+                send(true, new Answer(AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+            else if (gT.Mafia.Status is Status.PeacefulWins)
+                send(true, new Answer(AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
         }
     }
 
     public class KillCommand : ICommandHandler
     {
         public CommandType Type => CommandType.Kill;
-
-        public IEnumerable<AnswerType> ExecuteCommand(GameTeam gameTeam, CommandInfo commandInfo)
+        
+        public void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send)
         {
-            if (commandInfo.IsComChat)
+            if (gT is null)
             {
-                yield return AnswerType.OnlyInLocal;
-                yield break;
+                send(false, new Answer(AnswerType.YouAreNotInGame, cI.User.Name), cI.User.Id);
+                return;
             }
-
-            var status = gameTeam.Mafia.Status;
-            if (status != Status.MafiaKilling)
+            if (cI.IsComChat)
+                send(true, new Answer(AnswerType.OnlyInLocal, cI.User.Name), cI.ComChatId);
+            else if (!gT.ContainsUser(cI.User))
+                send(false, new Answer(AnswerType.YouAreNotInGame, cI.User.Name), cI.User.Id);
+            else if (gT.Mafia.Status is not Status.MafiaKilling)
+                send(false, new Answer(AnswerType.NotTimeToKill, cI.User.Name), cI.User.Id);
+            else if (!cI.Content.Any() || !int.TryParse(cI.Content.First(), out var target))
+                send(false, new Answer(AnswerType.IncorrectNumber, cI.User.Name), cI.User.Id);
+            else
             {
-                yield return AnswerType.NotTimeToKill;
-                yield break;
+                var killer = cI.User.Name;
+                var opStatus = gT.Mafia.Act(killer, target);
+                var answType =  opStatus switch
+                {
+                    OperationStatus.Success => AnswerType.SuccessfullyKilled,
+                    OperationStatus.Already => AnswerType.AlreadyKilled,
+                    OperationStatus.Cant => AnswerType.YouCantKillThisPl,
+                    OperationStatus.Incorrect => AnswerType.IncorrectNumber
+                };
+                send(false, new Answer(answType, cI.User.Name, target.ToString()), cI.User.Id);
             }
-
-            if (!gameTeam.ContainsUser(commandInfo.User))
+            
+            if (gT.Mafia.Status is Status.Voting)
             {
-                yield return AnswerType.YouAreNotInGame;
-                yield break;
-            }
-
-            var killer = commandInfo.User.Name;
-            int target;
-            if (!commandInfo.Content.Any() || !int.TryParse(commandInfo.Content.First(), out target))
-            {
-                yield return AnswerType.IncorrectNumber;
-                yield break;
-            }
-
-            var opStatus = gameTeam.Mafia.Act(killer, target);
-            yield return opStatus switch
-            {
-                OperationStatus.Success => AnswerType.SuccessfullyKilled,
-                OperationStatus.Already => AnswerType.AlreadyKilled,
-                OperationStatus.Cant => AnswerType.YouCantKillThisPl,
-                OperationStatus.Incorrect => AnswerType.IncorrectNumber,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            foreach (var answerType in CheckStatusChange(gameTeam)) yield return answerType;
-        }
-
-        private IEnumerable<AnswerType> CheckStatusChange(GameTeam gameTeam)
-        {
-            if (gameTeam.Mafia.Status == Status.Voting)
-            {
-                if (gameTeam.Mafia.IsSomeBodyDied)
-                    yield return AnswerType.NightKill;
+                if (gT.Mafia.IsSomeBodyDied)
+                    send(true, new Answer(AnswerType.NightKill, gT.Mafia.Dead.ToArray()), gT.ChatId);
                 else
-                    yield return AnswerType.NightAllAlive;
-                yield return AnswerType.EndNight;
+                    send(true, new Answer(AnswerType.NightAllAlive), gT.ChatId);
+                send(true, new Answer(AnswerType.EndNight), gT.ChatId);
             }
-
-            if (gameTeam.Mafia.Status == Status.PeacefulWins)
-                yield return AnswerType.PeacefulWins;
-            if (gameTeam.Mafia.Status == Status.MafiaWins)
-                yield return AnswerType.MafiaWins;
+            else if (gT.Mafia.Status is Status.MafiaWins)
+                send(true, new Answer(AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+            else if (gT.Mafia.Status is Status.PeacefulWins)
+                send(true, new Answer(AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
         }
     }
 }

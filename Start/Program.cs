@@ -41,10 +41,6 @@ namespace Start
             container.Bind<ICommandHandler>().To<VoteCommand>();
             container.Bind<ICommandHandler>().To<KillCommand>();
 
-            container.Bind<IAnswerTypeHandler>().To<SimpleTypesHandler>();
-            container.Bind<IAnswerTypeHandler>().To<StartGameTypeHandler>();
-            container.Bind<IAnswerTypeHandler>().To<StartMafiaKillingTypeHandler>();
-
             container.Bind<IMafiaFactory>().ToFactory();
             container.Bind<IMafia>().To<MafiaGame>();
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
@@ -52,7 +48,7 @@ namespace Start
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IMessageSender>().To<MessageSender>();
-            container.Bind<IAnswerParser>().To<DefaultParser>();
+            container.Bind<IAnswerParser>().To<ToStringParser>();
 
             return container;
         }

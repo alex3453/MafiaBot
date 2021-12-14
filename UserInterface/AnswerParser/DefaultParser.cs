@@ -12,7 +12,7 @@ namespace UserInterface
             newGame, youAreMafia, youArePeaceful, onlyInLocal, onlyInCommon, gameIsGoing, needMorePlayers,
             youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, enterNumber,
             incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, mafiaKilling,
-            incorrectVote, unknownCommand;
+            incorrectVote, unknownCommand, tellRole;
         public DefaultParser()
         {
             // help = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n" +
@@ -47,8 +47,9 @@ namespace UserInterface
             nightKill = "Злодейка ночь забрала с собой **{0}**. У кого-то есть идеи, чьих рук дело?";
             nightAllAlive = "Неожиданно, но факт - никто не погиб этой ночью.";
             newGame = "Новая игра создана. Кто хочет поиграть?;)";
-            youAreMafia = "Ты *мафия*. Определенно знаешь, чего хочешь от этой жизни.";
-            youArePeaceful = "Ты *мирный*...Ох как я тебе не завидую...";
+            tellRole = "Ваша роль: ";
+            // youAreMafia = "Ты *мафия*. Определенно знаешь, чего хочешь от этой жизни.";
+            // youArePeaceful = "Ты *мирный*...Ох как я тебе не завидую...";
             onlyInLocal = "Не обязательно орать об этом на весь город. Лучше написать личным письмом. " +
                           "Сохрани приватность информации...";
             onlyInCommon =  "Нет, тут это делать не будем. Если сильно хочется - можно уйти в общий чат.";
@@ -95,8 +96,7 @@ namespace UserInterface
                 AnswerType.NightKill =>string.Format(nightKill, answer.Args[0]),
                 AnswerType.NightAllAlive => nightAllAlive,
                 AnswerType.NewGame => newGame,
-                AnswerType.YouAreMafia => youAreMafia,
-                AnswerType.YouArePeaceful => youArePeaceful,
+                AnswerType.TellRole => string.Format(tellRole, answer.Args[0]),
                 AnswerType.OnlyInLocal => onlyInLocal,
                 AnswerType.OnlyInCommon =>onlyInCommon,
                 AnswerType.GameIsGoing => gameIsGoing,
@@ -128,7 +128,6 @@ namespace UserInterface
                 res.Append(killList[i] + " - ");
                 res.Append(killList[i + 1] + "\n");
             }
-
             return res.ToString();
         }
     }
