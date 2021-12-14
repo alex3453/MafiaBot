@@ -191,10 +191,7 @@ namespace App
                 if (usersTeam.Mafia.IsSomeBodyDied)
                     yield return AnswerType.NightKill;
                 else
-                {
                     yield return AnswerType.NightAllAlive;
-                }
-
                 yield return AnswerType.EndNight;
             }
 

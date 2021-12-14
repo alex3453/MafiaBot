@@ -15,15 +15,15 @@ namespace UserInterface
             _answerParser = answerParser;
         }
 
-        public void SendMessage(User user, bool isCommonChat, Answer answer, ulong destinationId)
+        public void SendMessage(bool isCommonChat, Answer answer, ulong destinationId)
         {
             if (isCommonChat)
-            {
-                var msgChannel = _client.GetChannel(destinationId) as IMessageChannel;
-                msgChannel?.SendMessageAsync(_answerParser.ParseAnswer(answer));
-            }
+                ((IMessageChannel) _client.GetChannel(destinationId))
+                    .SendMessageAsync(_answerParser.ParseAnswer(answer));
             else
-                _client.GetUser(user.Id).SendMessageAsync(_answerParser.ParseAnswer(answer));
+                _client.GetUser(destinationId)
+                    .SendMessageAsync(_answerParser.ParseAnswer(answer));
+            
         }
     }
 }

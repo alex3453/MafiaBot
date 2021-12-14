@@ -8,7 +8,7 @@ namespace App
 {
     public class UsersTeam
     {
-        private List<User> _usersInGame = new ();
+        private HashSet<User> _usersInGame = new ();
         public ulong ChatId { get; }
         public IMafia Mafia { get; private set; }
         // private readonly Func<IMafia> _createMafiaFunc;
@@ -23,7 +23,7 @@ namespace App
             ChatId = chatId;
             Mafia = new MafiaGame(new SimpleRoleDist());
         }
-        public IReadOnlyList<User> Users => _usersInGame;
+        public IReadOnlySet<User> Users => _usersInGame;
 
         public void AddUser(User user) => _usersInGame.Add(user);
         public bool ContainsUser(User user) => _usersInGame.Contains(user);
@@ -36,7 +36,7 @@ namespace App
         public void ResetMafia()
         {
             Mafia = new MafiaGame(new SimpleRoleDist());
-            _usersInGame = new List<User>();
+            _usersInGame = new HashSet<User>();
         }
         
         

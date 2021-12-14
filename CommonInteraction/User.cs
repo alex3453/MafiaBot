@@ -17,6 +17,7 @@ namespace CommonInteraction
         }
         
         public override bool Equals(object obj) => obj is User otherUser && Equals(otherUser);
+        public override int GetHashCode() => (Id, Name).GetHashCode();
 
         private bool Equals(User otherUser)
         {

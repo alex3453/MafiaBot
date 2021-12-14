@@ -15,7 +15,7 @@ namespace App
         private readonly IAnswerTypeHandler[] _answerTypeHandlers;
         
         public Action<CommandInfo> Register() => ReproduceCommand;
-        public event Action<User, bool, Answer, ulong> SendMassage;
+        public event Action<bool, Answer, ulong> SendMassage;
 
         public Bot(ICommandHandler[] commandHandlers, IAnswerTypeHandler[] answerTypeHandlers)
         {

@@ -14,7 +14,7 @@ namespace UserInterface
         private readonly ITokenProvider _provider;
         private readonly IMessageSender _messageSender;
         
-        public Action<User, bool, Answer, ulong> RegisterSending() => _messageSender.SendMessage;
+        public Action<bool, Answer, ulong> RegisterSending() => _messageSender.SendMessage;
         public void SubscribeOn(Action<CommandInfo> exCommand) => _messageHandler.ExCommand += exCommand;
 
         public View(
