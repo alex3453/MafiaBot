@@ -97,9 +97,9 @@ namespace Mafia
             if (murderedPlayers.Contains(killer))
                 return OperationStatus.Already;
             if (target > playersInGame.Count || target <= 0)
-                return OperationStatus.Cant;
+                return OperationStatus.Incorrect;
             murderedPlayers.Add(killer);
-            var targetP = playersInGame.First(x => x.Name == playersNumbers[target]);
+            var targetP = playersInGame[target - 1];
             targetP.KillMe();
             if (playersInGame.Sum(player => player.KillCount) == mafiozyPlayers.Count)
                 EndNight();
@@ -117,8 +117,6 @@ namespace Mafia
         {
             if (mafiozyPlayers.Count == 0)
                 Status = Status.PeacefulWins;
-            // if (mafiozyPlayers.Count == playersInGame.Count)
-            //     Status = Status.PeacefulWins;
             else if (mafiozyPlayers.Count >= playersInGame.Count / 2.0)
                 Status = Status.MafiaWins;
         }

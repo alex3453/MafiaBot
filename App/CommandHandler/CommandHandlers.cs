@@ -118,7 +118,7 @@ namespace App
                     send(true, new Answer(AnswerType.DayAllAlive), gT.ChatId);
                 send(true, new Answer(AnswerType.EndDay), gT.ChatId);
                 var killList = gT.Mafia.PlayersInGame
-                    .Select((s, i) => (s, i.ToString()))
+                    .Select((s, i) => (s, (i + 1).ToString()))
                     .SelectMany(t => new[] {t.s, t.Item2})
                     .ToArray();
                 foreach (var player in gT.Mafia.MafiozyPlayers)
