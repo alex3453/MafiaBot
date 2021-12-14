@@ -6,7 +6,7 @@ using Mafia;
 
 namespace App
 {
-    public class UsersTeam
+    public class GameTeam
     {
         public ulong ChatId { get; }
         public IMafia Mafia { get; private set; }
@@ -16,14 +16,19 @@ namespace App
         
         private readonly Func<IMafia> _createMafiaFunc;
 
-        public UsersTeam(ulong chatId, Func<IMafia> createMafiaFunc)
+        public GameTeam(ulong chatId, Func<IMafia> createMafiaFunc)
         {
             _createMafiaFunc = createMafiaFunc;
             ChatId = chatId;
             Mafia = _createMafiaFunc();
         }
 
-        public void AddUser(User user) => _usersInGame.Add(user);
+        public void AddUser(User user)
+        {
+            _usersInGame.Add(user);
+            Mafia.RegisterPlayer(user.Name);
+        }
+
         public bool ContainsUser(User user) => _usersInGame.Contains(user);
 
         public void Reset()

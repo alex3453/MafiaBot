@@ -8,6 +8,6 @@ namespace App
     public interface ICommandHandler
     {
         CommandType Type { get; }
-        IEnumerable<AnswerType> ExecuteCommand(UsersTeam usersTeam, CommandInfo commandInfo);
+        void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send);
     }
 }

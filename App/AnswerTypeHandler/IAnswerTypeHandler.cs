@@ -6,6 +6,6 @@ namespace App
     public interface IAnswerTypeHandler
     {
         bool IsItMyAnswerType(AnswerType answerType); 
-        void SendMessage(AnswerType answerType, UsersTeam usersTeam, CommandInfo commandInfo, Action<bool, Answer, ulong> send);
+        void SendMessage(AnswerType answerType, GameTeam gameTeam, CommandInfo commandInfo, Action<bool, Answer, ulong> send);
     }
 }
