@@ -96,19 +96,22 @@ namespace Mafia
             return OperationStatus.Success;
         }
 
-        public OperationStatus Act(string killer, int target)
+        public OperationStatus Act(Player maker, int target)
         {
-            if (playersInGame.All(x => x.Name != killer))
+            if (playersInGame.All(x => x.Name != maker.Name))
                 return OperationStatus.NotInGame;
-            if (murderedPlayers.Contains(killer))
-                return OperationStatus.Already;
             if (target > playersInGame.Count || target <= 0)
                 return OperationStatus.Incorrect;
-            murderedPlayers.Add(killer);
-            var targetP = playersInGame[target - 1];
-            targetP.KillMe();
-            if (playersInGame.Sum(player => player.KillCount) == mafiozyPlayers.Count)
-                EndNight();
+            var actStatus = maker.Role.Act(target, playersInGame);
+            switch (actStatus)
+            {
+                case ActStatus.Already:
+                    return OperationStatus.Already;
+                case ActStatus.EndNight:
+                    EndNight();
+                    break;
+            }
+
             return OperationStatus.Success;
         }
 
