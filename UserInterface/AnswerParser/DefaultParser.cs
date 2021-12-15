@@ -47,19 +47,17 @@ namespace UserInterface
             nightKill = "Злодейка ночь забрала с собой **{0}**. У кого-то есть идеи, чьих рук дело?";
             nightAllAlive = "Неожиданно, но факт - никто не погиб этой ночью.";
             newGame = "Новая игра создана. Кто хочет поиграть?;)";
-            tellRole = "Ваша роль: ";
-            // youAreMafia = "Ты *мафия*. Определенно знаешь, чего хочешь от этой жизни.";
-            // youArePeaceful = "Ты *мирный*...Ох как я тебе не завидую...";
+            tellRole = "Ваша роль: {0}";
             onlyInLocal = "Не обязательно орать об этом на весь город. Лучше написать личным письмом. " +
                           "Сохрани приватность информации...";
             onlyInCommon =  "Нет, тут это делать не будем. Если сильно хочется - можно уйти в общий чат.";
             needMorePlayers = "С друзьями играть интереснее. Тормошите и зовите их. Вас сейчас слишком мало.";
             gameIsGoing = "Игра уже идет, вы чего?";
-            youAreNotInGame = "**{0}**, мертвым слова не давали.";
+            youAreNotInGame = "**{0}**, ты не в игре. Чо ннада?";
             youCantVoteThisPl = "**{0}**, хватит пытаться сделать невозможное. За **{1}** нельзя голосовать.";
             youCantKillThisPl = "Убить **{0}** не получится. Подумай насчет другой жертвы.";
-            notTimeToVote = "Под покровом ночи не проголосуешь.";
-            notTimeToKill = "Убивать у всех на виду? Слабо, я ожидал большего.";
+            notTimeToVote = "Сейчас не время голосовать.";
+            notTimeToKill = "Сейчас не время убивать...";
             enterNumber = "Я, вроде, просил ввести число?";
             incorrectNumber = "Ты что-то сделал не так. Число неверное.";
             youAreNotMafia = "Не борзей. Ты не мафия. Меня не одурачить.";
@@ -109,7 +107,7 @@ namespace UserInterface
                 AnswerType.EnterNumber => enterNumber,
                 AnswerType.IncorrectNumber => incorrectNumber,
                 AnswerType.YouAreNotMafia => youAreNotMafia,
-                AnswerType.SuccessfullyKilled =>string.Format(successfullyKilled, answer.Args[0]),
+                AnswerType.SuccessfullyKilled =>string.Format(successfullyKilled, answer.Args[1]),
                 AnswerType.AlreadyKilled => alreadyKilled,
                 AnswerType.NeedToCreateGame => needToCreateGame,
                 AnswerType.IncorrectVote => string.Format(incorrectVote, answer.Args[0]),

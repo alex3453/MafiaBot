@@ -82,10 +82,14 @@ namespace Mafia
         
         public OperationStatus Vote(string voter, string target)
         {
+            if (playersInGame.All(x => x.Name != voter))
+                return OperationStatus.NotInGame;
             if (votedPlayers.Contains(voter))
                 return OperationStatus.Already;
+            var targetP = playersInGame.FirstOrDefault(x => x.Name == target);
+            if (targetP is null)
+                return OperationStatus.Cant;
             votedPlayers.Add(voter);
-            var targetP = playersInGame.First(x => x.Name == target);
             targetP.VoteMe();
             if (playersInGame.Sum(player => player.VoteCount) == playersInGame.Count)
                 EndDay();
@@ -94,6 +98,8 @@ namespace Mafia
 
         public OperationStatus Act(string killer, int target)
         {
+            if (playersInGame.All(x => x.Name != killer))
+                return OperationStatus.NotInGame;
             if (murderedPlayers.Contains(killer))
                 return OperationStatus.Already;
             if (target > playersInGame.Count || target <= 0)

@@ -48,7 +48,7 @@ namespace Start
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IMessageSender>().To<MessageSender>();
-            container.Bind<IAnswerParser>().To<ToStringParser>();
+            container.Bind<IAnswerParser>().To<DefaultParser>();
 
             return container;
         }

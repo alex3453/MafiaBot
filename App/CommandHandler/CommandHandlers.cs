@@ -89,10 +89,17 @@ namespace App
                 send(false, new Answer(AnswerType.OnlyInCommon, cI.User.Name), cI.User.Id);
                 return;
             }
+
             if (!gT.ContainsUser(cI.User))
+            {
                 send(true, new Answer(AnswerType.YouAreNotInGame, cI.User.Name), cI.ComChatId);
+                return;
+            }
             else if (gT.Mafia.Status is not Status.Voting)
+            {
                 send(true, new Answer(AnswerType.NotTimeToVote, cI.User.Name), cI.ComChatId);
+                return;
+            }
             else if (!cI.MentPlayers.Any())
                 send(true, new Answer(AnswerType.IncorrectVote, cI.User.Name), cI.ComChatId);
             else
@@ -105,7 +112,8 @@ namespace App
                     OperationStatus.Success => AnswerType.SuccessfullyVoted,
                     OperationStatus.Already => AnswerType.AlreadyVoted,
                     OperationStatus.Cant => AnswerType.YouCantVoteThisPl,
-                    OperationStatus.Incorrect => AnswerType.IncorrectVote
+                    OperationStatus.Incorrect => AnswerType.IncorrectVote,
+                    OperationStatus.NotInGame => AnswerType.YouAreNotInGame
                 };
                 send(true, new Answer(answType, cI.User.Name, target), gT.ChatId);
             }
@@ -148,7 +156,10 @@ namespace App
             if (cI.IsComChat)
                 send(true, new Answer(AnswerType.OnlyInLocal, cI.User.Name), cI.ComChatId);
             else if (!gT.ContainsUser(cI.User))
+            {
                 send(false, new Answer(AnswerType.YouAreNotInGame, cI.User.Name), cI.User.Id);
+                return;
+            }
             else if (gT.Mafia.Status is not Status.MafiaKilling)
                 send(false, new Answer(AnswerType.NotTimeToKill, cI.User.Name), cI.User.Id);
             else if (!cI.Content.Any() || !int.TryParse(cI.Content.First(), out var target))
@@ -162,7 +173,8 @@ namespace App
                     OperationStatus.Success => AnswerType.SuccessfullyKilled,
                     OperationStatus.Already => AnswerType.AlreadyKilled,
                     OperationStatus.Cant => AnswerType.YouCantKillThisPl,
-                    OperationStatus.Incorrect => AnswerType.IncorrectNumber
+                    OperationStatus.Incorrect => AnswerType.IncorrectNumber,
+                    OperationStatus.NotInGame => AnswerType.YouAreNotInGame
                 };
                 send(false, new Answer(answType, cI.User.Name, target.ToString()), cI.User.Id);
             }

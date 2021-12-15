@@ -2,7 +2,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class ToStringParser : IAnswerParser
+    public class DebagParser : IAnswerParser
     {
         public string ParseAnswer(Answer answer)
         {

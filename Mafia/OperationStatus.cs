@@ -5,6 +5,7 @@ namespace Mafia
         Success,
         Already,
         Cant,
-        Incorrect
+        Incorrect,
+        NotInGame
     }
 }
