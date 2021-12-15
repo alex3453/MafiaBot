@@ -6,7 +6,7 @@ namespace Mafia
     {
         Status Status { get; }
         bool IsSomeBodyDied { get; }
-        IReadOnlyCollection<string> AllPlayers { get; }
+        IReadOnlyCollection<Player> AllPlayers { get; }
         IReadOnlyCollection<string> PlayersInGame { get; }
         IReadOnlyCollection<string> MafiozyPlayers { get; }
         IReadOnlyDictionary<string, Role> PlayersRoles { get; }

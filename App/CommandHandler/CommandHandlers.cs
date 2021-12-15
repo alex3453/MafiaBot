@@ -193,7 +193,7 @@ namespace App
                 return;
             }
             var killer = cI.User.Name;
-            var opStatus = gT.Mafia.Act(killer, target);
+            var opStatus = gT.Mafia.Act(gT.Mafia.AllPlayers.Single(player => player.Name == killer), target);
             var answType =  opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyKilled,

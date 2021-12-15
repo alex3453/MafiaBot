@@ -5,10 +5,9 @@ namespace Mafia
 {
     public abstract class Role
     {
-        protected bool act;
+        public bool act;
         public abstract string GetDescription();
         public abstract ActStatus Act(int target, List<Player> playersInGame);
-
     }
 
     public class PeacefulRole : Role

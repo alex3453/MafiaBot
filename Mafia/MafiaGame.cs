@@ -12,7 +12,6 @@ namespace Mafia
         private readonly HashSet<Player> deadPlayers = new();
         private readonly List<Player> mafiozyPlayers = new();
         private HashSet<string> votedPlayers = new();
-        private HashSet<string> murderedPlayers = new();
         private readonly Dictionary<int, string> playersNumbers = new();
         private readonly IRoleDistribution roleDist;
         
@@ -70,7 +69,8 @@ namespace Mafia
         private void EndNight()
         {
             deadPlayers.Clear();
-            murderedPlayers = new HashSet<string>();
+            foreach (var player in allPlayers.Where(player => player.Role is MafiaRole))
+                player.Role.act = false;
             var deadP = playersInGame.OrderByDescending(x => x.KillCount).First();
             foreach (var player in playersInGame)
                 player.ResetKillCount();
@@ -148,7 +148,7 @@ namespace Mafia
             return Array.Empty<string>();
         }
 
-        public IReadOnlyCollection<string> AllPlayers => allPlayers.Select(p => p.Name).ToArray();
+        public IReadOnlyCollection<Player> AllPlayers => allPlayers;
         public IReadOnlyCollection<string> PlayersInGame => playersInGame.Select(p => p.Name).ToArray();
         public IReadOnlyDictionary<string, Role> PlayersRoles => allPlayers.ToDictionary(p => p.Name, p => p.Role);
         public IReadOnlyCollection<string> MafiozyPlayers => mafiozyPlayers.Select(p => p.Name).ToArray();
