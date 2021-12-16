@@ -10,7 +10,7 @@ namespace UserInterface
     {
         private readonly IMessageParser _messageParser;
         public event Action<CommandInfo> ExCommand;
-        public event Action<bool, Answer, ulong> SendMassage;
+        public event Action<Answer, ulong> SendMassage;
 
         public MessageHandler(IMessageParser messageParser)
         {
@@ -24,8 +24,7 @@ namespace UserInterface
             if (commandInfo.CommandType == CommandType.Help)
             {
                 SendMassage?.Invoke(
-                    commandInfo.IsComChat,
-                    new Answer(
+                    new Answer( commandInfo.IsComChat,
                         AnswerType.GetHelp, 
                         new []{ _messageParser.GetCommandsDescription() }), 
                     commandInfo.IsComChat ? commandInfo.ComChatId : commandInfo.User.Id);

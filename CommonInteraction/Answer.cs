@@ -5,12 +5,14 @@ namespace CommonInteraction
 {
     public class Answer
     {
+        public readonly bool IsCommon;
         public readonly AnswerType AnswerType;
         public readonly IReadOnlyList<string> Args;
 
-        public Answer(AnswerType answerType, params string[] args)
+        public Answer(bool isCommon, AnswerType answerType, params string[] args)
         {
             AnswerType = answerType;
+            IsCommon = isCommon;
             Args = args;
         }
     }

@@ -15,9 +15,9 @@ namespace UserInterface
             _answerParser = answerParser;
         }
 
-        public void SendMessage(bool isCommonChat, Answer answer, ulong destinationId)
+        public void SendMessage(Answer answer, ulong destinationId)
         {
-            if (isCommonChat)
+            if (answer.IsCommon)
                 ((IMessageChannel) _client.GetChannel(destinationId))
                     .SendMessageAsync(_answerParser.ParseAnswer(answer));
             else

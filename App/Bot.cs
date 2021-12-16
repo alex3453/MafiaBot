@@ -14,7 +14,7 @@ namespace App
         private readonly ICommandHandler[] _commandHandlers;
 
         public Action<CommandInfo> Register() => ReproduceCommand;
-        public event Action<bool, Answer, ulong> SendMassage;
+        public event Action<Answer, ulong> SendMassage;
 
         public Bot(ICommandHandler[] commandHandlers, Func<IMafia> createMafiaFunc)
         {

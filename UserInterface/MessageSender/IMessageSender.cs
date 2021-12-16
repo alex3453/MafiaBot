@@ -4,6 +4,6 @@ namespace UserInterface
 {
     public interface IMessageSender
     {
-        void SendMessage(bool isCommonChat, Answer answer, ulong destinationId);
+        void SendMessage(Answer answer, ulong destinationId);
     }
 }

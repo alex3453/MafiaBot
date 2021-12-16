@@ -9,13 +9,13 @@ namespace App
     {
         public abstract CommandType Type { get; }
 
-        public abstract void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<bool, Answer, ulong> send);
+        public abstract void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<Answer, ulong> send);
 
-        protected bool IsSend(bool toSend, Action<bool, Answer, ulong> send, 
-            bool isCom, Answer answer, ulong id)
+        protected bool IsSend(bool toSend, Action<Answer, ulong> send, 
+            Answer answer, ulong id)
         {
             if (!toSend) return false;
-            send(isCom, answer, id);
+            send(answer , id);
             return true;
         }
     }
