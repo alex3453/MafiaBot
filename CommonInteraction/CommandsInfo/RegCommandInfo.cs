@@ -1,6 +1,4 @@
-﻿using App.CommandHandler;
-
-namespace CommonInteraction
+﻿namespace CommonInteraction
 {
     public class RegCommandInfo : ICommandInfo
     {

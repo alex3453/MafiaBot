@@ -1,6 +1,4 @@
-﻿using CommonInteraction;
-
-namespace App.CommandHandler
+﻿namespace CommonInteraction
 {
     public interface IVisitor
     {
