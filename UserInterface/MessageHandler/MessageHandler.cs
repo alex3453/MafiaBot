@@ -9,7 +9,7 @@ namespace UserInterface
     public class MessageHandler : IMessageHandler
     {
         private readonly IMessageParser _messageParser;
-        public event Action<CommandInfo> ExCommand;
+        public event Action<ICommandInfo> ExCommand;
         public event Action<Answer, ulong> SendMassage;
 
         public MessageHandler(IMessageParser messageParser)
@@ -21,7 +21,7 @@ namespace UserInterface
         {
             if (!_messageParser.Parse(msg, out var commandInfo))
                 return Task.CompletedTask;
-            if (commandInfo.CommandType == CommandType.Help)
+            if (commandInfo is HelpCommandInfo)
             {
                 SendMassage?.Invoke(
                     new Answer( commandInfo.IsComChat,

@@ -8,8 +8,11 @@ namespace UserInterface
     public abstract class CommandMessage
     {
         protected abstract ISet<string> PossibleStrings { get; }
-        protected abstract CommandType MyCommandType { get; }
-        
+        private protected User user;
+        private protected bool isCommonChannel;
+        private protected ulong commonChannelId;
+        private protected string[] mentionedUsers;
+        private protected string[] args;
         public bool IsItMyCommand(SocketMessage msg)
         {
             var content = msg.Content.Remove(0, 1);
@@ -17,23 +20,25 @@ namespace UserInterface
             return PossibleStrings.Contains(com);
         }
         
-        public CommandInfo CreateCommandInfo(SocketMessage msg)
+        public void PrepareCommandInfo(SocketMessage msg)
         {
-            var mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
-            var args = msg.Content.Split().Skip(1).ToArray();
-            var user = new User(msg.Author.Id, msg.Author.Username);
-            var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
-            ulong commonChannelId = 0;
+            mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
+            args = msg.Content.Split().Skip(1).ToArray();
+            user = new User(msg.Author.Id, msg.Author.Username);
+            isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
+            commonChannelId = 0;
             if (isCommonChannel)
                 commonChannelId = msg.Channel.Id;
-            return new CommandInfo(
-                user, 
-                MyCommandType, 
-                isCommonChannel, 
-                commonChannelId, 
-                mentionedUsers, 
-                args);
+            // return new CommandInfo(
+            //     user, 
+            //     MyCommandType, 
+            //     isCommonChannel, 
+            //     commonChannelId, 
+            //     mentionedUsers, 
+            //     args);
         }
+
+        public abstract ICommandInfo GetCommandInfo();
 
         public abstract string GetDescription();
     }

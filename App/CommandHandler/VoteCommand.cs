@@ -7,21 +7,26 @@ namespace App.CommandHandler
 {
     public class VoteCommand : ICommandHandler
     {
-        public override CommandType Type => CommandType.Vote;
-        
-        public override void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<Answer, ulong> send)
-        {
-            if (IsSend(!cI.IsComChat, send, 
-                new Answer(false, AnswerType.OnlyInCommon, cI.User.Name), cI.User.Id)) return;
-            if (IsSend(!gT.ContainsUser(cI.User), send,
-                new Answer(true, AnswerType.YouAreNotInGame, cI.User.Name), cI.ComChatId)) return;
-            if (IsSend(gT.Mafia.Status is not Status.Voting, send, 
-                new Answer(true, AnswerType.NotTimeToVote, cI.User.Name), cI.ComChatId)) return;
-            if (IsSend(!cI.MentPlayers.Any(), send, 
-                new Answer(true, AnswerType.IncorrectVote, cI.User.Name), cI.ComChatId)) return;
+        private readonly VoteCommandInfo info;
 
-            var voter = cI.User.Name;
-            var target = cI.MentPlayers.First();
+        public VoteCommand(VoteCommandInfo info)
+        {
+            this.info = info;
+        }
+
+        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
+        {
+            if (IsSend(!info.IsComChat, send, 
+                new Answer(false, AnswerType.OnlyInCommon, info.User.Name), info.User.Id)) return;
+            if (IsSend(!gT.ContainsUser(info.User), send,
+                new Answer(true, AnswerType.YouAreNotInGame, info.User.Name), info.ComChatId)) return;
+            if (IsSend(gT.Mafia.Status is not Status.Voting, send, 
+                new Answer(true, AnswerType.NotTimeToVote, info.User.Name), info.ComChatId)) return;
+            if (IsSend(!info.MentPlayers.Any(), send, 
+                new Answer(true, AnswerType.IncorrectVote, info.User.Name), info.ComChatId)) return;
+
+            var voter = info.User.Name;
+            var target = info.MentPlayers.First();
             var opStatus = gT.Mafia.Vote(voter, target);
             var answType = opStatus switch
             {
@@ -31,7 +36,7 @@ namespace App.CommandHandler
                 OperationStatus.Incorrect => AnswerType.IncorrectVote,
                 OperationStatus.NotInGame => AnswerType.YouAreNotInGame
             };
-            send(new Answer(true, answType, cI.User.Name, target), gT.ChatId);
+            send(new Answer(true, answType, info.User.Name, target), gT.ChatId);
             
 
             if (gT.Mafia.Status is Status.MafiaKilling)

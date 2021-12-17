@@ -15,7 +15,7 @@ namespace UserInterface
         private readonly IMessageSender _messageSender;
         
         public Action<Answer, ulong> RegisterSending() => _messageSender.SendMessage;
-        public void SubscribeOn(Action<CommandInfo> exCommand) => _messageHandler.ExCommand += exCommand;
+        public void SubscribeOn(Action<ICommandInfo> exCommand) => _messageHandler.ExCommand += exCommand;
 
         public View(
             DiscordSocketClient client,

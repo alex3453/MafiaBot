@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using App.CommandHandler;
 using Mafia;
 using CommonInteraction;
 
@@ -11,26 +12,25 @@ namespace App
     {
         private readonly IDictionary<ulong, GameTeam> _gameTeams = new ConcurrentDictionary<ulong, GameTeam>();
         private readonly Func<IMafia> _createMafiaFunc;
-        private readonly ICommandHandler[] _commandHandlers;
 
-        public Action<CommandInfo> Register() => ReproduceCommand;
+        public Action<ICommandInfo> Register() => ReproduceCommand;
         public event Action<Answer, ulong> SendMassage;
+        private IVisitor _visitor;
 
-        public Bot(ICommandHandler[] commandHandlers, Func<IMafia> createMafiaFunc)
+        public Bot(Func<IMafia> createMafiaFunc)
         {
-            _commandHandlers = commandHandlers;
             _createMafiaFunc = createMafiaFunc;
+            _visitor = new Visitor();
         }
 
-        private void ReproduceCommand (CommandInfo ctx)
+        private void ReproduceCommand (ICommandInfo ctx)
         {
             if (ctx.IsComChat && !_gameTeams.Keys.Contains(ctx.ComChatId))
                 _gameTeams[ctx.ComChatId] = new GameTeam(ctx.ComChatId, _createMafiaFunc);
             var gameTeam = _gameTeams.Values
                 .FirstOrDefault(u => ctx.IsComChat ? u.ChatId == ctx.ComChatId : u.ContainsUser(ctx.User));
-            _commandHandlers
-                .FirstOrDefault(c => c.Type == ctx.CommandType)
-                ?.ExecuteCommand(gameTeam, ctx, SendMassage);
+            ctx.Accept(_visitor);
+            (_visitor.Handler as ICommandHandler)?.ExecuteCommand(gameTeam, SendMassage);
         }
     }
 }

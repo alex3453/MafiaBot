@@ -14,7 +14,7 @@ namespace UserInterface
             _commands = commands;
         }
  
-        public bool Parse(SocketMessage msg, out CommandInfo commandInfo)
+        public bool Parse(SocketMessage msg, out ICommandInfo commandInfo)
         {
             if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!')
             {
@@ -24,7 +24,8 @@ namespace UserInterface
             foreach (var command in _commands)
             {
                 if (!command.IsItMyCommand(msg)) continue;
-                commandInfo = command.CreateCommandInfo(msg);
+                command.PrepareCommandInfo(msg);
+                commandInfo = command.GetCommandInfo();
                 return true;
             }
             commandInfo = null;

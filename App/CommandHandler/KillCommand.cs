@@ -7,23 +7,28 @@ namespace App.CommandHandler
 {
     public class KillCommand : ICommandHandler
     {
-        public override CommandType Type => CommandType.Kill;
-        
-        public override void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<Answer, ulong> send)
+        private readonly KillCommandInfo info;
+
+        public KillCommand(KillCommandInfo info)
+        {
+            this.info = info;
+        }
+
+        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
         {
             if (IsSend(gT is null, send,
-                new Answer(false, AnswerType.YouAreNotInGame, cI.User.Name), cI.User.Id)) return;
-            if (IsSend(cI.IsComChat, send, 
-                new Answer(true, AnswerType.OnlyInLocal, cI.User.Name), cI.ComChatId)) return;
-            if (IsSend(!gT.ContainsUser(cI.User), send, 
-                new Answer(false, AnswerType.YouAreNotInGame, cI.User.Name), cI.User.Id)) return;
+                new Answer(false, AnswerType.YouAreNotInGame, info.User.Name), info.User.Id)) return;
+            if (IsSend(info.IsComChat, send, 
+                new Answer(true, AnswerType.OnlyInLocal, info.User.Name), info.ComChatId)) return;
+            if (IsSend(!gT.ContainsUser(info.User), send, 
+                new Answer(false, AnswerType.YouAreNotInGame, info.User.Name), info.User.Id)) return;
             if (IsSend(gT.Mafia.Status is not Status.MafiaKilling, send,
-                new Answer(false, AnswerType.NotTimeToKill, cI.User.Name), cI.User.Id)) return;
+                new Answer(false, AnswerType.NotTimeToKill, info.User.Name), info.User.Id)) return;
             int target = 0;
-            var isCorrect = !cI.Content.Any() || !int.TryParse(cI.Content.First(), out target);
+            var isCorrect = !info.Content.Any() || !int.TryParse(info.Content.First(), out target);
             if (IsSend(isCorrect , send,
-                new Answer(false, AnswerType.IncorrectNumber, cI.User.Name), cI.User.Id)) return;
-            var killer = cI.User.Name;
+                new Answer(false, AnswerType.IncorrectNumber, info.User.Name), info.User.Id)) return;
+            var killer = info.User.Name;
             var opStatus = gT.Mafia.Act(killer, target);
             var answType =  opStatus switch
             {
@@ -33,7 +38,7 @@ namespace App.CommandHandler
                 OperationStatus.Incorrect => AnswerType.IncorrectNumber,
                 OperationStatus.NotInGame => AnswerType.YouAreNotInGame
             };
-            send(new Answer(false, answType, cI.User.Name, target.ToString()), cI.User.Id);
+            send(new Answer(false, answType, info.User.Name, target.ToString()), info.User.Id);
 
             if (gT.Mafia.Status is Status.Voting)
             {

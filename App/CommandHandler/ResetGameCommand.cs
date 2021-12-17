@@ -5,16 +5,21 @@ namespace App.CommandHandler
 {
     public class ResetGameCommand : ICommandHandler
     {
-        public override CommandType Type => CommandType.CreateNewGame;
-        
-        public override void ExecuteCommand(GameTeam gT, CommandInfo cI,Action<Answer, ulong> send)
+        private readonly ResetCommandInfo info;
+
+        public ResetGameCommand(ResetCommandInfo info)
         {
-            if (!cI.IsComChat)
-                send(new Answer(false, AnswerType.OnlyInCommon), cI.User.Id);
+            this.info = info;
+        }
+
+        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
+        {
+            if (!info.IsComChat)
+                send(new Answer(false, AnswerType.OnlyInCommon), info.User.Id);
             else
             {
                 gT.Reset();
-                send(new Answer(true, AnswerType.NewGame), cI.ComChatId);
+                send(new Answer(true, AnswerType.NewGame), info.ComChatId);
             }
         }
     }

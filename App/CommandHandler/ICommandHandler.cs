@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using App.CommandHandler;
 using CommonInteraction;
-using Mafia;
 
 namespace App
 {
-    public abstract class ICommandHandler
+    public abstract class ICommandHandler : ICommand
     {
-        public abstract CommandType Type { get; }
-
-        public abstract void ExecuteCommand(GameTeam gT, CommandInfo cI, Action<Answer, ulong> send);
+        public abstract void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send);
 
         protected bool IsSend(bool toSend, Action<Answer, ulong> send, 
             Answer answer, ulong id)

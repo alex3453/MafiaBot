@@ -8,42 +8,49 @@ namespace UserInterface
     public class HelpMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
-        protected override CommandType MyCommandType => CommandType.Help;
+        public override ICommandInfo GetCommandInfo() => new HelpCommandInfo(user, isCommonChannel, commonChannelId);
         public override string GetDescription() => "команда !help";
     }
 
     public class RegMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"reg", "куп"};
-        protected override CommandType MyCommandType => CommandType.Reg;
+
+        public override RegCommandInfo GetCommandInfo() => new(user, isCommonChannel, commonChannelId);
+
+
         public override string GetDescription() => "команда !reg";
     }
 
     public class ResetGameMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"createnew", "скуфеутуц"};
-        protected override CommandType MyCommandType => CommandType.CreateNewGame;
+        public override ResetCommandInfo GetCommandInfo() => new(user, isCommonChannel, commonChannelId);
+
         public override string GetDescription() => "команда !createnew";
     }
     
     public class StartMessageMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"start", "ыефке"};
-        protected override CommandType MyCommandType => CommandType.Start;
+        public override StartCommandInfo GetCommandInfo() => new(user, isCommonChannel, commonChannelId);
+
         public override string GetDescription() => "команда !start";
     }
 
     public class VoteMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string>{"vote", "мщеу"};
-        protected override CommandType MyCommandType => CommandType.Vote;
+        public override VoteCommandInfo GetCommandInfo() => new(user, isCommonChannel, commonChannelId, mentionedUsers);
+
         public override string GetDescription() => "команда !vote";
     }
 
     public class KillMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"kill", "лшдд"};
-        protected override CommandType MyCommandType => CommandType.Kill;
+        public override KillCommandInfo GetCommandInfo() => new(user, isCommonChannel, commonChannelId, args);
+
         public override string GetDescription() => "команда !kill";
     }
 }
