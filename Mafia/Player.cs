@@ -40,8 +40,5 @@
         {
             KillCount++;
         }
-
-        // public void BanMoving() => IsSkipsMove = true;
-        // public void Unban() => IsSkipsMove = false;
     }
 }

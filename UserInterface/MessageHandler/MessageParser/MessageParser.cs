@@ -24,8 +24,7 @@ namespace UserInterface
             foreach (var command in _commands)
             {
                 if (!command.IsItMyCommand(msg)) continue;
-                command.PrepareCommandInfo(msg);
-                commandInfo = command.GetCommandInfo();
+                commandInfo = command.GetCommandInfo(msg);
                 return true;
             }
             commandInfo = null;

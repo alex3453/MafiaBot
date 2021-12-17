@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using App;
 using App.CommandHandler;
+using CommonInteraction;
 using Discord.WebSocket;
 using Mafia;
 using Ninject;
-using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
 using UserInterface;
 
@@ -41,6 +41,9 @@ namespace Start
             container.Bind<ICommandHandler>().To<StartCommand>();
             container.Bind<ICommandHandler>().To<VoteCommand>();
             container.Bind<ICommandHandler>().To<KillCommand>();
+            
+            container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
+            container.Bind<IVisitor>().To<Visitor>();
 
             container.Bind<IMafiaFactory>().ToFactory();
             container.Bind<IMafia>().To<MafiaGame>();
