@@ -7,28 +7,28 @@ namespace App.CommandHandler
 {
     public class StartCommand : ICommandHandler
     {
-        private readonly StartCommandInfo info;
+        private readonly StartCommandInfo _info;
 
-        public StartCommand(StartCommandInfo info)
+        public StartCommand(StartCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
-            this.info = info;
+            _info = info;
         }
 
-        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
+        public override void ExecuteCommand(GameTeam gT)
         {
-            if (IsSend(!info.IsComChat, send, new Answer(false, AnswerType.OnlyInCommon, info.User.Name), info.User.Id)) return;
-            if (IsSend(gT.Mafia.Status is not Status.ReadyToStart, send,
+            if (IsSend(!_info.IsComChat, new Answer(false, AnswerType.OnlyInCommon, _info.User.Name), _info.User.Id)) return;
+            if (IsSend(gT.Mafia.Status is not Status.ReadyToStart,
                 gT.Mafia.Status is Status.WaitingPlayers
                     ? new Answer(true, AnswerType.NeedMorePlayers, gT.Users.Select(u => u.Name).ToArray())
-                    : new Answer(true, AnswerType.GameIsGoing), info.ComChatId)) return;
+                    : new Answer(true, AnswerType.GameIsGoing), _info.ComChatId)) return;
             gT.Mafia.StartGame();
             var playersRoles = gT.Mafia.PlayersRoles;
             foreach (var player in playersRoles.Keys)
             {
                 var usr = gT.Users.First(u => u.Name == player);
-                send(new Answer(false, AnswerType.TellRole, playersRoles[usr.Name].ToString()), usr.Id);
+                _send(new Answer(false, AnswerType.TellRole, playersRoles[usr.Name].ToString()), usr.Id);
             }
-            send(new Answer(true, AnswerType.GameStarted, gT.Users.Select(u => u.Name).ToArray()), gT.ChatId);
+            _send(new Answer(true, AnswerType.GameStarted, gT.Users.Select(u => u.Name).ToArray()), gT.ChatId);
         }
         
     }

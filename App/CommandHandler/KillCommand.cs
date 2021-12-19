@@ -7,29 +7,29 @@ namespace App.CommandHandler
 {
     public class KillCommand : ICommandHandler
     {
-        private readonly KillCommandInfo info;
+        private readonly KillCommandInfo _info;
 
-        public KillCommand(KillCommandInfo info)
+        public KillCommand(KillCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
-            this.info = info;
+            _info = info;
         }
 
-        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
+        public override void ExecuteCommand(GameTeam gT)
         {
-            if (IsSend(gT is null, send,
-                new Answer(false, AnswerType.YouAreNotInGame, info.User.Name), info.User.Id)) return;
-            if (IsSend(info.IsComChat, send, 
-                new Answer(true, AnswerType.OnlyInLocal, info.User.Name), info.ComChatId)) return;
-            if (IsSend(!gT.ContainsUser(info.User), send, 
-                new Answer(false, AnswerType.YouAreNotInGame, info.User.Name), info.User.Id)) return;
-            if (IsSend(gT.Mafia.Status is not Status.MafiaKilling, send,
-                new Answer(false, AnswerType.NotTimeToKill, info.User.Name), info.User.Id)) return;
+            if (IsSend(gT is null,
+                new Answer(false, AnswerType.YouAreNotInGame, _info.User.Name), _info.User.Id)) return;
+            if (IsSend(_info.IsComChat, 
+                new Answer(true, AnswerType.OnlyInLocal, _info.User.Name), _info.ComChatId)) return;
+            if (IsSend(!gT.ContainsUser(_info.User),
+                new Answer(false, AnswerType.YouAreNotInGame, _info.User.Name), _info.User.Id)) return;
+            if (IsSend(gT.Mafia.Status is not Status.MafiaKilling,
+                new Answer(false, AnswerType.NotTimeToKill, _info.User.Name), _info.User.Id)) return;
             int target = 0;
-            var isCorrect = !info.Content.Any() || !int.TryParse(info.Content.First(), out target);
-            if (IsSend(isCorrect , send,
-                new Answer(false, AnswerType.IncorrectNumber, info.User.Name), info.User.Id)) return;
-            var killer = info.User.Name;
-            var opStatus = gT.Mafia.Act(gT.Mafia.AllPlayers.Single(player => player.Name == killer), target);
+            var isCorrect = !_info.Content.Any() || !int.TryParse(_info.Content.First(), out target);
+            if (IsSend(isCorrect ,
+                new Answer(false, AnswerType.IncorrectNumber, _info.User.Name), _info.User.Id)) return;
+            var killer = _info.User.Name;
+            var opStatus = gT.Mafia.Act(killer, target);
             var answType =  opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyKilled,
@@ -38,19 +38,19 @@ namespace App.CommandHandler
                 OperationStatus.Incorrect => AnswerType.IncorrectNumber,
                 OperationStatus.NotInGame => AnswerType.YouAreNotInGame
             };
-            send(new Answer(false, answType, info.User.Name, target.ToString()), info.User.Id);
+            _send(new Answer(false, answType, _info.User.Name, target.ToString()), _info.User.Id);
 
             if (gT.Mafia.Status is Status.Voting)
             {
-                send(gT.Mafia.IsSomeBodyDied
+                _send(gT.Mafia.IsSomeBodyDied
                         ? new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray())
                         : new Answer(true, AnswerType.NightAllAlive), gT.ChatId);
-                send(new Answer(true, AnswerType.EndNight), gT.ChatId);
+                _send(new Answer(true, AnswerType.EndNight), gT.ChatId);
             }
             else if (gT.Mafia.Status is Status.MafiaWins)
-                send(new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+                _send(new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
             else if (gT.Mafia.Status is Status.PeacefulWins)
-                send(new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+                _send(new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
         }
     }
 }

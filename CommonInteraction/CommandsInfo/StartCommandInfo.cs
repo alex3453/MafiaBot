@@ -1,4 +1,6 @@
-﻿namespace CommonInteraction
+﻿using System;
+
+namespace CommonInteraction
 {
     public class StartCommandInfo : ICommandInfo
     {
@@ -10,9 +12,9 @@
             ComChatId = comChatId;
         }
 
-        public void Accept(IVisitor visitor)
+        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this);
+            visitor.Handle(this, send);
         }
 
         public User User { get; }

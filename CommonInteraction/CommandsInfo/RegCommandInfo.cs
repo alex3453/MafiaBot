@@ -1,17 +1,19 @@
-﻿namespace CommonInteraction
+﻿using System;
+
+namespace CommonInteraction
 {
     public class RegCommandInfo : ICommandInfo
     {
-        public void Accept(IVisitor visitor)
-        {
-            visitor.Handle(this);
-        }
-
         public RegCommandInfo(User user, bool isComChat, ulong comChatId)
         {
             User = user;
             IsComChat = isComChat;
             ComChatId = comChatId;
+        }
+
+        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        {
+            visitor.Handle(this, send);
         }
 
         public User User { get; }

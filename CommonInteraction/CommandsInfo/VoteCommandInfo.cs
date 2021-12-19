@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CommonInteraction
 {
@@ -14,9 +15,9 @@ namespace CommonInteraction
             MentPlayers = mentPlayers;
         }
 
-        public void Accept(IVisitor visitor)
+        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this);
+            visitor.Handle(this, send);
         }
 
         public User User { get; }

@@ -6,23 +6,23 @@ namespace App.CommandHandler
 {
     public class RegPlayerCommand : ICommandHandler
     {
-        private readonly RegCommandInfo info;
+        private readonly RegCommandInfo _info;
 
-        public RegPlayerCommand(RegCommandInfo info)
+        public RegPlayerCommand(RegCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
-            this.info = info;
+            _info = info;
         }
 
-        public override void ExecuteCommand(GameTeam gT, Action<Answer, ulong> send)
+        public override void ExecuteCommand(GameTeam gT)
         {
-            if (IsSend(!info.IsComChat, send,
-                new Answer(false, AnswerType.OnlyInCommon, info.User.Name), info.User.Id)) return;
-            if (IsSend(gT.ContainsUser(info.User), send,
-                new Answer(true, AnswerType.AlreadyRegistered, info.User.Name), info.User.Id)) return;
-            if (IsSend(gT.Mafia.Status is not (Status.WaitingPlayers or Status.ReadyToStart), send, 
-                new Answer(true, AnswerType.GameIsGoing, info.User.Name), info.ComChatId)) return;
-            gT.AddUser(info.User);
-            send(new Answer(true, AnswerType.SuccessfullyRegistered, info.User.Name), info.ComChatId);
+            if (IsSend(!_info.IsComChat,
+                new Answer(false, AnswerType.OnlyInCommon, _info.User.Name), _info.User.Id)) return;
+            if (IsSend(gT.ContainsUser(_info.User),
+                new Answer(true, AnswerType.AlreadyRegistered, _info.User.Name), _info.User.Id)) return;
+            if (IsSend(gT.Mafia.Status is not (Status.WaitingPlayers or Status.ReadyToStart), 
+                new Answer(true, AnswerType.GameIsGoing, _info.User.Name), _info.ComChatId)) return;
+            gT.AddUser(_info.User);
+            _send(new Answer(true, AnswerType.SuccessfullyRegistered, _info.User.Name), _info.ComChatId);
         }
     }
 }

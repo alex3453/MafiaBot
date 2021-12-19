@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 
 namespace CommonInteraction
 {
@@ -12,7 +12,7 @@ namespace CommonInteraction
         }
 
 
-        public void Accept(IVisitor visitor)
+        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
         {
             throw new System.NotImplementedException();
         }

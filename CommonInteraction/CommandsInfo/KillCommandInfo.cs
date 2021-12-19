@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 
 namespace CommonInteraction
@@ -7,9 +8,9 @@ namespace CommonInteraction
     {
         public readonly IEnumerable<string> Content;
         
-        public void Accept(IVisitor visitor)
+        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this);
+            visitor.Handle(this, send);
         }
         public KillCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> content)
         {

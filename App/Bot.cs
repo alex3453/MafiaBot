@@ -24,8 +24,8 @@ namespace App
         private void ReproduceCommand (ICommandInfo ctx)
         {
             var gameTeam = _teamProvider.GetTeam(ctx);
-            ctx.Accept(_visitor);
-            (_visitor.Handler as ICommandHandler)?.ExecuteCommand(gameTeam, SendMassage);
+            ctx.Accept(_visitor, SendMassage);
+            (_visitor.Handler as ICommandHandler)?.ExecuteCommand(gameTeam);
         }
     }
 }
