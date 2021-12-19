@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using App.CommandHandler;
-using Mafia;
 using CommonInteraction;
 
 namespace App
