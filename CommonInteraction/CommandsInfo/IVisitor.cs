@@ -2,19 +2,12 @@
 
 namespace CommonInteraction
 {
-    public interface IVisitor
+    public interface IVisitor<out TCommand>
     {
-        void Handle(KillCommandInfo info, Action<Answer, ulong> send);
-        void Handle(RegCommandInfo info, Action<Answer, ulong> send);
-        void Handle(ResetCommandInfo info, Action<Answer, ulong> send);
-        void Handle(StartCommandInfo info, Action<Answer, ulong> send);
-        void Handle(VoteCommandInfo info, Action<Answer, ulong> send);
-
-        public ICommand Handler { get; }
-    }
-
-    public interface ICommand
-    {
-        
+        TCommand Handle(KillCommandInfo info, Action<Answer, ulong> send);
+        TCommand Handle(RegCommandInfo info, Action<Answer, ulong> send);
+        TCommand Handle(ResetCommandInfo info, Action<Answer, ulong> send);
+        TCommand Handle(StartCommandInfo info, Action<Answer, ulong> send);
+        TCommand Handle(VoteCommandInfo info, Action<Answer, ulong> send);
     }
 }

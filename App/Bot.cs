@@ -12,10 +12,10 @@ namespace App
     {
         public Action<ICommandInfo> Register() => ReproduceCommand;
         public event Action<Answer, ulong> SendMassage;
-        private readonly IVisitor _visitor;
+        private readonly IVisitor<ICommandHandler> _visitor;
         private readonly IDictionaryProvider _teamProvider;
 
-        public Bot(IVisitor visitor, IDictionaryProvider teamProvider )
+        public Bot(IVisitor<ICommandHandler> visitor, IDictionaryProvider teamProvider )
         {
             _visitor = visitor;
             _teamProvider = teamProvider;
@@ -24,8 +24,7 @@ namespace App
         private void ReproduceCommand (ICommandInfo ctx)
         {
             var gameTeam = _teamProvider.GetTeam(ctx);
-            ctx.Accept(_visitor, SendMassage);
-            (_visitor.Handler as ICommandHandler)?.ExecuteCommand(gameTeam);
+            ctx.Accept(_visitor, SendMassage).ExecuteCommand(gameTeam);
         }
     }
 }

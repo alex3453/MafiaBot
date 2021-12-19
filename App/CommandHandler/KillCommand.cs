@@ -7,13 +7,8 @@ namespace App.CommandHandler
 {
     public class KillCommand : ICommandHandler
     {
-        private readonly KillCommandInfo _info;
-
-        public KillCommand(KillCommandInfo info, Action<Answer, ulong> send) : base(send)
-        {
-            _info = info;
-        }
-
+        private KillCommandInfo _info;
+        
         public override void ExecuteCommand(GameTeam gT)
         {
             if (IsSend(gT is null,
@@ -51,6 +46,11 @@ namespace App.CommandHandler
                 _send(new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
             else if (gT.Mafia.Status is Status.PeacefulWins)
                 _send(new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+        }
+
+        public KillCommand(KillCommandInfo info, Action<Answer, ulong> send) : base(send)
+        {
+            _info = info;
         }
     }
 }

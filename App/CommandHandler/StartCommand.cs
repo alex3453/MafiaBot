@@ -8,12 +8,6 @@ namespace App.CommandHandler
     public class StartCommand : ICommandHandler
     {
         private readonly StartCommandInfo _info;
-
-        public StartCommand(StartCommandInfo info, Action<Answer, ulong> send) : base(send)
-        {
-            _info = info;
-        }
-
         public override void ExecuteCommand(GameTeam gT)
         {
             if (IsSend(!_info.IsComChat, new Answer(false, AnswerType.OnlyInCommon, _info.User.Name), _info.User.Id)) return;
@@ -30,6 +24,10 @@ namespace App.CommandHandler
             }
             _send(new Answer(true, AnswerType.GameStarted, gT.Users.Select(u => u.Name).ToArray()), gT.ChatId);
         }
-        
+
+        public StartCommand(StartCommandInfo info, Action<Answer, ulong> send) : base(send)
+        {
+            _info = info;
+        }
     }
 }

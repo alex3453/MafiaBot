@@ -8,7 +8,6 @@ namespace App.CommandHandler
     public class VoteCommand : ICommandHandler
     {
         private readonly VoteCommandInfo _info;
-
         public VoteCommand(VoteCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
             _info = info;

@@ -6,12 +6,6 @@ namespace App.CommandHandler
     public class ResetGameCommand : ICommandHandler
     {
         private readonly ResetCommandInfo _info;
-
-        public ResetGameCommand(ResetCommandInfo info, Action<Answer, ulong> send) : base(send)
-        {
-            _info = info;
-        }
-
         public override void ExecuteCommand(GameTeam gT)
         {
             if (!_info.IsComChat)
@@ -21,6 +15,11 @@ namespace App.CommandHandler
                 gT.Reset();
                 _send(new Answer(true, AnswerType.NewGame), _info.ComChatId);
             }
+        }
+
+        public ResetGameCommand(ResetCommandInfo info, Action<Answer, ulong> send) : base( send)
+        {
+            _info = info;
         }
     }
 }

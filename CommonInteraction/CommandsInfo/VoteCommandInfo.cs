@@ -15,9 +15,9 @@ namespace CommonInteraction
             MentPlayers = mentPlayers;
         }
 
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this, send);
+            return visitor.Handle(this, send);
         }
 
         public User User { get; }

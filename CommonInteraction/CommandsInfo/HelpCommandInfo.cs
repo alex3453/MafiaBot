@@ -12,7 +12,7 @@ namespace CommonInteraction
         }
 
 
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong> send)
         {
             throw new System.NotImplementedException();
         }

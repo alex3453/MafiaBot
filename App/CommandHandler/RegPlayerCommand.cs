@@ -6,13 +6,7 @@ namespace App.CommandHandler
 {
     public class RegPlayerCommand : ICommandHandler
     {
-        private readonly RegCommandInfo _info;
-
-        public RegPlayerCommand(RegCommandInfo info, Action<Answer, ulong> send) : base(send)
-        {
-            _info = info;
-        }
-
+        private RegCommandInfo _info;
         public override void ExecuteCommand(GameTeam gT)
         {
             if (IsSend(!_info.IsComChat,
@@ -23,6 +17,11 @@ namespace App.CommandHandler
                 new Answer(true, AnswerType.GameIsGoing, _info.User.Name), _info.ComChatId)) return;
             gT.AddUser(_info.User);
             _send(new Answer(true, AnswerType.SuccessfullyRegistered, _info.User.Name), _info.ComChatId);
+        }
+
+        public RegPlayerCommand(RegCommandInfo info, Action<Answer, ulong> send) : base(send)
+        {
+            _info = info;
         }
     }
 }

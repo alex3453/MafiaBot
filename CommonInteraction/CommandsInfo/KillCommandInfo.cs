@@ -8,9 +8,9 @@ namespace CommonInteraction
     {
         public readonly IEnumerable<string> Content;
         
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this, send);
+            return visitor.Handle(this, send);
         }
         public KillCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> content)
         {

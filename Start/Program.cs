@@ -43,7 +43,7 @@ namespace Start
             container.Bind<ICommandHandler>().To<KillCommand>();
             
             container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
-            container.Bind<IVisitor>().To<Visitor>();
+            container.Bind<IVisitor<ICommandHandler>>().To<Visitor>();
 
             container.Bind<IMafiaFactory>().ToFactory();
             container.Bind<IMafia>().To<MafiaGame>();

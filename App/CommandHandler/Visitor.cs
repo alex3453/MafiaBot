@@ -3,34 +3,17 @@ using CommonInteraction;
 
 namespace App.CommandHandler
 {
-    public class Visitor : IVisitor
+    public class Visitor : IVisitor<ICommandHandler>
     {
-
-        public void Handle(KillCommandInfo info, Action<Answer, ulong> send)
-        {
-            Handler = new KillCommand(info, send);
-        }
-
-        public void Handle(RegCommandInfo info, Action<Answer, ulong> send)
-        {
-            Handler = new RegPlayerCommand(info, send);
-        }
-
-        public void Handle(ResetCommandInfo info, Action<Answer, ulong> send)
-        {
-            Handler = new ResetGameCommand(info, send);
-        }
-
-        public void Handle(StartCommandInfo info, Action<Answer, ulong> send)
-        {
-            Handler =  new StartCommand(info, send);
-        }
-
-        public void Handle(VoteCommandInfo info, Action<Answer, ulong> send)
-        {
-            Handler =  new VoteCommand(info, send);
-        }
-
-        public ICommand Handler { get; private set; }
+        public ICommandHandler Handle(KillCommandInfo info, Action<Answer, ulong> send) 
+            => new KillCommand(info, send);
+        public ICommandHandler Handle(RegCommandInfo info, Action<Answer, ulong> send) 
+            => new RegPlayerCommand(info, send);
+        public ICommandHandler Handle(ResetCommandInfo info, Action<Answer, ulong> send) 
+            => new ResetGameCommand(info, send);
+        public ICommandHandler Handle(StartCommandInfo info, Action<Answer, ulong> send) 
+            => new StartCommand(info, send);
+        public ICommandHandler Handle(VoteCommandInfo info, Action<Answer, ulong> send)
+            => new VoteCommand(info, send);
     }
 }
