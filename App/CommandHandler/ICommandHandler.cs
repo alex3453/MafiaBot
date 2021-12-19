@@ -4,7 +4,7 @@ using CommonInteraction;
 
 namespace App
 {
-    public abstract class ICommandHandler : ICommand
+    public abstract class ICommandHandler
     {
         protected readonly Action<Answer, ulong> _send;
 

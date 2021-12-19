@@ -12,9 +12,9 @@ namespace CommonInteraction
             ComChatId = comChatId;
         }
 
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        public THandler Accept<THandler>(IVisitor<THandler> visitor, Action<Answer, ulong> send)
         {
-            visitor.Handle(this, send);
+            return visitor.Handle(this, send);
         }
 
         public User User { get; }

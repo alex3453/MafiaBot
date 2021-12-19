@@ -12,7 +12,7 @@ namespace CommonInteraction
         }
 
 
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send)
+        public THandler Accept<THandler>(IVisitor<THandler> visitor, Action<Answer, ulong> send)
         {
             throw new System.NotImplementedException();
         }

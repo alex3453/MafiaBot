@@ -4,7 +4,7 @@ namespace CommonInteraction
 {
     public interface ICommandInfo
     {
-        public void Accept(IVisitor visitor, Action<Answer, ulong> send);
+        public THandler Accept<THandler>(IVisitor<THandler> visitor, Action<Answer, ulong> send);
         public User User { get; }
         public bool IsComChat { get; }
         public ulong ComChatId { get; }
