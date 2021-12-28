@@ -24,7 +24,8 @@ namespace UserInterface
             _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.Channel.Id);
         }
 
-        public override string GetDescription() => "!default";
+        public override string GetDescription() => "!default - обычный решим ответов. " +
+                                                   "Бот будет оповещать о событиях заготовленными фразами";
     }
     
     public class AnswerBalabobaMessage : ViewCommandMessage
@@ -56,21 +57,22 @@ namespace UserInterface
     
     public class HelpMessage : ViewCommandMessage
     {
-        private readonly Func<string> _getHelp;
+        private readonly Func<IMessageParser> getParser;
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
         public override void ExecuteCommand(SocketMessage msg)
         {
             var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
             var channelId = isCommonChannel ? msg.Channel.Id : msg.Author.Id;
-            _sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, _getHelp()), channelId);
+            var parser = getParser();
+            _sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
         }
 
         public override string GetDescription() => "!help - выведет данное приветственное сообщение и " +
                                                    "покажет все команды, если вы вдруг забыли.";
 
-        public HelpMessage(IMessageSender sender, Func<string> getHelp) : base(sender)
+        public HelpMessage(IMessageSender sender, Func<IMessageParser> getHelp) : base(sender)
         {
-            _getHelp = getHelp;
+            getParser = getHelp;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using App;
 using App.CommandHandler;
@@ -6,6 +7,7 @@ using CommonInteraction;
 using Discord.WebSocket;
 using Mafia;
 using Ninject;
+using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
 using UserInterface;
 
@@ -26,15 +28,15 @@ namespace Start
             var container = new StandardKernel();
 
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
-            container.Bind<IMessageHandler>().To<MessageHandler>();
+            container.Bind<IMessageHandler>().To<MessageHandler>().InSingletonScope();
             container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
-            
+
             container.Bind<CommandMessage>().To<RegMessage>();
             container.Bind<CommandMessage>().To<ResetGameMessage>();
             container.Bind<CommandMessage>().To<StartMessageMessage>();
             container.Bind<CommandMessage>().To<KillMessage>();
             container.Bind<CommandMessage>().To<VoteMessage>();
-
+            
             container.Bind<ViewCommandMessage>().To<AnswerBalabobaMessage>();
             container.Bind<ViewCommandMessage>().To<AnswerDefaultMessage>();
             container.Bind<ViewCommandMessage>().To<HelpMessage>();
@@ -54,8 +56,9 @@ namespace Start
             
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
-            container.Bind<IMessageSender>().To<MessageSender>();
+            container.Bind<IMessageSender>().To<MessageSender>().InSingletonScope();
             container.Bind<IAnswerParser>().To<BalabobaParser>();
+            container.Bind<IParserFactory>().ToFactory();
 
             return container;
         }
