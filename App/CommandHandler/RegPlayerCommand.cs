@@ -12,7 +12,7 @@ namespace App.CommandHandler
             if (IsSend(!_info.IsComChat,
                 new Answer(false, AnswerType.OnlyInCommon, _info.User.Name), _info.User.Id)) return;
             if (IsSend(gT.ContainsUser(_info.User),
-                new Answer(true, AnswerType.AlreadyRegistered, _info.User.Name), _info.User.Id)) return;
+                new Answer(true, AnswerType.AlreadyRegistered, _info.User.Name), _info.ComChatId)) return;
             if (IsSend(gT.Mafia.Status is not (Status.WaitingPlayers or Status.ReadyToStart), 
                 new Answer(true, AnswerType.GameIsGoing, _info.User.Name), _info.ComChatId)) return;
             gT.AddUser(_info.User);

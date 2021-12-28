@@ -9,5 +9,6 @@ namespace CommonInteraction
         TCommand Handle(ResetCommandInfo info, Action<Answer, ulong> send);
         TCommand Handle(StartCommandInfo info, Action<Answer, ulong> send);
         TCommand Handle(VoteCommandInfo info, Action<Answer, ulong> send);
+        TCommand Handle(HelpCommandInfo info, Action<Answer, ulong> send);
     }
 }

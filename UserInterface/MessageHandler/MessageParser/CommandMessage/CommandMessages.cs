@@ -5,19 +5,6 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class HelpMessage : CommandMessage
-    {
-        protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
-        public override ICommandInfo GetCommandInfo(SocketMessage msg)
-        {
-            FillCommonInfo(msg);
-            return new HelpCommandInfo(user, isCommonChannel, commonChannelId);
-        }
-
-        public override string GetDescription() => "!help - выведет данное приветственное сообщение и " +
-                                                   "покажет все команды, если вы вдруг забыли.";
-    }
-
     public class RegMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"reg", "куп"};

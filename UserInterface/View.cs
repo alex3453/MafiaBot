@@ -35,7 +35,6 @@ namespace UserInterface
         {
             _client.MessageReceived += _messageHandler.ProcessMessage;
             _client.Log += _logger.Log;
-            _messageHandler.SendMassage += RegisterSending();
             await _client.LoginAsync(TokenType.Bot,  _provider.GetToken());
             await _client.StartAsync();
         }

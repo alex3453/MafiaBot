@@ -35,6 +35,7 @@ namespace CommonInteraction
         MafiaKilling,
         IncorrectVote,
         GetHelp,
-        Unknown
+        Unknown,
+        ChangeMod
     }
 }

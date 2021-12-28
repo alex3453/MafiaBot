@@ -15,5 +15,8 @@ namespace App.CommandHandler
             => new StartCommand(info, send);
         public ICommandHandler Handle(VoteCommandInfo info, Action<Answer, ulong> send)
             => new VoteCommand(info, send);
+
+        public ICommandHandler Handle(HelpCommandInfo info, Action<Answer, ulong> send)
+            => new HelpCommand(info, send);
     }
 }

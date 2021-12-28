@@ -7,11 +7,14 @@ namespace UserInterface
 {
     public class MessageParser : IMessageParser
     {
-        private readonly CommandMessage[] _commands;
+        private readonly CommandMessage[] _botCommands;
 
-        public MessageParser(CommandMessage[] commands)
+        private readonly ViewCommandMessage[] _viewCommands;
+
+        public MessageParser(CommandMessage[] botCommands, ViewCommandMessage[] viewCommands)
         {
-            _commands = commands;
+            _botCommands = botCommands;
+            _viewCommands = viewCommands;
         }
  
         public bool Parse(SocketMessage msg, out ICommandInfo commandInfo)
@@ -21,11 +24,18 @@ namespace UserInterface
                 commandInfo = null;
                 return false;
             }
-            foreach (var command in _commands)
+            foreach (var command in _botCommands)
             {
                 if (!command.IsItMyCommand(msg)) continue;
                 commandInfo = command.GetCommandInfo(msg);
                 return true;
+            }
+            foreach (var command in _viewCommands)
+            {
+                if (!command.IsItMyCommand(msg)) continue;
+                command.ExecuteCommand(msg);
+                commandInfo = null;
+                return false;
             }
             commandInfo = null;
             return false;
@@ -34,10 +44,10 @@ namespace UserInterface
         public string GetCommandsDescription()
         {
             var des = new StringBuilder();
-            foreach (var command in _commands)
-            {
+            foreach (var command in _botCommands)
                 des.Append(command.GetDescription() + "\n");
-            }
+            foreach (var command in _viewCommands)
+                des.Append(command.GetDescription() + "\n");
             return des.ToString();
         }
     }

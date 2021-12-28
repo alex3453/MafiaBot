@@ -2,9 +2,9 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class DebagParser : IAnswerParser
+    public class DebugParser : IAnswerParser
     {
-        public string ParseAnswer(Answer answer)
+        public override string ParseAnswer(Answer answer)
         {
             return answer.AnswerType.ToString();
         }

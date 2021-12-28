@@ -1,3 +1,4 @@
+using System.Linq;
 using CommonInteraction;
 using Discord;
 using Discord.WebSocket;
@@ -7,9 +8,9 @@ namespace UserInterface
     public class MessageSender : IMessageSender
     {
         private readonly DiscordSocketClient _client;
-        private readonly IAnswerParser _answerParser;
+        private IAnswerParser _answerParser;
 
-        public MessageSender(DiscordSocketClient client, IAnswerParser answerParser)
+        public MessageSender(DiscordSocketClient client, DefaultParser answerParser)
         {
             _client = client;
             _answerParser = answerParser;
@@ -18,12 +19,19 @@ namespace UserInterface
         public void SendMessage(Answer answer, ulong destinationId)
         {
             if (answer.IsCommon)
-                ((IMessageChannel) _client.GetChannel(destinationId))
-                    .SendMessageAsync(_answerParser.ParseAnswer(answer));
+            {
+                var channel = (SocketTextChannel)_client.GetChannel(destinationId);
+                channel.SendMessageAsync(_answerParser.ParseAnswer(answer));
+            }
             else
                 _client.GetUser(destinationId)
                     .SendMessageAsync(_answerParser.ParseAnswer(answer));
             
+        }
+
+        public void SetParser(IAnswerParser parser)
+        {
+            _answerParser = parser;
         }
     }
 }

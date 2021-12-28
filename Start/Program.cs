@@ -27,14 +27,17 @@ namespace Start
 
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
             container.Bind<IMessageHandler>().To<MessageHandler>();
-            container.Bind<IMessageParser>().To<MessageParser>();
+            container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
             
-            container.Bind<CommandMessage>().To<HelpMessage>();
             container.Bind<CommandMessage>().To<RegMessage>();
             container.Bind<CommandMessage>().To<ResetGameMessage>();
             container.Bind<CommandMessage>().To<StartMessageMessage>();
             container.Bind<CommandMessage>().To<KillMessage>();
             container.Bind<CommandMessage>().To<VoteMessage>();
+
+            container.Bind<ViewCommandMessage>().To<AnswerBalabobaMessage>();
+            container.Bind<ViewCommandMessage>().To<AnswerDefaultMessage>();
+            container.Bind<ViewCommandMessage>().To<HelpMessage>();
 
             container.Bind<ICommandHandler>().To<ResetGameCommand>();
             container.Bind<ICommandHandler>().To<RegPlayerCommand>();
@@ -52,7 +55,7 @@ namespace Start
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
             container.Bind<IMessageSender>().To<MessageSender>();
-            container.Bind<IAnswerParser>().To<DefaultParser>();
+            container.Bind<IAnswerParser>().To<BalabobaParser>();
 
             return container;
         }
