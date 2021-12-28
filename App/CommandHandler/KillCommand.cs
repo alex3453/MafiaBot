@@ -24,7 +24,7 @@ namespace App.CommandHandler
             if (IsSend(isCorrect ,
                 new Answer(false, AnswerType.IncorrectNumber, _info.User.Name), _info.User.Id)) return;
             var killer = _info.User.Name;
-            var opStatus = gT.Mafia.Act(killer, target);
+            var opStatus = gT.Mafia.Act(gT.Mafia.AllPlayers.Single(player => player.Name == killer), target);
             var answType =  opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyKilled,
