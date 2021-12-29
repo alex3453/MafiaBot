@@ -6,6 +6,7 @@ namespace Mafia
         Already,
         Cant,
         Incorrect,
-        NotInGame
+        NotInGame,
+        WrongAct
     }
 }

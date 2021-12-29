@@ -24,14 +24,15 @@ namespace App.CommandHandler
             if (IsSend(isCorrect ,
                 new Answer(false, AnswerType.IncorrectNumber, _info.User.Name), _info.User.Id)) return;
             var killer = _info.User.Name;
-            var opStatus = gT.Mafia.Act(killer, target);
+            var opStatus = gT.Mafia.Act(gT.Mafia.AllPlayers.Single(player => player.Name == killer), target);
             var answType =  opStatus switch
             {
                 OperationStatus.Success => AnswerType.SuccessfullyKilled,
                 OperationStatus.Already => AnswerType.AlreadyKilled,
                 OperationStatus.Cant => AnswerType.YouCantKillThisPl,
                 OperationStatus.Incorrect => AnswerType.IncorrectNumber,
-                OperationStatus.NotInGame => AnswerType.YouAreNotInGame
+                OperationStatus.NotInGame => AnswerType.YouAreNotInGame,
+                OperationStatus.WrongAct => AnswerType.YouAreNotMafia
             };
             _send(new Answer(false, answType, _info.User.Name, target.ToString()), _info.User.Id);
 
