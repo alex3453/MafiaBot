@@ -17,7 +17,7 @@ namespace Mafia
 
         public override ActStatus Act(int target, List<Player> playersInGame)
         {
-            return ActStatus.Nothing;
+            return ActStatus.WrongAct;
         }
 
         public override string ToString()

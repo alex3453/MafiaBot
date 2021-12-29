@@ -4,6 +4,7 @@ namespace Mafia
     {
         EndNight, 
         Nothing, 
-        Already
+        Already,
+        WrongAct
     }
 }

@@ -31,7 +31,8 @@ namespace App.CommandHandler
                 OperationStatus.Already => AnswerType.AlreadyKilled,
                 OperationStatus.Cant => AnswerType.YouCantKillThisPl,
                 OperationStatus.Incorrect => AnswerType.IncorrectNumber,
-                OperationStatus.NotInGame => AnswerType.YouAreNotInGame
+                OperationStatus.NotInGame => AnswerType.YouAreNotInGame,
+                OperationStatus.WrongAct => AnswerType.YouAreNotMafia
             };
             _send(new Answer(false, answType, _info.User.Name, target.ToString()), _info.User.Id);
 

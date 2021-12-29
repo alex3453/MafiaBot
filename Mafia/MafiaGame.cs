@@ -107,6 +107,8 @@ namespace Mafia
             {
                 case ActStatus.Already:
                     return OperationStatus.Already;
+                case ActStatus.WrongAct:
+                    return OperationStatus.WrongAct;
                 case ActStatus.EndNight:
                     EndNight();
                     break;
