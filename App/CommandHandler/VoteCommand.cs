@@ -57,6 +57,8 @@ namespace App.CommandHandler
 
                 return;
             }
+            if (gT.Mafia.IsSomeBodyDied)
+                _send(new Answer(true, AnswerType.DayKill, gT.Mafia.Dead.ToArray()), gT.ChatId);
             if (IsSend(gT.Mafia.Status is Status.MafiaWins, new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId )) return;
             if (IsSend(gT.Mafia.Status is Status.PeacefulWins, new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId )) return;
         }

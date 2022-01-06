@@ -5,14 +5,17 @@ namespace UserInterface
 {
     public class BalabobaParser : IAnswerParser
     {
+        private readonly Balaboba _balaboba;
+
         private  readonly string hi, algo, startGame, mafiaWins, peacefulWins, successfullyRegistered, 
             alreadyRegistered, successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, 
             nightAllAlive, newGame, onlyInLocal, onlyInCommon, gameIsGoing,
             needMorePlayers, youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, 
             enterNumber, incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, 
             mafiaKilling, incorrectVote, unknownCommand, tellRole;
-        public BalabobaParser()
+        public BalabobaParser(Balaboba balaboba)
         {
+            _balaboba = balaboba;
             hi = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n";
             algo = "1. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
                    "2. Начните игру командой !start\n" +
@@ -64,17 +67,17 @@ namespace UserInterface
             return answer.AnswerType switch
             {
                 AnswerType.GameStarted => startGame,
-                AnswerType.MafiaWins => Balaboba.GetAnswer(mafiaWins).Result,
-                AnswerType.PeacefulWins => Balaboba.GetAnswer(peacefulWins).Result,
+                AnswerType.MafiaWins => _balaboba.GetAnswer(mafiaWins).Result,
+                AnswerType.PeacefulWins => _balaboba.GetAnswer(peacefulWins).Result,
                 AnswerType.SuccessfullyRegistered => string.Format(successfullyRegistered, answer.Args[0]),
                 AnswerType.AlreadyRegistered => string.Format(alreadyRegistered, answer.Args[0]),
                 AnswerType.SuccessfullyVoted => string.Format(successfullyVoted, answer.Args[0], answer.Args[1]),
                 AnswerType.AlreadyVoted => string.Format(alreadyVoted, answer.Args[0]),
-                AnswerType.EndDay => Balaboba.GetAnswer(endDay).Result,
-                AnswerType.EndNight => Balaboba.GetAnswer(endNight).Result,
-                AnswerType.DayKill => Balaboba.GetAnswer(string.Format(dayKill, answer.Args[0])).Result,
-                AnswerType.DayAllAlive => Balaboba.GetAnswer(dayAllAlive).Result,
-                AnswerType.NightKill =>Balaboba.GetAnswer(string.Format(nightKill, answer.Args[0])).Result,
+                AnswerType.EndDay => _balaboba.GetAnswer(endDay).Result,
+                AnswerType.EndNight => _balaboba.GetAnswer(endNight).Result,
+                AnswerType.DayKill => _balaboba.GetAnswer(string.Format(dayKill, answer.Args[0])).Result,
+                AnswerType.DayAllAlive => _balaboba.GetAnswer(dayAllAlive).Result,
+                AnswerType.NightKill =>_balaboba.GetAnswer(string.Format(nightKill, answer.Args[0])).Result,
                 AnswerType.NightAllAlive => nightAllAlive,
                 AnswerType.NewGame => newGame,
                 AnswerType.TellRole => string.Format(tellRole, answer.Args[0]),

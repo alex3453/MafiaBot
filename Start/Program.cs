@@ -30,35 +30,31 @@ namespace Start
             container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
             container.Bind<IMessageHandler>().To<MessageHandler>().InSingletonScope();
             container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
+            container.Bind<IMessageSender>().To<MessageSender>().InSingletonScope();
 
-            container.Bind<CommandMessage>().To<RegMessage>();
-            container.Bind<CommandMessage>().To<ResetGameMessage>();
-            container.Bind<CommandMessage>().To<StartMessageMessage>();
-            container.Bind<CommandMessage>().To<KillMessage>();
-            container.Bind<CommandMessage>().To<VoteMessage>();
-            
-            container.Bind<ViewCommandMessage>().To<AnswerBalabobaMessage>();
-            container.Bind<ViewCommandMessage>().To<AnswerDefaultMessage>();
-            container.Bind<ViewCommandMessage>().To<HelpMessage>();
+            container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
+                .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());
 
-            container.Bind<ICommandHandler>().To<ResetGameCommand>();
-            container.Bind<ICommandHandler>().To<RegPlayerCommand>();
-            container.Bind<ICommandHandler>().To<StartCommand>();
-            container.Bind<ICommandHandler>().To<VoteCommand>();
-            container.Bind<ICommandHandler>().To<KillCommand>();
-            
+            container.Bind(c => c.FromAssemblyContaining<ViewCommandMessage>()
+                .SelectAllClasses().InheritedFrom<ViewCommandMessage>().BindAllBaseClasses());
+
+            container.Bind(c => c.FromAssemblyContaining<ICommandHandler>()
+                .SelectAllClasses().InheritedFrom<ICommandHandler>().BindAllBaseClasses());
+
             container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
             container.Bind<IVisitor<ICommandHandler>>().To<Visitor>();
 
             container.Bind<IMafiaFactory>().ToFactory();
+            container.Bind<IParserFactory>().ToFactory();
+            
             container.Bind<IMafia>().To<MafiaGame>();
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
             container.Bind<ILogger>().To<ConsoleLogger>();
             container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
-            container.Bind<IMessageSender>().To<MessageSender>().InSingletonScope();
             container.Bind<IAnswerParser>().To<BalabobaParser>();
-            container.Bind<IParserFactory>().ToFactory();
+            container.Bind<IAnswerParser>().To<DefaultParser>(); 
+
 
             return container;
         }

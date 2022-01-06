@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace UserInterface
 {
-    public static class Balaboba
+    public class Balaboba
     {
         private class Response
         {
@@ -22,10 +22,10 @@ namespace UserInterface
             public string query { get; set; }
         }
         
-        public static async Task<string> GetAnswer(string text, int style = 11)
+        public async Task<string> GetAnswer(string text, int style = 11)
         {
             var result = text;
-            var message = new Message {filter = 1, intro = style, query = "он погиб"};
+            var message = new Message {filter = 1, intro = style, query = text};
             var json = JsonConvert.SerializeObject(message);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             using (var httpClient = new HttpClient())

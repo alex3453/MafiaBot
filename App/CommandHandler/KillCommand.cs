@@ -44,9 +44,17 @@ namespace App.CommandHandler
                 _send(new Answer(true, AnswerType.EndNight), gT.ChatId);
             }
             else if (gT.Mafia.Status is Status.MafiaWins)
+            {
+                if (gT.Mafia.IsSomeBodyDied)
+                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray()), gT.ChatId);
                 _send(new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+            }
             else if (gT.Mafia.Status is Status.PeacefulWins)
+            {
+                if (gT.Mafia.IsSomeBodyDied)
+                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray()), gT.ChatId);
                 _send(new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId);
+            }
         }
 
         public KillCommand(KillCommandInfo info, Action<Answer, ulong> send) : base(send)

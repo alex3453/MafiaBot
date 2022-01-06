@@ -47,7 +47,18 @@ namespace Mafia
         {
             return "Мафия";
         }
-        
-        public bool Kill(Player target) => true;
+    }
+
+    public class DoctorRole : Role
+    {
+        public override string GetDescription()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override ActStatus Act(int target, List<Player> playersInGame)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
