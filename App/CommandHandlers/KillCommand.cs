@@ -5,7 +5,7 @@ using Mafia;
 
 namespace App.CommandHandler
 {
-    public class KillCommand : ICommandHandler
+    public class KillCommand : BaseCommandHandler
     {
         private KillCommandInfo _info;
         

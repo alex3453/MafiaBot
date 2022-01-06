@@ -3,9 +3,9 @@ using System.Linq;
 using CommonInteraction;
 using Mafia;
 
-namespace App.CommandHandler
+namespace App
 {
-    public class VoteCommand : ICommandHandler
+    public class VoteCommand : BaseCommandHandler
     {
         private readonly VoteCommandInfo _info;
         public VoteCommand(VoteCommandInfo info, Action<Answer, ulong> send) : base(send)

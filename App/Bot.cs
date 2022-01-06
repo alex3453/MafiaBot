@@ -7,10 +7,10 @@ namespace App
     {
         public Action<ICommandInfo> Register() => ReproduceCommand;
         public event Action<Answer, ulong> SendMassage;
-        private readonly IVisitor<ICommandHandler> _visitor;
+        private readonly IVisitor<BaseCommandHandler> _visitor;
         private readonly IDictionaryProvider _teamProvider;
 
-        public Bot(IVisitor<ICommandHandler> visitor, IDictionaryProvider teamProvider )
+        public Bot(IVisitor<BaseCommandHandler> visitor, IDictionaryProvider teamProvider )
         {
             _visitor = visitor;
             _teamProvider = teamProvider;

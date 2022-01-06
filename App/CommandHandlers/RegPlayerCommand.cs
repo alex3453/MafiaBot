@@ -4,7 +4,7 @@ using Mafia;
 
 namespace App.CommandHandler
 {
-    public class RegPlayerCommand : ICommandHandler
+    public class RegPlayerCommand : BaseCommandHandler
     {
         private RegCommandInfo _info;
         public override void ExecuteCommand(GameTeam gT)

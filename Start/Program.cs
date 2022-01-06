@@ -38,11 +38,11 @@ namespace Start
             container.Bind(c => c.FromAssemblyContaining<ViewCommandMessage>()
                 .SelectAllClasses().InheritedFrom<ViewCommandMessage>().BindAllBaseClasses());
 
-            container.Bind(c => c.FromAssemblyContaining<ICommandHandler>()
-                .SelectAllClasses().InheritedFrom<ICommandHandler>().BindAllBaseClasses());
+            container.Bind(c => c.FromAssemblyContaining<BaseCommandHandler>()
+                .SelectAllClasses().InheritedFrom<BaseCommandHandler>().BindAllBaseClasses());
 
             container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
-            container.Bind<IVisitor<ICommandHandler>>().To<Visitor>();
+            container.Bind<IVisitor<BaseCommandHandler>>().To<Visitor>();
 
             container.Bind<IMafiaFactory>().ToFactory();
             container.Bind<IParserFactory>().ToFactory();

@@ -3,7 +3,7 @@ using CommonInteraction;
 
 namespace App.CommandHandler
 {
-    public class HelpCommand : ICommandHandler
+    public class HelpCommand : BaseCommandHandler
     {
         private HelpCommandInfo _info;
         public HelpCommand(HelpCommandInfo info, Action<Answer, ulong> send) : base(send)
