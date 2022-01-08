@@ -8,12 +8,11 @@ namespace UserInterface
     public class MessageSender : IMessageSender
     {
         private readonly DiscordSocketClient _client;
-        private IAnswerParser _answerParser;
+        private IAnswerParser _answerParser = new DefaultParser();
 
-        public MessageSender(DiscordSocketClient client, DefaultParser answerParser)
+        public MessageSender(DiscordSocketClient client)
         {
             _client = client;
-            _answerParser = answerParser;
         }
 
         public void SendMessage(Answer answer, ulong destinationId)

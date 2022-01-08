@@ -51,9 +51,10 @@ namespace Start
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
             container.Bind<ILogger>().To<ConsoleLogger>();
-            container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            container.Bind<ITokenProvider>().To<TgEnvVarTokenProvider>();
             container.Bind<IAnswerParser>().To<BalabobaParser>();
-            container.Bind<IAnswerParser>().To<DefaultParser>(); 
+            container.Bind<IAnswerParser>().To<DefaultParser>();
+            container.Bind<IView>().To<ViewTg>();
 
 
             return container;

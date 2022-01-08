@@ -6,7 +6,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class View
+    public class View : IView
     {
         private readonly DiscordSocketClient _client;
         private readonly IMessageHandler _messageHandler;
