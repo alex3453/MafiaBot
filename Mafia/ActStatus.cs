@@ -5,6 +5,7 @@ namespace Mafia
         EndNight, 
         Nothing, 
         Already,
-        WrongAct
+        WrongAct,
+        Success
     }
 }

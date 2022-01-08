@@ -7,6 +7,8 @@
         MafiaKilling,
         Voting,
         MafiaWins,
-        PeacefulWins
+        PeacefulWins,
+        Night,
+        Day
     }
 }

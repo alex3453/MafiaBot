@@ -5,15 +5,15 @@
         public string Name { get; }
         
         public bool IsSkipsMove { get; private set; }
-        public int VoteCount { get; private set; }
-        public int KillCount { get; private set; }
+        public bool IsAlive { get; private set; } = true;
+        public int VoteCount { get; private set; } = 0;
 
         public Role Role { get; private set; }
-        
+        public int KillCount { get; set; }
+
         public Player(string name)
         {
             Name = name;
-            VoteCount = 0;
         }
 
         public void SetRole(Role role)
@@ -21,24 +21,11 @@
             Role = role;
         }
 
-        public void ResetVoteCount()
-        {
-            VoteCount = 0;
-        }
+        public void VoteMe() => VoteCount++;
+        public void KillMe() => KillCount++;
+        public void HealMe() => IsAlive = true;
+        public void ResetVoteCount() => VoteCount = 0;
 
-        public void ResetKillCount()
-        {
-            KillCount = 0;
-        }
-
-        public void VoteMe()
-        {
-            VoteCount++;
-        }
-
-        public void KillMe()
-        {
-            KillCount++;
-        }
+        public void ResetKillCount() => KillCount = 0;
     }
 }

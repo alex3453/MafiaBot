@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mafia
 {
@@ -11,9 +13,11 @@ namespace Mafia
         private readonly List<Player> playersInGame = new();
         private readonly HashSet<Player> deadPlayers = new();
         private readonly List<Player> mafiozyPlayers = new();
+        private readonly List<Player> specialPlayers = new();
         private HashSet<string> votedPlayers = new();
         private readonly Dictionary<int, string> playersNumbers = new();
         private readonly IRoleDistribution roleDist;
+        private ConcurrentDictionary<Player, PlayerState> changes;
         
         public bool IsSomeBodyDied { get; private set; }
 
@@ -102,18 +106,20 @@ namespace Mafia
                 return OperationStatus.NotInGame;
             if (target > playersInGame.Count || target <= 0)
                 return OperationStatus.Incorrect;
-            var actStatus = maker.Role.Act(target, playersInGame);
+            PlayerState state;
+            var targetPlayer = playersInGame[target - 1];
+            var actStatus = maker.Role.Act(targetPlayer, out state);
             switch (actStatus)
             {
                 case ActStatus.Already:
                     return OperationStatus.Already;
                 case ActStatus.WrongAct:
                     return OperationStatus.WrongAct;
-                case ActStatus.EndNight:
-                    EndNight();
+                case ActStatus.Success:
+                    AddChange(targetPlayer, state );
                     break;
             }
-
+            if specialPlayers
             return OperationStatus.Success;
         }
 
@@ -148,6 +154,21 @@ namespace Mafia
             }
 
             return Array.Empty<string>();
+        }
+
+
+
+        public void AddChange(Player target, PlayerState state)
+        {
+            if (!changes.ContainsKey(target))
+            {
+                changes[target] = state;
+                return;
+            }
+            if (changes[target] != PlayerState.Alive)
+            {
+                changes[target] = state;
+            }
         }
 
         public IReadOnlyCollection<Player> AllPlayers => allPlayers;

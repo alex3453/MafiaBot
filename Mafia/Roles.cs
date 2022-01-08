@@ -7,7 +7,7 @@ namespace Mafia
     {
         public bool act;
         public abstract string GetDescription();
-        public abstract ActStatus Act(int target, List<Player> playersInGame);
+        public abstract ActStatus Act(Player target, out PlayerState state);
     }
 
     public class PeacefulRole : Role
@@ -15,8 +15,9 @@ namespace Mafia
         public override string GetDescription() => 
             "You are Peaceful. You can nothing, just try to survive.";
 
-        public override ActStatus Act(int target, List<Player> playersInGame)
+        public override ActStatus Act(Player target, out PlayerState state)
         {
+            state = PlayerState.Alive;
             return ActStatus.WrongAct;
         }
 
@@ -31,16 +32,21 @@ namespace Mafia
         public override string GetDescription() => 
             "You are Mafia. You and yours mafia-friends can kill one player per night.";
 
-        public override ActStatus Act(int target, List<Player> playersInGame)
+        public override ActStatus Act(Player target, out PlayerState state)
         {
             if (act)
+            {
+                state = PlayerState.Dead;
                 return ActStatus.Already;
+            }
+
             act = true;
-            var targetP = playersInGame[target - 1];
-            targetP.KillMe();
-            return playersInGame.Sum(player => player.KillCount) ==
-                   playersInGame.Sum(player => player.Role is MafiaRole ? 1 : 0) 
-                ? ActStatus.EndNight : ActStatus.Nothing;
+            target.KillMe();
+            state = PlayerState.Dead;
+            return ActStatus.Success;
+            // playersInGame.Sum(player => player.KillCount) ==
+            //    playersInGame.Sum(player => player.Role is MafiaRole ? 1 : 0) 
+            // ? ActStatus.EndNight : ActStatus.Nothing;
         }
 
         public override string ToString()
@@ -55,10 +61,20 @@ namespace Mafia
         {
             throw new System.NotImplementedException();
         }
+        
 
-        public override ActStatus Act(int target, List<Player> playersInGame)
+        public override ActStatus Act(Player target, out PlayerState state)
         {
-            throw new System.NotImplementedException();
+            if (act)
+            {
+                state = PlayerState.Alive;
+                return ActStatus.Already;
+            }
+
+            act = true;
+            target.HealMe();
+            state = PlayerState.Alive;
+            return ActStatus.Success;
         }
     }
 }
