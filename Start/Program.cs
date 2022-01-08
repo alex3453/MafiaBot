@@ -56,9 +56,14 @@ namespace Start
             // container.Bind<IAnswerParser>().To<BalabobaParser>();
             // container.Bind<IAnswerParser>().To<DefaultParser>();
 
-            container.Bind<TelegramBotClient>().To<TelegramBotClient>().InSingletonScope();
+            // container.Bind<TelegramBotClient>().To<TelegramBotClient>().InSingletonScope()
+            //     .WithConstructorArgument("token", "5013503683:AAEeTRWwk4m4GRIgqFf1YEtwzD5ysszQ3yw")
+            //     .WithConstructorArgument("httpClient", null)
+            //     .WithConstructorArgument("baseUrl", null);
             container.Bind<ITokenProvider>().To<TgEnvVarTokenProvider>();
             container.Bind<IView>().To<ViewTg>().InSingletonScope();
+            container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
+            container.Bind<IMessageSender>().To<TgSender>().InSingletonScope();
             
             container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
                 .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());

@@ -6,14 +6,18 @@ namespace UserInterface
 {
     public class TgSender : IMessageSender
     {
-        private readonly TelegramBotClient _client;
+        private TelegramBotClient _client;
         private IAnswerParser _answerParser = new DefaultParser();
         private CancellationTokenSource _cts;
 
-        public TgSender(TelegramBotClient client, CancellationTokenSource cts)
+        public TgSender(CancellationTokenSource cts)
+        {
+            _cts = cts;
+        }
+
+        public void SetClient(TelegramBotClient client)
         {
             _client = client;
-            _cts = cts;
         }
 
         public void SendMessage(Answer answer, ulong destinationId)

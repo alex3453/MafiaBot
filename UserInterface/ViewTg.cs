@@ -24,7 +24,8 @@ namespace UserInterface
             _messageHandler = messageHandler;
             _client = new TelegramBotClient(_provider.GetToken());
             _cts = new CancellationTokenSource();
-            _messageSender = new TgSender(_client, _cts);
+            _messageSender = new TgSender(_cts);
+            (_messageSender as TgSender)?.SetClient(_client);
         }
 
         public Action<Answer, ulong> RegisterSending() => _messageSender.SendMessage;

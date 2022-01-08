@@ -43,18 +43,19 @@ namespace UserInterface
                 return null;
             if (update.Message!.Type != MessageType.Text)
                 return null;
-            
-            var author = new Author(update., msg.Author.Username, msg.Author.Id);
-            var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
-            var commonChannelId = isCommonChannel ? msg.Channel.Id : 0;
-            var res = new MessageData(
-                msg.Content,
-                author,
-                msg.MentionedUsers.Select(u => u.Username).ToArray(),
-                isCommonChannel,
-                commonChannelId
-            );
-            return res;
+            var a = new Author(false, "222", 44);
+            return new MessageData("sss", a, new[] {"gg"}, true, 0);
+            // var author = new Author(update., msg.Author.Username, msg.Author.Id);
+            // var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
+            // var commonChannelId = isCommonChannel ? msg.Channel.Id : 0;
+            // var res = new MessageData(
+            //     msg.Content,
+            //     author,
+            //     msg.MentionedUsers.Select(u => u.Username).ToArray(),
+            //     isCommonChannel,
+            //     commonChannelId
+            // );
+            // return res;
         }
     }
 }
