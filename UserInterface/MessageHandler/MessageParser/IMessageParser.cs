@@ -6,7 +6,7 @@ namespace UserInterface
 {
     public interface IMessageParser
     {
-        bool Parse(SocketMessage msg, out ICommandInfo commandInfo);
+        bool Parse(MessageData msg, out ICommandInfo commandInfo);
         string GetCommandsDescription();
     }
 }

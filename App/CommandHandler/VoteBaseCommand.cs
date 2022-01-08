@@ -5,10 +5,10 @@ using Mafia;
 
 namespace App.CommandHandler
 {
-    public class VoteCommand : ICommandHandler
+    public class VoteBaseCommand : BaseCommandHandler
     {
         private readonly VoteCommandInfo _info;
-        public VoteCommand(VoteCommandInfo info, Action<Answer, ulong> send) : base(send)
+        public VoteBaseCommand(VoteCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
             _info = info;
         }

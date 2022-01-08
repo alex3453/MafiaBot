@@ -4,7 +4,7 @@ using Mafia;
 
 namespace App.CommandHandler
 {
-    public class RegPlayerCommand : ICommandHandler
+    public class RegPlayerBaseCommand : BaseCommandHandler
     {
         private RegCommandInfo _info;
         public override void ExecuteCommand(GameTeam gT)
@@ -19,7 +19,7 @@ namespace App.CommandHandler
             _send(new Answer(true, AnswerType.SuccessfullyRegistered, _info.User.Name), _info.ComChatId);
         }
 
-        public RegPlayerCommand(RegCommandInfo info, Action<Answer, ulong> send) : base(send)
+        public RegPlayerBaseCommand(RegCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
             _info = info;
         }

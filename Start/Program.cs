@@ -9,6 +9,7 @@ using Mafia;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
+using Telegram.Bot;
 using UserInterface;
 
 namespace Start
@@ -27,35 +28,55 @@ namespace Start
         {
             var container = new StandardKernel();
 
-            container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
-            container.Bind<IMessageHandler>().To<MessageHandler>().InSingletonScope();
-            container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
-            container.Bind<IMessageSender>().To<MessageSender>().InSingletonScope();
+            // container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
+            // container.Bind<IMessageHandler>().To<MessageHandler>().InSingletonScope();
+            // container.Bind<IMessageParser>().To<MessageParser>().InSingletonScope();
+            // container.Bind<IMessageSender>().To<MessageSender>().InSingletonScope();
+            //
+            // container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
+            //     .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());
+            //
+            // container.Bind(c => c.FromAssemblyContaining<ViewCommandMessage>()
+            //     .SelectAllClasses().InheritedFrom<ViewCommandMessage>().BindAllBaseClasses());
+            //
+            // container.Bind(c => c.FromAssemblyContaining<BaseCommandHandler>()
+            //     .SelectAllClasses().InheritedFrom<BaseCommandHandler>().BindAllBaseClasses());
+            //
+            // container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
+            // container.Bind<IVisitor<BaseCommandHandler>>().To<Visitor>();
+            //
+            // container.Bind<IMafiaFactory>().ToFactory();
+            // container.Bind<IParserFactory>().ToFactory();
+            //
+            // container.Bind<IMafia>().To<MafiaGame>();
+            // container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
+            //
+            // container.Bind<ILogger>().To<ConsoleLogger>();
+            // container.Bind<ITokenProvider>().To<FromEnvVarProvider>();
+            // container.Bind<IAnswerParser>().To<BalabobaParser>();
+            // container.Bind<IAnswerParser>().To<DefaultParser>();
 
+            container.Bind<TelegramBotClient>().To<TelegramBotClient>().InSingletonScope();
+            container.Bind<ITokenProvider>().To<TgEnvVarTokenProvider>();
+            container.Bind<IView>().To<ViewTg>().InSingletonScope();
+            
             container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
                 .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());
-
+            
             container.Bind(c => c.FromAssemblyContaining<ViewCommandMessage>()
                 .SelectAllClasses().InheritedFrom<ViewCommandMessage>().BindAllBaseClasses());
-
-            container.Bind(c => c.FromAssemblyContaining<ICommandHandler>()
-                .SelectAllClasses().InheritedFrom<ICommandHandler>().BindAllBaseClasses());
-
+            
+            container.Bind(c => c.FromAssemblyContaining<BaseCommandHandler>()
+                .SelectAllClasses().InheritedFrom<BaseCommandHandler>().BindAllBaseClasses());
+            
             container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
-            container.Bind<IVisitor<ICommandHandler>>().To<Visitor>();
-
+            container.Bind<IVisitor<BaseCommandHandler>>().To<Visitor>();
+            
             container.Bind<IMafiaFactory>().ToFactory();
             container.Bind<IParserFactory>().ToFactory();
             
             container.Bind<IMafia>().To<MafiaGame>();
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
-            
-            container.Bind<ILogger>().To<ConsoleLogger>();
-            container.Bind<ITokenProvider>().To<TgEnvVarTokenProvider>();
-            container.Bind<IAnswerParser>().To<BalabobaParser>();
-            container.Bind<IAnswerParser>().To<DefaultParser>();
-            container.Bind<IView>().To<ViewTg>();
-
 
             return container;
         }

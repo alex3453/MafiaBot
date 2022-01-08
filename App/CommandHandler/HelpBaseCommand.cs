@@ -3,10 +3,10 @@ using CommonInteraction;
 
 namespace App.CommandHandler
 {
-    public class HelpCommand : ICommandHandler
+    public class HelpBaseCommand : BaseCommandHandler
     {
         private HelpCommandInfo _info;
-        public HelpCommand(HelpCommandInfo info, Action<Answer, ulong> send) : base(send)
+        public HelpBaseCommand(HelpCommandInfo info, Action<Answer, ulong> send) : base(send)
         {
             _info = info;
         }

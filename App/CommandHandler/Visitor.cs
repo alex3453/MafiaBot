@@ -3,20 +3,20 @@ using CommonInteraction;
 
 namespace App.CommandHandler
 {
-    public class Visitor : IVisitor<ICommandHandler>
+    public class Visitor : IVisitor<BaseCommandHandler>
     {
-        public ICommandHandler Handle(KillCommandInfo info, Action<Answer, ulong> send) 
-            => new KillCommand(info, send);
-        public ICommandHandler Handle(RegCommandInfo info, Action<Answer, ulong> send) 
-            => new RegPlayerCommand(info, send);
-        public ICommandHandler Handle(ResetCommandInfo info, Action<Answer, ulong> send) 
-            => new ResetGameCommand(info, send);
-        public ICommandHandler Handle(StartCommandInfo info, Action<Answer, ulong> send) 
-            => new StartCommand(info, send);
-        public ICommandHandler Handle(VoteCommandInfo info, Action<Answer, ulong> send)
-            => new VoteCommand(info, send);
+        public BaseCommandHandler Handle(KillCommandInfo info, Action<Answer, ulong> send) 
+            => new KillBaseCommand(info, send);
+        public BaseCommandHandler Handle(RegCommandInfo info, Action<Answer, ulong> send) 
+            => new RegPlayerBaseCommand(info, send);
+        public BaseCommandHandler Handle(ResetCommandInfo info, Action<Answer, ulong> send) 
+            => new ResetGameBaseCommand(info, send);
+        public BaseCommandHandler Handle(StartCommandInfo info, Action<Answer, ulong> send) 
+            => new StartBaseCommand(info, send);
+        public BaseCommandHandler Handle(VoteCommandInfo info, Action<Answer, ulong> send)
+            => new VoteBaseCommand(info, send);
 
-        public ICommandHandler Handle(HelpCommandInfo info, Action<Answer, ulong> send)
-            => new HelpCommand(info, send);
+        public BaseCommandHandler Handle(HelpCommandInfo info, Action<Answer, ulong> send)
+            => new HelpBaseCommand(info, send);
     }
 }

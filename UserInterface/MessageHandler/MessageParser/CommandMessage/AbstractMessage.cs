@@ -11,20 +11,20 @@ namespace UserInterface
         private protected User user;
         private protected bool isCommonChannel;
         private protected ulong commonChannelId;
-        public bool IsItMyCommand(SocketMessage msg)
+        public bool IsItMyCommand(MessageData msg)
         {
             var content = msg.Content.Remove(0, 1);
             var com = content.Split().First();
             return PossibleStrings.Contains(com);
         }
 
-        public abstract ICommandInfo GetCommandInfo(SocketMessage msg);
+        public abstract ICommandInfo GetCommandInfo(MessageData msg);
 
-        protected void FillCommonInfo(SocketMessage msg)
+        protected void FillCommonInfo(MessageData msg)
         {
             user = new User(msg.Author.Id, msg.Author.Username);
-            isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
-            commonChannelId = isCommonChannel ? msg.Channel.Id : 0;
+            isCommonChannel = msg.IsCommonChannel;
+            commonChannelId = isCommonChannel ? msg.CommonChannelId : 0;
         }
 
         public abstract string GetDescription();

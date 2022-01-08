@@ -3,7 +3,7 @@ using CommonInteraction;
 
 namespace App.CommandHandler
 {
-    public class ResetGameCommand : ICommandHandler
+    public class ResetGameBaseCommand : BaseCommandHandler
     {
         private readonly ResetCommandInfo _info;
         public override void ExecuteCommand(GameTeam gT)
@@ -17,7 +17,7 @@ namespace App.CommandHandler
             }
         }
 
-        public ResetGameCommand(ResetCommandInfo info, Action<Answer, ulong> send) : base( send)
+        public ResetGameBaseCommand(ResetCommandInfo info, Action<Answer, ulong> send) : base( send)
         {
             _info = info;
         }

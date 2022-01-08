@@ -9,7 +9,7 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"reg", "куп"};
 
-        public override RegCommandInfo GetCommandInfo(SocketMessage msg)
+        public override RegCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
             return new RegCommandInfo(user, isCommonChannel, commonChannelId);
@@ -23,7 +23,7 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"createnew", "скуфеутуц"};
 
-        public override ResetCommandInfo GetCommandInfo(SocketMessage msg)
+        public override ResetCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
             return new ResetCommandInfo(user, isCommonChannel, commonChannelId);
@@ -36,7 +36,7 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"start", "ыефке"};
 
-        public override StartCommandInfo GetCommandInfo(SocketMessage msg)
+        public override StartCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
             return new StartCommandInfo(user, isCommonChannel, commonChannelId);
@@ -48,10 +48,10 @@ namespace UserInterface
     public class VoteMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string>{"vote", "мщеу"};
-        public override VoteCommandInfo GetCommandInfo(SocketMessage msg)
+        public override VoteCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            var mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
+            var mentionedUsers = msg.MentionedUsers;
             return new VoteCommandInfo(user, isCommonChannel, commonChannelId, mentionedUsers);
         }
 
@@ -62,7 +62,7 @@ namespace UserInterface
     public class KillMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"kill", "лшдд"};
-        public override KillCommandInfo GetCommandInfo(SocketMessage msg)
+        public override KillCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
             var args = msg.Content.Split().Skip(1).ToArray();

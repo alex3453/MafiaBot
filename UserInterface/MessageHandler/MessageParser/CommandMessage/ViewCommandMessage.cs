@@ -13,14 +13,14 @@ namespace UserInterface
             _sender = sender;
         }
         protected abstract ISet<string> PossibleStrings { get; }
-        public bool IsItMyCommand(SocketMessage msg)
+        public bool IsItMyCommand(MessageData msg)
         {
             var content = msg.Content.Remove(0, 1);
             var com = content.Split().First();
             return PossibleStrings.Contains(com);
         }
 
-        public abstract void ExecuteCommand(SocketMessage msg);
+        public abstract void ExecuteCommand(MessageData msg);
         public abstract string GetDescription();
     }
 }

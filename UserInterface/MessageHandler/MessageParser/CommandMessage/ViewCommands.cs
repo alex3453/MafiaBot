@@ -17,11 +17,11 @@ namespace UserInterface
         }
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"default", "вуафгде", "обычный"};
 
-        public override void ExecuteCommand(SocketMessage msg)
+        public override void ExecuteCommand(MessageData msg)
         {
-            if (!(msg.Channel.GetType() == typeof(SocketTextChannel))) return;
+            if (!msg.IsCommonChannel) return;
             _sender.SetParser(_default);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.Channel.Id);
+            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() => "!default - обычный решим ответов. " +
@@ -41,11 +41,11 @@ namespace UserInterface
 
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"balaboba", "ифдфищиф", "балабоба"};
 
-        public override void ExecuteCommand(SocketMessage msg)
+        public override void ExecuteCommand(MessageData msg)
         {
-            if (!(msg.Channel.GetType() == typeof(SocketTextChannel))) return;
+            if (!msg.IsCommonChannel) return;
             _sender.SetParser(_parser);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.Channel.Id);
+            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() =>
@@ -59,10 +59,10 @@ namespace UserInterface
     {
         private readonly Func<IMessageParser> getParser;
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
-        public override void ExecuteCommand(SocketMessage msg)
+        public override void ExecuteCommand(MessageData msg)
         {
-            var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
-            var channelId = isCommonChannel ? msg.Channel.Id : msg.Author.Id;
+            var isCommonChannel = msg.IsCommonChannel;
+            var channelId = isCommonChannel ? msg.CommonChannelId : msg.Author.Id;
             var parser = getParser();
             _sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
         }
