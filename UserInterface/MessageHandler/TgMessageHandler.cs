@@ -35,7 +35,7 @@ namespace UserInterface
                 return null;
             var msg = update.Message;
             Console.WriteLine(msg.Text);
-            var author = new Author(msg.From.IsBot, msg.From.Username, (ulong)msg.From.Id);
+            var author = new Author(msg.From.IsBot, msg.From.Username, MapLongToUlong(msg.From.Id));
             var chat = msg.Chat;
             var isCommonChannel = chat.Type == ChatType.Group;
             var commonChannelId = isCommonChannel ? chat.Id : 0;
@@ -44,9 +44,14 @@ namespace UserInterface
                 author,
                 msg.Text.Split().Where(s => s.First() == '@').Select(s => s.Remove(0)).ToArray(),
                 isCommonChannel,
-                (ulong)commonChannelId
+                MapLongToUlong(commonChannelId)
             );
             return res;
+        }
+        
+        private ulong MapLongToUlong(long longValue)
+        {
+            return unchecked((ulong)(longValue - long.MinValue));
         }
     }
 }

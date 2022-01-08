@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using CommonInteraction;
 using Telegram.Bot;
@@ -23,12 +24,19 @@ namespace UserInterface
         public void SendMessage(Answer answer, ulong destinationId)
         {
             {
+                var dest = MapUlongToLong(destinationId);
                 var res = _answerParser.ParseAnswer(answer);
                 var sentMessage = _client.SendTextMessageAsync(
-                    chatId: (long)destinationId,
+                    chatId: dest,
                     text: res,
                     cancellationToken: _cts.Token);
+                Console.WriteLine(sentMessage.Status);
             }
+        }
+        
+        public static long MapUlongToLong(ulong ulongValue)
+        {
+            return unchecked((long)ulongValue + long.MinValue);
         }
 
         public void SetParser(IAnswerParser parser)
