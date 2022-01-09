@@ -2,7 +2,7 @@ using System;
 
 namespace UserInterface
 {
-    public class TgEnvVarTokenProvider : ITokenProvider
+    public class TgEnvVarTokenProvider
     {
         public string GetToken()
         {

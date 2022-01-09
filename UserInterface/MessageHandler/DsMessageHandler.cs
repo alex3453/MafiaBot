@@ -6,12 +6,12 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class MessageHandler : IMessageHandler
+    public class DsMessageHandler
     {
-        private readonly IMessageParser _messageParser;
+        private readonly MessageParser _messageParser;
         public event Action<ICommandInfo> ExCommand;
 
-        public MessageHandler(IMessageParser messageParser)
+        public DsMessageHandler(MessageParser messageParser)
         {
             _messageParser = messageParser;
         }

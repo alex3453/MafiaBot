@@ -5,12 +5,12 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class MessageSender : IMessageSender
+    public class DsSender : IMessageSender
     {
         private readonly DiscordSocketClient _client;
         private IAnswerParser _answerParser = new DefaultParser();
 
-        public MessageSender(DiscordSocketClient client)
+        public DsSender(DiscordSocketClient client)
         {
             _client = client;
         }

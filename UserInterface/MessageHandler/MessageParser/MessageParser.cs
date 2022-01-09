@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class MessageParser : IMessageParser
+    public class MessageParser
     {
         private readonly CommandMessage[] _botCommands;
 

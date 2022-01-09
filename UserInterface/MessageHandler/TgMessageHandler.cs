@@ -12,15 +12,23 @@ namespace UserInterface
 {
     public class TgMessageHandler
     {
-        private readonly IMessageParser _messageParser;
+        private readonly MessageParser _messageParser;
+        private TgSender _sender;
         public event Action<ICommandInfo> ExCommand;
 
-        public TgMessageHandler(IMessageParser messageParser)
+        public TgMessageHandler(MessageParser messageParser)
         {
             _messageParser = messageParser;
         }
+
+        public void SetSender(TgSender sender)
+        {
+            _sender = sender;
+        }
+        
         public Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
+            Console.WriteLine(update.Message.Text);
             if (!_messageParser.Parse(CreateMessageData(update), out var commandInfo))
                 return Task.CompletedTask;
             ExCommand?.Invoke(commandInfo);
@@ -34,15 +42,17 @@ namespace UserInterface
             if (update.Message!.Type != MessageType.Text)
                 return null;
             var msg = update.Message;
-            Console.WriteLine(msg.Text);
             var author = new Author(msg.From.IsBot, msg.From.Username, MapLongToUlong(msg.From.Id));
             var chat = msg.Chat;
             var isCommonChannel = chat.Type == ChatType.Group;
             var commonChannelId = isCommonChannel ? chat.Id : 0;
+            var mentionedUsers = Array.Empty<string>();
+            if (msg.Text != null)
+                mentionedUsers = msg.Text.Split().Where(s => s.First() == '@').Select(s => s.Remove(0)).ToArray();
             var res = new MessageData(
                 msg.Text,
                 author,
-                msg.Text.Split().Where(s => s.First() == '@').Select(s => s.Remove(0)).ToArray(),
+                mentionedUsers,
                 isCommonChannel,
                 MapLongToUlong(commonChannelId)
             );

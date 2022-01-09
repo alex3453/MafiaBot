@@ -7,19 +7,29 @@ namespace UserInterface
 {
     public class TgSender : IMessageSender
     {
-        private TelegramBotClient _client;
+        private ITelegramBotClient _client;
         private IAnswerParser _answerParser = new DefaultParser();
-        private CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cts;
 
         public TgSender(CancellationTokenSource cts)
         {
             _cts = cts;
         }
 
-        public void SetClient(TelegramBotClient client)
+        public void SetClient(ITelegramBotClient client)
         {
             _client = client;
         }
+        
+        public void SetParser(IAnswerParser parser)
+        {
+            _answerParser = parser;
+        }
+
+        // public void SetToken(CancellationToken cancellationToken)
+        // {
+        //     _cancellationToken = cancellationToken;
+        // }
 
         public void SendMessage(Answer answer, ulong destinationId)
         {
@@ -30,18 +40,12 @@ namespace UserInterface
                     chatId: dest,
                     text: res,
                     cancellationToken: _cts.Token);
-                Console.WriteLine(sentMessage.Status);
             }
         }
-        
-        public static long MapUlongToLong(ulong ulongValue)
+
+        private static long MapUlongToLong(ulong ulongValue)
         {
             return unchecked((long)ulongValue + long.MinValue);
-        }
-
-        public void SetParser(IAnswerParser parser)
-        {
-            _answerParser = parser;
         }
     }
 }

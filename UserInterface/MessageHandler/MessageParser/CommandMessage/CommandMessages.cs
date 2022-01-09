@@ -12,7 +12,7 @@ namespace UserInterface
         public override RegCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new RegCommandInfo(user, isCommonChannel, commonChannelId);
+            return new RegCommandInfo(User, IsCommonChannel, CommonChannelId);
         }
 
 
@@ -26,7 +26,7 @@ namespace UserInterface
         public override ResetCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new ResetCommandInfo(user, isCommonChannel, commonChannelId);
+            return new ResetCommandInfo(User, IsCommonChannel, CommonChannelId);
         }
 
         public override string GetDescription() => "!createnew - создает для вас новую игру.";
@@ -39,7 +39,7 @@ namespace UserInterface
         public override StartCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new StartCommandInfo(user, isCommonChannel, commonChannelId);
+            return new StartCommandInfo(User, IsCommonChannel, CommonChannelId);
         }
 
         public override string GetDescription() => "!start - позволяет начать игру.";
@@ -52,7 +52,7 @@ namespace UserInterface
         {
             FillCommonInfo(msg);
             var mentionedUsers = msg.MentionedUsers;
-            return new VoteCommandInfo(user, isCommonChannel, commonChannelId, mentionedUsers);
+            return new VoteCommandInfo(User, IsCommonChannel, CommonChannelId, mentionedUsers);
         }
 
         public override string GetDescription() => "!vote {имя игрока на сервере, лучше через @} - " +
@@ -66,7 +66,7 @@ namespace UserInterface
         {
             FillCommonInfo(msg);
             var args = msg.Content.Split().Skip(1).ToArray();
-            return new KillCommandInfo(user, isCommonChannel, commonChannelId, args);
+            return new KillCommandInfo(User, IsCommonChannel, CommonChannelId, args);
         }
 
         public override string GetDescription() => "!kill {номер игрока из отправленного вам списка} - " +
