@@ -26,11 +26,6 @@ namespace UserInterface
             _answerParser = parser;
         }
 
-        // public void SetToken(CancellationToken cancellationToken)
-        // {
-        //     _cancellationToken = cancellationToken;
-        // }
-
         public void SendMessage(Answer answer, ulong destinationId)
         {
             {

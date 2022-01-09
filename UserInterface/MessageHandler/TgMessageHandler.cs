@@ -48,7 +48,8 @@ namespace UserInterface
             var commonChannelId = isCommonChannel ? chat.Id : 0;
             var mentionedUsers = Array.Empty<string>();
             if (msg.Text != null)
-                mentionedUsers = msg.Text.Split().Where(s => s.First() == '@').Select(s => s.Remove(0)).ToArray();
+                mentionedUsers = msg.Text.Split().Where(s => s.First() == '@').Select(s => s.Remove(0, 1)).ToArray();
+
             var res = new MessageData(
                 msg.Text,
                 author,
