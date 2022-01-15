@@ -8,7 +8,7 @@ namespace UserInterface
     public class DsSender : IMessageSender
     {
         private readonly DiscordSocketClient _client;
-        private IAnswerParser _answerParser = new DefaultParser();
+        private IAnswerGenerator _answerGenerator = new DefaultGenerator();
 
         public DsSender(DiscordSocketClient client)
         {
@@ -20,17 +20,17 @@ namespace UserInterface
             if (answer.IsCommon)
             {
                 var channel = (SocketTextChannel)_client.GetChannel(destinationId);
-                channel.SendMessageAsync(_answerParser.ParseAnswer(answer));
+                channel.SendMessageAsync(_answerGenerator.GenerateAnswer(answer));
             }
             else
                 _client.GetUser(destinationId)
-                    .SendMessageAsync(_answerParser.ParseAnswer(answer));
+                    .SendMessageAsync(_answerGenerator.GenerateAnswer(answer));
             
         }
 
-        public void SetParser(IAnswerParser parser)
+        public void SetParser(IAnswerGenerator generator)
         {
-            _answerParser = parser;
+            _answerGenerator = generator;
         }
     }
 }

@@ -4,9 +4,9 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public abstract class IAnswerParser
+    public abstract class IAnswerGenerator
     {
-        public abstract string ParseAnswer(Answer answer);
+        public abstract string GenerateAnswer(Answer answer);
 
         protected static string ParseKillList(IReadOnlyList<string> killList)
         {

@@ -9,11 +9,11 @@ namespace UserInterface
     public class AnswerDefaultMessage : ViewCommandMessage
     {
         private readonly IMessageSender _sender;
-        private readonly DefaultParser _default;
-        public AnswerDefaultMessage(IMessageSender sender, DefaultParser defaultParser) : base(sender)
+        private readonly DefaultGenerator _default;
+        public AnswerDefaultMessage(IMessageSender sender, DefaultGenerator defaultGenerator) : base(sender)
         {
             _sender = sender;
-            _default = defaultParser;
+            _default = defaultGenerator;
         }
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"default", "вуафгде", "обычный"};
 
@@ -31,12 +31,12 @@ namespace UserInterface
     public class AnswerBalabobaMessage : ViewCommandMessage
     {
         private readonly IMessageSender _sender;
-        private readonly BalabobaParser _parser;
+        private readonly BalabobaGenerator _generator;
 
-        public AnswerBalabobaMessage(IMessageSender sender, BalabobaParser parser) : base(sender)
+        public AnswerBalabobaMessage(IMessageSender sender, BalabobaGenerator generator) : base(sender)
         {
             _sender = sender;
-            _parser = parser;
+            _generator = generator;
         }
 
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"balaboba", "ифдфищиф", "балабоба"};
@@ -44,7 +44,7 @@ namespace UserInterface
         public override void ExecuteCommand(MessageData msg)
         {
             if (!msg.IsCommonChannel) return;
-            _sender.SetParser(_parser);   
+            _sender.SetParser(_generator);   
             _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.CommonChannelId);
         }
 

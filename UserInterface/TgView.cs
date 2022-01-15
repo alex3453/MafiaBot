@@ -24,13 +24,15 @@ namespace UserInterface
             TgMessageHandler messageHandler, 
             IMessageSender messageSender,
             ITgErrorHandler errorHandler,
-            CancellationTokenSource cts)
+            CancellationTokenSource cts,
+            TelegramBotClient client)
         {
             _provider = provider;
             _messageHandler = messageHandler;
             _errorHandler = errorHandler;
             _messageSender = messageSender as TgSender;
             _cts = cts;
+            _client = client;
         }
 
         public Action<Answer, ulong> RegisterSending() => _messageSender.SendMessage;
@@ -39,7 +41,6 @@ namespace UserInterface
 
         private void SetUp()
         {
-            _client = new TelegramBotClient(_provider.GetToken());
             _messageSender.SetClient(_client);
             _messageHandler.SetSender(_messageSender);
         }

@@ -5,7 +5,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class DefaultParser : IAnswerParser
+    public class DefaultGenerator : IAnswerGenerator
     {
         private  readonly string hi, algo, startGame, mafiaWins, peacefulWins, successfullyRegistered, 
             alreadyRegistered, successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, 
@@ -13,7 +13,7 @@ namespace UserInterface
             needMorePlayers, youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, 
             enterNumber, incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, 
             mafiaKilling, incorrectVote, unknownCommand, tellRole;
-        public DefaultParser()
+        public DefaultGenerator()
         {
             hi = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n";
             algo = "1. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
@@ -67,7 +67,7 @@ namespace UserInterface
             unknownCommand = "Кажется, мы друг друга не поняли...Я таких команд не знаю:(";
         }
 
-        public override string ParseAnswer(Answer answer)
+        public override string GenerateAnswer(Answer answer)
         {
             return answer.AnswerType switch
             {

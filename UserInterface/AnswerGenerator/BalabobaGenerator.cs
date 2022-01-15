@@ -3,7 +3,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class BalabobaParser : IAnswerParser
+    public class BalabobaGenerator : IAnswerGenerator
     {
         private readonly Balaboba _balaboba;
 
@@ -13,7 +13,7 @@ namespace UserInterface
             needMorePlayers, youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, 
             enterNumber, incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, 
             mafiaKilling, incorrectVote, unknownCommand, tellRole;
-        public BalabobaParser(Balaboba balaboba)
+        public BalabobaGenerator(Balaboba balaboba)
         {
             _balaboba = balaboba;
             hi = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n";
@@ -62,7 +62,7 @@ namespace UserInterface
                         "проголосовать за себя, чтобы не вылетел кто-то невинный...)";
             unknownCommand = "Кажется, мы друг друга не поняли...Я таких команд не знаю:(";
         }
-        public override string ParseAnswer(Answer answer)
+        public override string GenerateAnswer(Answer answer)
         {
             return answer.AnswerType switch
             {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using App;
 using App.CommandHandler;
@@ -7,6 +9,7 @@ using Mafia;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
+using Telegram.Bot;
 using UserInterface;
 
 namespace Start
@@ -47,14 +50,20 @@ namespace Start
             container.Bind<IMessageSender>().To<TgSender>().InSingletonScope();
             container.Bind<ITgErrorHandler>().To<TgConsoleErrorHandler>();
             container.Bind<IView>().To<TgView>().InSingletonScope();
-            
+
+
             // container.Bind<IMessageSender>().To<DsSender>().InSingletonScope();
             // container.Bind<IDsLogger>().To<ConsoleDsLogger>();
             // container.Bind<IView>().To<DsView>().InSingletonScope();
             // container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
 
-            // container.Bind<TelegramBotClient>().To<TelegramBotClient>().InSingletonScope()
-            //     .WithConstructorArgument("token", "");
+            container.Bind<string>().ToMethod(ctx => ctx.Kernel
+                .Get<TgEnvVarTokenProvider>().GetToken()).WhenInjectedInto<TelegramBotClient>();
+            container.Bind<HttpClient>().ToSelf().WhenInjectedInto<TelegramBotClient>();
+            container.Bind<TelegramBotClient>().ToSelf().InSingletonScope()
+                .WithConstructorArgument("baseUrl", "https://api.telegram.org");
+            
+            
             return container;
         }
     }
