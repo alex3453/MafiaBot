@@ -55,7 +55,6 @@ namespace UserInterface
             var me = await _client.GetMeAsync();
 
             Console.WriteLine($"Start listening for @{me.Username}");
-            Console.ReadLine();
         }
     }
 }
