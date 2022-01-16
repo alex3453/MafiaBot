@@ -16,20 +16,16 @@ namespace UserInterface
         private readonly TgSender _messageSender;
         private readonly TgMessageHandler _messageHandler;
         private readonly ITgErrorHandler _errorHandler;
-        private readonly CancellationTokenSource _cts;
 
         public TgView(
-            TgEnvVarTokenProvider provider, 
             TgMessageHandler messageHandler, 
             TgSender messageSender,
             ITgErrorHandler errorHandler,
-            CancellationTokenSource cts,
             TelegramBotClient client)
         {
             _messageHandler = messageHandler;
             _errorHandler = errorHandler;
             _messageSender = messageSender;
-            _cts = cts;
             _client = client;
         }
 
@@ -54,14 +50,12 @@ namespace UserInterface
             _client.StartReceiving(
                 _messageHandler.HandleUpdateAsync,
                 _errorHandler.HandleErrorAsync,
-                receiverOptions,
-                cancellationToken: _cts.Token);
+                receiverOptions);
 
             var me = await _client.GetMeAsync();
 
             Console.WriteLine($"Start listening for @{me.Username}");
             Console.ReadLine();
-            _cts.Cancel();
         }
     }
 }

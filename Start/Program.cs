@@ -58,11 +58,11 @@ namespace Start
                 .WithConstructorArgument("baseUrl", "https://api.telegram.org");
             container.Bind<CancellationTokenSource>().ToSelf().InSingletonScope();
             container.Bind<TgSender>().ToSelf().InSingletonScope();
-            
+            container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<TgSender>());
+
             container.Bind<IDsLogger>().To<ConsoleDsLogger>();
             container.Bind<DiscordSocketClient>().ToSelf().InSingletonScope();
             container.Bind<DsSender>().ToSelf().InSingletonScope();
-            container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<TgSender>());
             container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<DsSender>());
 
             return container;
