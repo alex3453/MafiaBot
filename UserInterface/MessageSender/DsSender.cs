@@ -18,7 +18,6 @@ namespace UserInterface
 
         public void SendMessage(Answer answer, ulong destinationId)
         {
-            // Console.WriteLine(_answerGenerator.GetType());
             if (answer.IsCommon)
             {
                 var channel = (SocketTextChannel)_client.GetChannel(destinationId);

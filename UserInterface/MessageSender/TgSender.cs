@@ -29,7 +29,6 @@ namespace UserInterface
 
         public void SendMessage(Answer answer, ulong destinationId)
         {
-            // Console.WriteLine(_answerGenerator.GetType());
             {
                 var dest = MapUlongToLong(destinationId);
                 var res = _answerGenerator.GenerateAnswer(answer);
