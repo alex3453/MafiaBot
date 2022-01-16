@@ -18,15 +18,13 @@ namespace Start
     {
         public static void Main()
         {
-            var cts = new CancellationTokenSource();
-            var container = ConfigureContainer(cts);
+            var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
             entryPoint.Run();
             Console.ReadLine();
-            cts.Cancel();
         }
 
-        private static StandardKernel ConfigureContainer(CancellationTokenSource cts)
+        private static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
             
@@ -58,7 +56,6 @@ namespace Start
             container.Bind<HttpClient>().ToSelf().WhenInjectedInto<TelegramBotClient>();
             container.Bind<TelegramBotClient>().ToSelf().InSingletonScope()
                 .WithConstructorArgument("baseUrl", "https://api.telegram.org");
-            container.Bind<CancellationTokenSource>().ToConstant(cts).WhenInjectedInto<TgSender>().InSingletonScope();
             container.Bind<TgSender>().ToSelf().InSingletonScope();
             container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<TgSender>());
 

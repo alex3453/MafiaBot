@@ -9,11 +9,9 @@ namespace UserInterface
     {
         private TelegramBotClient _client;
         private IAnswerGenerator _answerGenerator = new DefaultGenerator();
-        private readonly CancellationTokenSource _cts;
 
-        public TgSender(CancellationTokenSource cts, TelegramBotClient client)
+        public TgSender(TelegramBotClient client)
         {
-            _cts = cts;
             _client = client;
         }
 
@@ -29,14 +27,9 @@ namespace UserInterface
 
         public void SendMessage(Answer answer, ulong destinationId)
         {
-            {
-                var dest = MapUlongToLong(destinationId);
-                var res = _answerGenerator.GenerateAnswer(answer);
-                var sentMessage = _client.SendTextMessageAsync(
-                    chatId: dest,
-                    text: res,
-                    cancellationToken: _cts.Token);
-            }
+            var dest = MapUlongToLong(destinationId);
+            var res = _answerGenerator.GenerateAnswer(answer);
+            _client.SendTextMessageAsync(dest, res);
         }
 
         private static long MapUlongToLong(ulong ulongValue)
