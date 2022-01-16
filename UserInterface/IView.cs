@@ -6,7 +6,8 @@ namespace UserInterface
 {
     public interface IView
     {
-        public Action<Answer, ulong> RegisterSending();
+        public bool IsItMyService(Service service);
+        public void Send(Answer answer, ulong destinationId);
         public void SubscribeOn(Action<ICommandInfo> exCommand);
         public Task StartAsync();
     }

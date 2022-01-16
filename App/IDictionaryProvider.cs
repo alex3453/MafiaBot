@@ -6,7 +6,6 @@ namespace App
 {
     public interface IDictionaryProvider
     {
-        public IDictionary<ulong, GameTeam> GameTeams { get; }
         public GameTeam GetTeam(ICommandInfo info);
     }
 }

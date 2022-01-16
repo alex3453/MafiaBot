@@ -18,6 +18,7 @@ namespace UserInterface
 
         public Task ProcessMessage(SocketMessage msg)
         {
+            // Console.WriteLine(msg.Content + "ds");
             if (!_messageParser.Parse(CreateMessageData(msg), out var commandInfo))
                 return Task.CompletedTask;
             ExCommand?.Invoke(commandInfo);
@@ -34,7 +35,8 @@ namespace UserInterface
                 author,
                 msg.MentionedUsers.Select(u => u.Username).ToArray(),
                 isCommonChannel,
-                commonChannelId
+                commonChannelId,
+                Service.Discord
                 );
             return res;
         }

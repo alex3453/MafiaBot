@@ -1,7 +1,10 @@
+using CommonInteraction;
+
 namespace UserInterface
 {
     public class MessageData
     {
+        public readonly Service Service;
         public readonly string Content;
         public readonly Author Author;
         public readonly string[] MentionedUsers;
@@ -13,13 +16,15 @@ namespace UserInterface
             Author author, 
             string[] mentionedUsers, 
             bool isCommonChannel, 
-            ulong commonChannelId)
+            ulong commonChannelId, 
+            Service service)
         {
             Content = content;
             Author = author;
             MentionedUsers = mentionedUsers;
             IsCommonChannel = isCommonChannel;
             CommonChannelId = commonChannelId;
+            Service = service;
         }
     }
 

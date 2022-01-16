@@ -6,7 +6,7 @@ namespace App
     public class Bot
     {
         public Action<ICommandInfo> Register() => ReproduceCommand;
-        public event Action<Answer, ulong> SendMassage;
+        public event Action<Answer, ulong, Service> SendMassage;
         private readonly IVisitor<BaseCommandHandler> _visitor;
         private readonly IDictionaryProvider _teamProvider;
 

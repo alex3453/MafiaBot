@@ -12,7 +12,7 @@ namespace UserInterface
         public override RegCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new RegCommandInfo(User, IsCommonChannel, CommonChannelId);
+            return new RegCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
 
@@ -26,7 +26,7 @@ namespace UserInterface
         public override ResetCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new ResetCommandInfo(User, IsCommonChannel, CommonChannelId);
+            return new ResetCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
         public override string GetDescription() => "!createnew - создает для вас новую игру.";
@@ -39,7 +39,7 @@ namespace UserInterface
         public override StartCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new StartCommandInfo(User, IsCommonChannel, CommonChannelId);
+            return new StartCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
         public override string GetDescription() => "!start - позволяет начать игру.";
@@ -52,7 +52,7 @@ namespace UserInterface
         {
             FillCommonInfo(msg);
             var mentionedUsers = msg.MentionedUsers;
-            return new VoteCommandInfo(User, IsCommonChannel, CommonChannelId, mentionedUsers);
+            return new VoteCommandInfo(User, IsCommonChannel, CommonChannelId, mentionedUsers, Service);
         }
 
         public override string GetDescription() => "!vote {имя игрока на сервере, лучше через @} - " +
@@ -66,7 +66,7 @@ namespace UserInterface
         {
             FillCommonInfo(msg);
             var args = msg.Content.Split().Skip(1).ToArray();
-            return new KillCommandInfo(User, IsCommonChannel, CommonChannelId, args);
+            return new KillCommandInfo(User, IsCommonChannel, CommonChannelId, args, Service);
         }
 
         public override string GetDescription() => "!kill {номер игрока из отправленного вам списка} - " +

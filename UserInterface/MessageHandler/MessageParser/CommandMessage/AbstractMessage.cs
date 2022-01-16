@@ -10,6 +10,7 @@ namespace UserInterface
         private protected User User;
         private protected bool IsCommonChannel;
         private protected ulong CommonChannelId;
+        private protected Service Service;
         public bool IsItMyCommand(MessageData msg)
         {
             var content = msg.Content.Remove(0, 1);
@@ -21,6 +22,7 @@ namespace UserInterface
 
         protected void FillCommonInfo(MessageData msg)
         {
+            Service = msg.Service;
             User = new User(msg.Author.Id, msg.Author.Username);
             IsCommonChannel = msg.IsCommonChannel;
             CommonChannelId = IsCommonChannel ? msg.CommonChannelId : 0;

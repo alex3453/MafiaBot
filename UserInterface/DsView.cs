@@ -12,14 +12,14 @@ namespace UserInterface
         private readonly DsMessageHandler _dsMessageHandler;
         private readonly IDsLogger _dsLogger;
         private readonly DsEnvVarProvider _provider;
-        private readonly IMessageSender _messageSender;
+        private readonly DsSender _messageSender;
         
         public DsView(
             DiscordSocketClient client,
             DsMessageHandler dsMessageHandler,
             IDsLogger dsLogger,
             DsEnvVarProvider provider, 
-            IMessageSender messageSender)
+            DsSender messageSender)
         {
             _client = client;
             _dsMessageHandler = dsMessageHandler;
@@ -27,8 +27,17 @@ namespace UserInterface
             _provider = provider;
             _messageSender = messageSender;
         }
-        
-        public Action<Answer, ulong> RegisterSending() => _messageSender.SendMessage;
+
+        public bool IsItMyService(Service service)
+        {
+            return service == Service.Discord;
+        }
+
+        public void Send(Answer answer, ulong destinationId)
+        {
+            _messageSender.SendMessage(answer, destinationId);
+        }
+
         public void SubscribeOn(Action<ICommandInfo> exCommand) => _dsMessageHandler.ExCommand += exCommand;
 
         public async Task StartAsync()

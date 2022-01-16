@@ -13,7 +13,6 @@ namespace UserInterface
     public class TgMessageHandler
     {
         private readonly MessageParser _messageParser;
-        private TgSender _sender;
         public event Action<ICommandInfo> ExCommand;
 
         public TgMessageHandler(MessageParser messageParser)
@@ -21,14 +20,9 @@ namespace UserInterface
             _messageParser = messageParser;
         }
 
-        public void SetSender(TgSender sender)
-        {
-            _sender = sender;
-        }
-        
         public Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            Console.WriteLine(update.Message.Text);
+            // Console.WriteLine(update.Message.Text + "tg");
             if (!_messageParser.Parse(CreateMessageData(update), out var commandInfo))
                 return Task.CompletedTask;
             ExCommand?.Invoke(commandInfo);
@@ -55,7 +49,8 @@ namespace UserInterface
                 author,
                 mentionedUsers,
                 isCommonChannel,
-                MapLongToUlong(commonChannelId)
+                MapLongToUlong(commonChannelId),
+                Service.Telegram
             );
             return res;
         }

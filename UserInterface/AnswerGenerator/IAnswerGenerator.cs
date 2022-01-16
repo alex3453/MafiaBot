@@ -8,7 +8,7 @@ namespace UserInterface
     {
         public abstract string GenerateAnswer(Answer answer);
 
-        protected static string ParseKillList(IReadOnlyList<string> killList)
+        protected static string GenerateKillList(IReadOnlyList<string> killList)
         {
             var res = new StringBuilder();
             for (var i = 0; i < killList.Count; i += 2)

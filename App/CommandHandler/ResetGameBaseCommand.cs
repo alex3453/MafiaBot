@@ -9,15 +9,15 @@ namespace App.CommandHandler
         public override void ExecuteCommand(GameTeam gT)
         {
             if (!_info.IsComChat)
-                _send(new Answer(false, AnswerType.OnlyInCommon), _info.User.Id);
+                _send(new Answer(false, AnswerType.OnlyInCommon), _info.User.Id, _info.Service);
             else
             {
                 gT.Reset();
-                _send(new Answer(true, AnswerType.NewGame), _info.ComChatId);
+                _send(new Answer(true, AnswerType.NewGame), _info.ComChatId, _info.Service);
             }
         }
 
-        public ResetGameBaseCommand(ResetCommandInfo info, Action<Answer, ulong> send) : base( send)
+        public ResetGameBaseCommand(ResetCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
         {
             _info = info;
         }

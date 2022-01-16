@@ -7,27 +7,29 @@ namespace UserInterface
 {
     public class TgSender : IMessageSender
     {
-        private ITelegramBotClient _client;
+        private TelegramBotClient _client;
         private IAnswerGenerator _answerGenerator = new DefaultGenerator();
         private readonly CancellationTokenSource _cts;
 
-        public TgSender(CancellationTokenSource cts)
+        public TgSender(CancellationTokenSource cts, TelegramBotClient client)
         {
             _cts = cts;
-        }
-
-        public void SetClient(ITelegramBotClient client)
-        {
             _client = client;
         }
-        
+
         public void SetParser(IAnswerGenerator generator)
         {
             _answerGenerator = generator;
         }
 
+        public bool IsItMyService(Service service)
+        {
+            return service == Service.Telegram;
+        }
+
         public void SendMessage(Answer answer, ulong destinationId)
         {
+            // Console.WriteLine(_answerGenerator.GetType());
             {
                 var dest = MapUlongToLong(destinationId);
                 var res = _answerGenerator.GenerateAnswer(answer);

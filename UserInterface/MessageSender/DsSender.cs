@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CommonInteraction;
 using Discord;
@@ -17,6 +18,7 @@ namespace UserInterface
 
         public void SendMessage(Answer answer, ulong destinationId)
         {
+            // Console.WriteLine(_answerGenerator.GetType());
             if (answer.IsCommon)
             {
                 var channel = (SocketTextChannel)_client.GetChannel(destinationId);
@@ -31,6 +33,11 @@ namespace UserInterface
         public void SetParser(IAnswerGenerator generator)
         {
             _answerGenerator = generator;
+        }
+
+        public bool IsItMyService(Service service)
+        {
+            return service == Service.Discord;
         }
     }
 }

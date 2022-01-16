@@ -8,20 +8,18 @@ namespace UserInterface
 {
     public class AnswerDefaultMessage : ViewCommandMessage
     {
-        private readonly IMessageSender _sender;
         private readonly DefaultGenerator _default;
-        public AnswerDefaultMessage(IMessageSender sender, DefaultGenerator defaultGenerator) : base(sender)
+        public AnswerDefaultMessage(IMessageSender[] senders, DefaultGenerator defaultGenerator) : base(senders)
         {
-            _sender = sender;
             _default = defaultGenerator;
         }
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"default", "вуафгде", "обычный"};
 
         public override void ExecuteCommand(MessageData msg)
         {
-            if (!msg.IsCommonChannel) return;
-            _sender.SetParser(_default);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.CommonChannelId);
+            if (!msg.IsCommonChannel || !GetSender(msg.Service, out var sender)) return;
+            sender.SetParser(_default);   
+            sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() => "!default - обычный решим ответов. " +
@@ -30,12 +28,10 @@ namespace UserInterface
     
     public class AnswerBalabobaMessage : ViewCommandMessage
     {
-        private readonly IMessageSender _sender;
         private readonly BalabobaGenerator _generator;
 
-        public AnswerBalabobaMessage(IMessageSender sender, BalabobaGenerator generator) : base(sender)
+        public AnswerBalabobaMessage(IMessageSender[] senders, BalabobaGenerator generator) : base(senders)
         {
-            _sender = sender;
             _generator = generator;
         }
 
@@ -43,9 +39,9 @@ namespace UserInterface
 
         public override void ExecuteCommand(MessageData msg)
         {
-            if (!msg.IsCommonChannel) return;
-            _sender.SetParser(_generator);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.CommonChannelId);
+            if (!msg.IsCommonChannel || !GetSender(msg.Service, out var sender)) return;
+            sender.SetParser(_generator);   
+            sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() =>
@@ -60,16 +56,17 @@ namespace UserInterface
         private readonly Func<MessageParser> getParser;
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
         
-        public HelpMessage(IMessageSender sender, Func<MessageParser> getParser) : base(sender)
+        public HelpMessage(IMessageSender[] senders, Func<MessageParser> getParser) : base(senders)
         {
             this.getParser = getParser;
         }
         public override void ExecuteCommand(MessageData msg)
         {
+            if (!GetSender(msg.Service, out var sender)) return;
             var isCommonChannel = msg.IsCommonChannel;
             var channelId = isCommonChannel ? msg.CommonChannelId : msg.Author.Id;
             var parser = getParser();
-            _sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
+            sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
         }
 
         public override string GetDescription() => "!help - выведет данное приветственное сообщение и " +

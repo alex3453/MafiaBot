@@ -97,7 +97,7 @@ namespace UserInterface
                 AnswerType.AlreadyKilled => alreadyKilled,
                 AnswerType.NeedToCreateGame => needToCreateGame,
                 AnswerType.IncorrectVote => string.Format(incorrectVote, answer.Args[0]),
-                AnswerType.MafiaKilling => mafiaKilling + ParseKillList(answer.Args),
+                AnswerType.MafiaKilling => mafiaKilling + GenerateKillList(answer.Args),
                 AnswerType.GetHelp => hi + answer.Args[0] + algo,
                 AnswerType.Unknown => unknownCommand,
                 AnswerType.ChangeMod => string.Format("Режим: {0}", answer.Args[0]),

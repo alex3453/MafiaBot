@@ -13,7 +13,6 @@ namespace UserInterface
     public class TgView : IView
     {
         private TelegramBotClient _client;
-        private readonly TgEnvVarTokenProvider _provider;
         private readonly TgSender _messageSender;
         private readonly TgMessageHandler _messageHandler;
         private readonly ITgErrorHandler _errorHandler;
@@ -22,33 +21,32 @@ namespace UserInterface
         public TgView(
             TgEnvVarTokenProvider provider, 
             TgMessageHandler messageHandler, 
-            IMessageSender messageSender,
+            TgSender messageSender,
             ITgErrorHandler errorHandler,
             CancellationTokenSource cts,
             TelegramBotClient client)
         {
-            _provider = provider;
             _messageHandler = messageHandler;
             _errorHandler = errorHandler;
-            _messageSender = messageSender as TgSender;
+            _messageSender = messageSender;
             _cts = cts;
             _client = client;
         }
 
-        public Action<Answer, ulong> RegisterSending() => _messageSender.SendMessage;
+        public bool IsItMyService(Service service)
+        {
+            return service == Service.Telegram;
+        }
+
+        public void Send(Answer answer, ulong destinationId)
+        {
+            _messageSender.SendMessage(answer, destinationId);
+        }
 
         public void SubscribeOn(Action<ICommandInfo> exCommand) => _messageHandler.ExCommand += exCommand;
 
-        private void SetUp()
-        {
-            _messageSender.SetClient(_client);
-            _messageHandler.SetSender(_messageSender);
-        }
-
         public async Task StartAsync()
         {
-            SetUp();
-            
             var receiverOptions = new ReceiverOptions
             {
                 AllowedUpdates = { }

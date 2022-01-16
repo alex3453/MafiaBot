@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using App;
 using App.CommandHandler;
 using CommonInteraction;
+using Discord.WebSocket;
 using Mafia;
 using Ninject;
 using Ninject.Extensions.Conventions;
@@ -16,11 +16,11 @@ namespace Start
 {
     internal static class Program
     {
-        public static async Task Main()
+        public static void Main()
         {
             var container = ConfigureContainer();
             var entryPoint = container.Get<EntryPoint>();
-            await entryPoint.Run();
+            entryPoint.Run();
             Console.ReadLine();
         }
 
@@ -47,23 +47,24 @@ namespace Start
             
             container.Bind<MessageParser>().To<MessageParser>().InSingletonScope();
             
-            container.Bind<IMessageSender>().To<TgSender>().InSingletonScope();
+            container.Bind(c => c.FromAssemblyContaining<IView>()
+                .SelectAllClasses().InheritedFrom<IView>().BindAllInterfaces());
+            
             container.Bind<ITgErrorHandler>().To<TgConsoleErrorHandler>();
-            container.Bind<IView>().To<TgView>().InSingletonScope();
-
-
-            // container.Bind<IMessageSender>().To<DsSender>().InSingletonScope();
-            // container.Bind<IDsLogger>().To<ConsoleDsLogger>();
-            // container.Bind<IView>().To<DsView>().InSingletonScope();
-            // container.Bind<DiscordSocketClient>().To<DiscordSocketClient>().InSingletonScope();
-
             container.Bind<string>().ToMethod(ctx => ctx.Kernel
                 .Get<TgEnvVarTokenProvider>().GetToken()).WhenInjectedInto<TelegramBotClient>();
             container.Bind<HttpClient>().ToSelf().WhenInjectedInto<TelegramBotClient>();
             container.Bind<TelegramBotClient>().ToSelf().InSingletonScope()
                 .WithConstructorArgument("baseUrl", "https://api.telegram.org");
+            container.Bind<CancellationTokenSource>().ToSelf().InSingletonScope();
+            container.Bind<TgSender>().ToSelf().InSingletonScope();
             
-            
+            container.Bind<IDsLogger>().To<ConsoleDsLogger>();
+            container.Bind<DiscordSocketClient>().ToSelf().InSingletonScope();
+            container.Bind<DsSender>().ToSelf().InSingletonScope();
+            container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<TgSender>());
+            container.Bind<IMessageSender>().ToMethod(ctx => ctx.Kernel.Get<DsSender>());
+
             return container;
         }
     }

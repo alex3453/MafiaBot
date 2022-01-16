@@ -4,22 +4,22 @@ using App;
 
 namespace Start
 {
-    internal class EntryPoint
+    internal class  EntryPoint
     {
-        private readonly IView view;
-        private readonly Bot bot;
+        private readonly ViewController _controller;
+        private readonly Bot _bot;
         
-        public EntryPoint(IView view, Bot bot)
+        public EntryPoint(Bot bot, ViewController controller)
         {
-            this.view = view;
-            this.bot = bot;
+            _bot = bot;
+            _controller = controller;
         }
 
-        public async Task Run()
+        public void Run()
         {
-            view.SubscribeOn(bot.Register());
-            bot.SendMassage += view.RegisterSending();
-            await view.StartAsync();
+            _controller.SubscribeOn(_bot.Register());
+            _bot.SendMassage += _controller.RegisterSending();
+            _controller.Start();
         }
     }
 }
