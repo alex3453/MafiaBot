@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommonInteraction;
-using Discord.WebSocket;
 
 namespace UserInterface
 {
@@ -14,8 +13,7 @@ namespace UserInterface
             FillCommonInfo(msg);
             return new RegCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
-
-
+        
         public override string GetDescription() => "!reg - позволяет зарегестрироваться на игру.";
     }
 
@@ -48,6 +46,7 @@ namespace UserInterface
     public class VoteMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string>{"vote", "мщеу"};
+        
         public override VoteCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
@@ -62,6 +61,7 @@ namespace UserInterface
     public class KillMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"kill", "лшдд"};
+        
         public override KillCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);

@@ -4,7 +4,6 @@ namespace CommonInteraction
 {
     public class StartCommandInfo : ICommandInfo
     {
-
         public StartCommandInfo(User user, bool isComChat, ulong comChatId, string service)
         {
             User = user;

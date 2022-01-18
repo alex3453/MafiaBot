@@ -25,7 +25,7 @@ namespace UserInterface
             return Task.CompletedTask;
         }
 
-        private MessageData CreateMessageData(SocketMessage msg)
+        private static MessageData CreateMessageData(SocketMessage msg)
         {
             var author = new Author(msg.Author.IsBot, msg.Author.Username, msg.Author.Id);
             var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);

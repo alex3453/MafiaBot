@@ -1,5 +1,3 @@
-using CommonInteraction;
-
 namespace UserInterface
 {
     public class MessageData

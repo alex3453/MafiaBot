@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading;
 using App;
 using App.CommandHandler;
 using CommonInteraction;
@@ -41,8 +40,8 @@ namespace Start
             container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
                 .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());
             
-            container.Bind(c => c.FromAssemblyContaining<ViewCommandMessage>()
-                .SelectAllClasses().InheritedFrom<ViewCommandMessage>().BindAllBaseClasses());
+            container.Bind(c => c.FromAssemblyContaining<AbstractViewComMessage>()
+                .SelectAllClasses().InheritedFrom<AbstractViewComMessage>().BindAllBaseClasses());
             
             container.Bind<IParserFactory>().ToFactory();
             

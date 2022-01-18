@@ -1,30 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CommonInteraction;
-using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public abstract class ViewCommandMessage
+    public abstract class AbstractViewComMessage
     {
-        protected readonly IMessageSender[] _senders;
-        protected ViewCommandMessage(IMessageSender[] sender)
+        protected readonly IMessageSender[] Senders;
+        protected AbstractViewComMessage(IMessageSender[] sender)
         {
-            _senders = sender;
+            Senders = sender;
         }
+        
         protected abstract ISet<string> PossibleStrings { get; }
+        
         public bool IsItMyCommand(MessageData msg)
         {
             var content = msg.Content.Remove(0, 1);
             var com = content.Split().First();
             return PossibleStrings.Contains(com);
         }
+        
         public abstract void ExecuteCommand(MessageData msg);
         public abstract string GetDescription();
 
         protected bool GetSender(string service, out IMessageSender sender)
         {
-            sender = _senders.FirstOrDefault(s => s.IsItMyService(service));
+            sender = Senders.FirstOrDefault(s => s.IsItMyService(service));
             return sender != null;
         }
     }

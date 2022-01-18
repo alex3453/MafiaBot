@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonInteraction;
-using Discord.WebSocket;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -29,7 +28,7 @@ namespace UserInterface
             return Task.CompletedTask;
         }
         
-        private MessageData CreateMessageData(Update update)
+        private static MessageData CreateMessageData(Update update)
         {
             if (update.Type != UpdateType.Message)
                 return null;
@@ -55,7 +54,7 @@ namespace UserInterface
             return res;
         }
         
-        private ulong MapLongToUlong(long longValue)
+        private static ulong MapLongToUlong(long longValue)
         {
             return unchecked((ulong)(longValue - long.MinValue));
         }

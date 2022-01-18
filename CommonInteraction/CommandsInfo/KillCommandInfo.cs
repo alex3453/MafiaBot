@@ -14,6 +14,7 @@ namespace CommonInteraction
         {
             return visitor.Handle(this, send);
         }
+        
         public KillCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> content, string service)
         {
             User = user;

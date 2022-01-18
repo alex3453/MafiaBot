@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
 using CommonInteraction;
-using Discord.WebSocket;
 
 namespace UserInterface
 {
@@ -9,9 +8,9 @@ namespace UserInterface
     {
         private readonly CommandMessage[] _botCommands;
 
-        private readonly ViewCommandMessage[] _viewCommands;
+        private readonly AbstractViewComMessage[] _viewCommands;
 
-        public MessageParser(CommandMessage[] botCommands, ViewCommandMessage[] viewCommands)
+        public MessageParser(CommandMessage[] botCommands, AbstractViewComMessage[] viewCommands)
         {
             _botCommands = botCommands;
             _viewCommands = viewCommands;

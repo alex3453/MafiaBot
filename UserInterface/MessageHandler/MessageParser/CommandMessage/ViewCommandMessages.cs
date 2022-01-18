@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CommonInteraction;
-using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class AnswerDefaultMessage : ViewCommandMessage
+    public class AnswerDefaultMessage : AbstractViewComMessage
     {
         private readonly DefaultGenerator _default;
+        
         public AnswerDefaultMessage(IMessageSender[] senders, DefaultGenerator defaultGenerator) : base(senders)
         {
             _default = defaultGenerator;
         }
+        
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"default", "вуафгде", "обычный"};
 
         public override void ExecuteCommand(MessageData msg)
@@ -26,7 +26,7 @@ namespace UserInterface
                                                    "Бот будет оповещать о событиях заготовленными фразами";
     }
     
-    public class AnswerBalabobaMessage : ViewCommandMessage
+    public class AnswerBalabobaMessage : AbstractViewComMessage
     {
         private readonly BalabobaGenerator _generator;
 
@@ -51,21 +51,22 @@ namespace UserInterface
             "то Балабоба вам не ответит:(";
     }
     
-    public class HelpMessage : ViewCommandMessage
+    public class HelpMessage : AbstractViewComMessage
     {
-        private readonly Func<MessageParser> getParser;
+        private readonly Func<MessageParser> _getParserFunc;
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
         
-        public HelpMessage(IMessageSender[] senders, Func<MessageParser> getParser) : base(senders)
+        public HelpMessage(IMessageSender[] senders, Func<MessageParser> getParserFunc) : base(senders)
         {
-            this.getParser = getParser;
+            _getParserFunc = getParserFunc;
         }
+        
         public override void ExecuteCommand(MessageData msg)
         {
             if (!GetSender(msg.Service, out var sender)) return;
             var isCommonChannel = msg.IsCommonChannel;
             var channelId = isCommonChannel ? msg.CommonChannelId : msg.Author.Id;
-            var parser = getParser();
+            var parser = _getParserFunc();
             sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
         }
 

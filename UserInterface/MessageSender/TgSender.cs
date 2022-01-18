@@ -20,16 +20,16 @@ namespace UserInterface
             _answerGenerator = generator;
         }
 
-        public bool IsItMyService(string service)
-        {
-            return service == "Telegram";
-        }
-
         public void SendMessage(Answer answer, ulong destinationId)
         {
             var dest = MapUlongToLong(destinationId);
             var res = _answerGenerator.GenerateAnswer(answer);
             _client.SendTextMessageAsync(dest, res);
+        }
+        
+        public bool IsItMyService(string service)
+        {
+            return service == "Telegram";
         }
 
         private static long MapUlongToLong(ulong ulongValue)

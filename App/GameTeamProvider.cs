@@ -6,7 +6,7 @@ using Mafia;
 
 namespace App
 {
-    public class GameTeamProvider : IDictionaryProvider
+    public class GameTeamProvider
     {
         private readonly Func<IMafia> _createMafiaFunc;
         private readonly IList<GameTeam> _gameTeams = new List<GameTeam>();

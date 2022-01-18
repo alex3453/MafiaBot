@@ -9,23 +9,23 @@ namespace UserInterface
     {
         private class Response
         {
-            public int bad_query { get; set; }
-            public int error { get; set; }
-            public string query { get; set; }
-            public string text { get; set; }
+            public int BadQuery { get; set; }
+            public int Error { get; set; }
+            public string Query { get; set; }
+            public string Text { get; set; }
         }
 
         private class Message
         {
-            public int filter { get; set; }
-            public int intro { get; set; }
-            public string query { get; set; }
+            public int Filter { get; set; }
+            public int Intro { get; set; }
+            public string Query { get; set; }
         }
         
         public async Task<string> GetAnswer(string text, int style = 11)
         {
-            var result = text;
-            var message = new Message {filter = 1, intro = style, query = text};
+            var result = text + " ";
+            var message = new Message { Filter = 1, Intro = style, Query = text };
             var json = JsonConvert.SerializeObject(message);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             using var httpClient = new HttpClient();
@@ -33,7 +33,7 @@ namespace UserInterface
             if (httpResponse.Content == null) return result;
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
             var res = JsonConvert.DeserializeObject<Response>(responseContent);
-            result += res.text;
+            result += res.Text;
 
             return result;
         }
