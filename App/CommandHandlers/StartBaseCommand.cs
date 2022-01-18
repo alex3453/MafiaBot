@@ -28,7 +28,7 @@ namespace App.CommandHandler
         }
         
 
-        public StartBaseCommand(StartCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public StartBaseCommand(StartCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

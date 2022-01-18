@@ -29,9 +29,9 @@ namespace UserInterface
             _client = client;
         }
 
-        public bool IsItMyService(Service service)
+        public bool IsItMyService(string service)
         {
-            return service == Service.Telegram;
+            return service == "Telegram";
         }
 
         public void Send(Answer answer, ulong destinationId)

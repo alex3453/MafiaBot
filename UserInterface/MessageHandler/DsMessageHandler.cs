@@ -36,7 +36,7 @@ namespace UserInterface
                 msg.MentionedUsers.Select(u => u.Username).ToArray(),
                 isCommonChannel,
                 commonChannelId,
-                Service.Discord
+                "Discord"
                 );
             return res;
         }

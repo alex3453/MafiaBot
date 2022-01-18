@@ -13,12 +13,12 @@ namespace UserInterface
             _views = views;
         }
 
-        private void Send(Answer answer, ulong destinationId, Service service)
+        private void Send(Answer answer, ulong destinationId, string service)
         {
             _views.FirstOrDefault(v => v.IsItMyService(service))?.Send(answer, destinationId);
         }
 
-        public Action<Answer, ulong, Service> RegisterSending() => Send;
+        public Action<Answer, ulong, string> RegisterSending() => Send;
 
         public void SubscribeOn(Action<ICommandInfo> exCommand)
         {

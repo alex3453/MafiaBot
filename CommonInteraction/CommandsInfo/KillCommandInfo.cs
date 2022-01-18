@@ -8,13 +8,13 @@ namespace CommonInteraction
     {
         public readonly IEnumerable<string> Content;
 
-        public Service Service { get; }
+        public string Service { get; }
 
-        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, Service> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, string> send)
         {
             return visitor.Handle(this, send);
         }
-        public KillCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> content, Service service)
+        public KillCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> content, string service)
         {
             User = user;
             IsComChat = isComChat;

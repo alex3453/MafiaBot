@@ -50,7 +50,7 @@ namespace UserInterface
                 mentionedUsers,
                 isCommonChannel,
                 MapLongToUlong(commonChannelId),
-                Service.Telegram
+                "Telegram"
             );
             return res;
         }

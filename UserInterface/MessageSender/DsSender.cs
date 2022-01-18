@@ -34,9 +34,9 @@ namespace UserInterface
             _answerGenerator = generator;
         }
 
-        public bool IsItMyService(Service service)
+        public bool IsItMyService(string service)
         {
-            return service == Service.Discord;
+            return service == "Discord";
         }
     }
 }

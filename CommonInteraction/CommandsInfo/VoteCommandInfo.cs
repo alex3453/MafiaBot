@@ -7,7 +7,7 @@ namespace CommonInteraction
     {
         public readonly IEnumerable<string> MentPlayers;
 
-        public VoteCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> mentPlayers, Service service)
+        public VoteCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> mentPlayers, string service)
         {
             User = user;
             IsComChat = isComChat;
@@ -16,9 +16,9 @@ namespace CommonInteraction
             Service = service;
         }
 
-        public Service Service { get; }
+        public string Service { get; }
 
-        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, Service> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, string> send)
         {
             return visitor.Handle(this, send);
         }

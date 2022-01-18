@@ -8,7 +8,7 @@ namespace App
 {
     public class GameTeam
     {
-        public Service Service { get; }
+        public string Service { get; }
         public ulong ChatId { get; }
         public IMafia Mafia { get; private set; }
         
@@ -17,7 +17,7 @@ namespace App
         
         private readonly Func<IMafia> _createMafiaFunc;
 
-        public GameTeam(ulong chatId, Func<IMafia> createMafiaFunc, Service service)
+        public GameTeam(ulong chatId, Func<IMafia> createMafiaFunc, string service)
         {
             _createMafiaFunc = createMafiaFunc;
             Service = service;

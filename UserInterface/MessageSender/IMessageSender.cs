@@ -6,6 +6,6 @@ namespace UserInterface
     {
         void SendMessage(Answer answer, ulong destinationId);
         void SetParser(IAnswerGenerator generator);
-        bool IsItMyService(Service service);
+        bool IsItMyService(string service);
     }
 }

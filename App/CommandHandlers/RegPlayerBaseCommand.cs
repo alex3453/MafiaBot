@@ -19,7 +19,7 @@ namespace App.CommandHandler
             _send(new Answer(true, AnswerType.SuccessfullyRegistered, _info.User.Name), _info.ComChatId, _info.Service);
         }
 
-        public RegPlayerBaseCommand(RegCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public RegPlayerBaseCommand(RegCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

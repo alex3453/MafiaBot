@@ -5,7 +5,7 @@ namespace CommonInteraction
     public class StartCommandInfo : ICommandInfo
     {
 
-        public StartCommandInfo(User user, bool isComChat, ulong comChatId, Service service)
+        public StartCommandInfo(User user, bool isComChat, ulong comChatId, string service)
         {
             User = user;
             IsComChat = isComChat;
@@ -13,9 +13,9 @@ namespace CommonInteraction
             Service = service;
         }
 
-        public Service Service { get; }
+        public string Service { get; }
 
-        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, Service> send)
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, string> send)
         {
             return visitor.Handle(this, send);
         }

@@ -22,7 +22,7 @@ namespace UserInterface
         public abstract void ExecuteCommand(MessageData msg);
         public abstract string GetDescription();
 
-        protected bool GetSender(Service service, out IMessageSender sender)
+        protected bool GetSender(string service, out IMessageSender sender)
         {
             sender = _senders.FirstOrDefault(s => s.IsItMyService(service));
             return sender != null;

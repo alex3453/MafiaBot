@@ -8,7 +8,7 @@ namespace App
     public class VoteBaseCommand : BaseCommandHandler
     {
         private readonly VoteCommandInfo _info;
-        public VoteBaseCommand(VoteCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public VoteBaseCommand(VoteCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

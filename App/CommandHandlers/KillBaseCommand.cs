@@ -57,7 +57,7 @@ namespace App.CommandHandler
             }
         }
 
-        public KillBaseCommand(KillCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public KillBaseCommand(KillCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

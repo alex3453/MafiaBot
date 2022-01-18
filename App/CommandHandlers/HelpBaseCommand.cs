@@ -6,7 +6,7 @@ namespace App.CommandHandler
     public class HelpBaseCommand : BaseCommandHandler
     {
         private HelpCommandInfo _info;
-        public HelpBaseCommand(HelpCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public HelpBaseCommand(HelpCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

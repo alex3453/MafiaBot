@@ -4,7 +4,7 @@ namespace UserInterface
 {
     public class MessageData
     {
-        public readonly Service Service;
+        public readonly string Service;
         public readonly string Content;
         public readonly Author Author;
         public readonly string[] MentionedUsers;
@@ -17,7 +17,7 @@ namespace UserInterface
             string[] mentionedUsers, 
             bool isCommonChannel, 
             ulong commonChannelId, 
-            Service service)
+            string service)
         {
             Content = content;
             Author = author;

@@ -17,7 +17,7 @@ namespace App.CommandHandler
             }
         }
 
-        public ResetGameBaseCommand(ResetCommandInfo info, Action<Answer, ulong, Service> send) : base(send)
+        public ResetGameBaseCommand(ResetCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

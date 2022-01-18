@@ -20,9 +20,9 @@ namespace UserInterface
             _answerGenerator = generator;
         }
 
-        public bool IsItMyService(Service service)
+        public bool IsItMyService(string service)
         {
-            return service == Service.Telegram;
+            return service == "Telegram";
         }
 
         public void SendMessage(Answer answer, ulong destinationId)

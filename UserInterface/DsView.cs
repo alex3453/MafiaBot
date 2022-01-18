@@ -28,9 +28,9 @@ namespace UserInterface
             _messageSender = messageSender;
         }
 
-        public bool IsItMyService(Service service)
+        public bool IsItMyService(string service)
         {
-            return service == Service.Discord;
+            return service == "Discord";
         }
 
         public void Send(Answer answer, ulong destinationId)
