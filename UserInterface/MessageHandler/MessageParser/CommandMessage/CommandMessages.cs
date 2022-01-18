@@ -9,10 +9,10 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"reg", "куп"};
 
-        public override RegCommandInfo GetCommandInfo(SocketMessage msg)
+        public override RegCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new RegCommandInfo(user, isCommonChannel, commonChannelId);
+            return new RegCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
 
@@ -23,10 +23,10 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"createnew", "скуфеутуц"};
 
-        public override ResetCommandInfo GetCommandInfo(SocketMessage msg)
+        public override ResetCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new ResetCommandInfo(user, isCommonChannel, commonChannelId);
+            return new ResetCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
         public override string GetDescription() => "!createnew - создает для вас новую игру.";
@@ -36,10 +36,10 @@ namespace UserInterface
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"start", "ыефке"};
 
-        public override StartCommandInfo GetCommandInfo(SocketMessage msg)
+        public override StartCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            return new StartCommandInfo(user, isCommonChannel, commonChannelId);
+            return new StartCommandInfo(User, IsCommonChannel, CommonChannelId, Service);
         }
 
         public override string GetDescription() => "!start - позволяет начать игру.";
@@ -48,11 +48,11 @@ namespace UserInterface
     public class VoteMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string>{"vote", "мщеу"};
-        public override VoteCommandInfo GetCommandInfo(SocketMessage msg)
+        public override VoteCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
-            var mentionedUsers = msg.MentionedUsers.Select(x => x.Username).ToArray();
-            return new VoteCommandInfo(user, isCommonChannel, commonChannelId, mentionedUsers);
+            var mentionedUsers = msg.MentionedUsers;
+            return new VoteCommandInfo(User, IsCommonChannel, CommonChannelId, mentionedUsers, Service);
         }
 
         public override string GetDescription() => "!vote {имя игрока на сервере, лучше через @} - " +
@@ -62,11 +62,11 @@ namespace UserInterface
     public class KillMessage : CommandMessage
     {
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"kill", "лшдд"};
-        public override KillCommandInfo GetCommandInfo(SocketMessage msg)
+        public override KillCommandInfo GetCommandInfo(MessageData msg)
         {
             FillCommonInfo(msg);
             var args = msg.Content.Split().Skip(1).ToArray();
-            return new KillCommandInfo(user, isCommonChannel, commonChannelId, args);
+            return new KillCommandInfo(User, IsCommonChannel, CommonChannelId, args, Service);
         }
 
         public override string GetDescription() => "!kill {номер игрока из отправленного вам списка} - " +

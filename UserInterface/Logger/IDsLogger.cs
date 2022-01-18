@@ -3,7 +3,7 @@ using Discord;
 
 namespace UserInterface
 {
-    public interface ILogger
+    public interface IDsLogger
     {
         Task Log(LogMessage msg);
     }

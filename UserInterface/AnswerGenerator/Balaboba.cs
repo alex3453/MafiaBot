@@ -28,16 +28,12 @@ namespace UserInterface
             var message = new Message {filter = 1, intro = style, query = text};
             var json = JsonConvert.SerializeObject(message);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            using (var httpClient = new HttpClient())
-            {
-                var httpResponse = await httpClient.PostAsync("https://zeapi.yandex.net/lab/api/yalm/text3", content);
-                if (httpResponse.Content != null)
-                {
-                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
-                    var res = JsonConvert.DeserializeObject<Response>(responseContent);
-                    result += res.text;
-                }
-            }
+            using var httpClient = new HttpClient();
+            var httpResponse = await httpClient.PostAsync("https://zeapi.yandex.net/lab/api/yalm/text3", content);
+            if (httpResponse.Content == null) return result;
+            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+            var res = JsonConvert.DeserializeObject<Response>(responseContent);
+            result += res.text;
 
             return result;
         }

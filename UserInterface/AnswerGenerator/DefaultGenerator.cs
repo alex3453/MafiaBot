@@ -1,37 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using CommonInteraction;
 
 namespace UserInterface
 {
-    public class BalabobaParser : IAnswerParser
+    public class DefaultGenerator : IAnswerGenerator
     {
-        private readonly Balaboba _balaboba;
-
         private  readonly string hi, algo, startGame, mafiaWins, peacefulWins, successfullyRegistered, 
             alreadyRegistered, successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, 
             nightAllAlive, newGame, onlyInLocal, onlyInCommon, gameIsGoing,
             needMorePlayers, youAreNotInGame, youCantVoteThisPl, youCantKillThisPl, notTimeToVote, notTimeToKill, 
             enterNumber, incorrectNumber, youAreNotMafia, successfullyKilled, alreadyKilled, needToCreateGame, 
             mafiaKilling, incorrectVote, unknownCommand, tellRole;
-        public BalabobaParser(Balaboba balaboba)
+        public DefaultGenerator()
         {
-            _balaboba = balaboba;
             hi = "Привет, я *бот* для игры в *мафию*, и у меня есть следующие команды:\n";
             algo = "1. Все желающие поиграть должны зарегестрироваться, написав команду !reg\n" +
                    "2. Начните игру командой !start\n" +
                    "3. Играйте:)";
-            mafiaWins = "Игра окончена. Мафия победила.";
+            mafiaWins = "Игра окончена. Мафия победила. Да будет пир в честь павших и победивших.";
             peacefulWins = "Игра окончена. На сей раз победа за мирными. " +
                            "Наконец-то в этом городе воцарил мир и спокойствие...";
             successfullyRegistered = "**{0}**, добро пожаловать в игру!";
             alreadyRegistered ="**{0}**, не пудри мне мозги. Я уже понял, что ты хочешь играть. Хватит регистрироваться.";
             successfullyVoted = "**{0}**, твой голос отдан за **{1}**. Ты точно хорошо подумал?";
             alreadyVoted = "**{0}**, думал незаметно проголосовать второй раз? Увы и ах...";
-            endDay = "Наступила ночь...";
-            endNight = "Настал новый день.";
-            dayKill = "**{0}** был повешен.";
-            dayAllAlive = "Никого не повесили.";
-            nightKill = "Ночью убили **{0}**.";
+            endDay = "Наступила __ночь__ и все затихло... Перестали петь птицы, погасли огни в домах... " +
+                     "И только слышно иногда, как где-то раздаются глухие выстрелы...";
+            endNight = "С появлением солнца на небе новый __день__ сменил кровавую ночь, " +
+                       "и тот, кто еще смог открыть утром глаза, радостно пялится на солнышко " +
+                       "и благодарит Бога за то, что его не коснулись события прошедшей ночи...";
+            dayKill = "**{0}** был изгнан. У него есть последнее слово и возможность рассказать всем, " +
+                      "какая роль в этой жизни была ему отведена.";
+            dayAllAlive = "Судьба осталась благосклонна ко всем - город ночует прежним составом. " +
+                          "Изменится ли что-то после ночи?";
+            nightKill = "Злодейка ночь забрала с собой **{0}**. У кого-то есть идеи, чьих рук дело?";
             nightAllAlive = "Неожиданно, но факт - никто не погиб этой ночью.";
             newGame = "Новая игра создана. Кто хочет поиграть?;)";
             tellRole = "Ваша роль: {0}";
@@ -62,22 +66,23 @@ namespace UserInterface
                         "проголосовать за себя, чтобы не вылетел кто-то невинный...)";
             unknownCommand = "Кажется, мы друг друга не поняли...Я таких команд не знаю:(";
         }
-        public override string ParseAnswer(Answer answer)
+
+        public override string GenerateAnswer(Answer answer)
         {
             return answer.AnswerType switch
             {
                 AnswerType.GameStarted => startGame,
-                AnswerType.MafiaWins => _balaboba.GetAnswer(mafiaWins).Result,
-                AnswerType.PeacefulWins => _balaboba.GetAnswer(peacefulWins).Result,
+                AnswerType.MafiaWins => mafiaWins,
+                AnswerType.PeacefulWins => peacefulWins,
                 AnswerType.SuccessfullyRegistered => string.Format(successfullyRegistered, answer.Args[0]),
                 AnswerType.AlreadyRegistered => string.Format(alreadyRegistered, answer.Args[0]),
                 AnswerType.SuccessfullyVoted => string.Format(successfullyVoted, answer.Args[0], answer.Args[1]),
                 AnswerType.AlreadyVoted => string.Format(alreadyVoted, answer.Args[0]),
-                AnswerType.EndDay => _balaboba.GetAnswer(endDay).Result,
-                AnswerType.EndNight => _balaboba.GetAnswer(endNight).Result,
-                AnswerType.DayKill => _balaboba.GetAnswer(string.Format(dayKill, answer.Args[0])).Result,
-                AnswerType.DayAllAlive => _balaboba.GetAnswer(dayAllAlive).Result,
-                AnswerType.NightKill =>_balaboba.GetAnswer(string.Format(nightKill, answer.Args[0])).Result,
+                AnswerType.EndDay => endDay,
+                AnswerType.EndNight => endNight,
+                AnswerType.DayKill => string.Format(dayKill, answer.Args[0]),
+                AnswerType.DayAllAlive => dayAllAlive,
+                AnswerType.NightKill =>string.Format(nightKill, answer.Args[0]),
                 AnswerType.NightAllAlive => nightAllAlive,
                 AnswerType.NewGame => newGame,
                 AnswerType.TellRole => string.Format(tellRole, answer.Args[0]),
@@ -97,10 +102,10 @@ namespace UserInterface
                 AnswerType.AlreadyKilled => alreadyKilled,
                 AnswerType.NeedToCreateGame => needToCreateGame,
                 AnswerType.IncorrectVote => string.Format(incorrectVote, answer.Args[0]),
-                AnswerType.MafiaKilling => mafiaKilling + ParseKillList(answer.Args),
+                AnswerType.MafiaKilling => mafiaKilling + GenerateKillList(answer.Args),
                 AnswerType.GetHelp => hi + answer.Args[0] + algo,
                 AnswerType.Unknown => unknownCommand,
-                AnswerType.ChangeMod => string.Format("Режим: {0}", answer.Args[0]),
+                AnswerType.ChangeMod => $"Режим: {answer.Args[0]}",
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

@@ -2,7 +2,7 @@ using System;
 
 namespace UserInterface
 {
-    public class FromEnvVarProvider : ITokenProvider
+    public class DsEnvVarProvider
     {
         public string GetToken()
         {

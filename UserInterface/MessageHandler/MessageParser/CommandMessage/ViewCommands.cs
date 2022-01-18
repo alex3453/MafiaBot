@@ -8,20 +8,18 @@ namespace UserInterface
 {
     public class AnswerDefaultMessage : ViewCommandMessage
     {
-        private readonly IMessageSender _sender;
-        private readonly DefaultParser _default;
-        public AnswerDefaultMessage(IMessageSender sender, DefaultParser defaultParser) : base(sender)
+        private readonly DefaultGenerator _default;
+        public AnswerDefaultMessage(IMessageSender[] senders, DefaultGenerator defaultGenerator) : base(senders)
         {
-            _sender = sender;
-            _default = defaultParser;
+            _default = defaultGenerator;
         }
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"default", "вуафгде", "обычный"};
 
-        public override void ExecuteCommand(SocketMessage msg)
+        public override void ExecuteCommand(MessageData msg)
         {
-            if (!(msg.Channel.GetType() == typeof(SocketTextChannel))) return;
-            _sender.SetParser(_default);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.Channel.Id);
+            if (!msg.IsCommonChannel || !GetSender(msg.Service, out var sender)) return;
+            sender.SetParser(_default);   
+            sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Обычненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() => "!default - обычный решим ответов. " +
@@ -30,22 +28,20 @@ namespace UserInterface
     
     public class AnswerBalabobaMessage : ViewCommandMessage
     {
-        private readonly IMessageSender _sender;
-        private readonly BalabobaParser _parser;
+        private readonly BalabobaGenerator _generator;
 
-        public AnswerBalabobaMessage(IMessageSender sender, BalabobaParser parser) : base(sender)
+        public AnswerBalabobaMessage(IMessageSender[] senders, BalabobaGenerator generator) : base(senders)
         {
-            _sender = sender;
-            _parser = parser;
+            _generator = generator;
         }
 
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> {"balaboba", "ифдфищиф", "балабоба"};
 
-        public override void ExecuteCommand(SocketMessage msg)
+        public override void ExecuteCommand(MessageData msg)
         {
-            if (!(msg.Channel.GetType() == typeof(SocketTextChannel))) return;
-            _sender.SetParser(_parser);   
-            _sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.Channel.Id);
+            if (!msg.IsCommonChannel || !GetSender(msg.Service, out var sender)) return;
+            sender.SetParser(_generator);   
+            sender.SendMessage(new Answer(true, AnswerType.ChangeMod, "Балабобненька"), msg.CommonChannelId);
         }
 
         public override string GetDescription() =>
@@ -57,22 +53,23 @@ namespace UserInterface
     
     public class HelpMessage : ViewCommandMessage
     {
-        private readonly Func<IMessageParser> getParser;
+        private readonly Func<MessageParser> getParser;
         protected override ISet<string> PossibleStrings { get; } = new HashSet<string> { "help", "рудз" };
-        public override void ExecuteCommand(SocketMessage msg)
+        
+        public HelpMessage(IMessageSender[] senders, Func<MessageParser> getParser) : base(senders)
         {
-            var isCommonChannel = msg.Channel.GetType() == typeof(SocketTextChannel);
-            var channelId = isCommonChannel ? msg.Channel.Id : msg.Author.Id;
+            this.getParser = getParser;
+        }
+        public override void ExecuteCommand(MessageData msg)
+        {
+            if (!GetSender(msg.Service, out var sender)) return;
+            var isCommonChannel = msg.IsCommonChannel;
+            var channelId = isCommonChannel ? msg.CommonChannelId : msg.Author.Id;
             var parser = getParser();
-            _sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
+            sender.SendMessage(new Answer(isCommonChannel, AnswerType.GetHelp, parser.GetCommandsDescription() ), channelId);
         }
 
         public override string GetDescription() => "!help - выведет данное приветственное сообщение и " +
                                                    "покажет все команды, если вы вдруг забыли.";
-
-        public HelpMessage(IMessageSender sender, Func<IMessageParser> getHelp) : base(sender)
-        {
-            getParser = getHelp;
-        }
     }
 }

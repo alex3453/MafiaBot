@@ -8,9 +8,8 @@ namespace App
 {
     public class GameTeamProvider : IDictionaryProvider
     {
-        public IDictionary<ulong, GameTeam> GameTeams => _gameTeams;
         private readonly Func<IMafia> _createMafiaFunc;
-        private readonly IDictionary<ulong, GameTeam> _gameTeams = new Dictionary<ulong, GameTeam>();
+        private readonly IList<GameTeam> _gameTeams = new List<GameTeam>();
 
         public GameTeamProvider(Func<IMafia> createMafiaFunc)
         {
@@ -18,10 +17,22 @@ namespace App
         }
         public GameTeam GetTeam(ICommandInfo info)
         {
-            if (info.IsComChat && !_gameTeams.Keys.Contains(info.ComChatId))
-                _gameTeams[info.ComChatId] = new GameTeam(info.ComChatId, _createMafiaFunc);
-            return _gameTeams.Values
-                .FirstOrDefault(u => info.IsComChat ? u.ChatId == info.ComChatId : u.ContainsUser(info.User));
+            // if (info.IsComChat && !_gameTeams.Keys.Contains(info.ComChatId))
+            //     _gameTeams[info.ComChatId] = new GameTeam(info.ComChatId, _createMafiaFunc);
+            // return _gameTeams.Values
+            //     .FirstOrDefault(u => info.IsComChat ? u.ChatId == info.ComChatId : u.ContainsUser(info.User));
+            foreach (var gt in _gameTeams.Where(g => g.Service == info.Service))
+            {
+                if (info.IsComChat && gt.ChatId == info.ComChatId)
+                    return gt;
+                if (gt.ContainsUser(info.User))
+                    return gt;
+            }
+
+            if (!info.IsComChat) return null;
+            var team = new GameTeam(info.ComChatId, _createMafiaFunc, info.Service);
+            _gameTeams.Add(team);
+            return team;
         }
     }
 }

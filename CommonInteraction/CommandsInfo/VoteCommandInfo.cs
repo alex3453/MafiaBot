@@ -7,15 +7,18 @@ namespace CommonInteraction
     {
         public readonly IEnumerable<string> MentPlayers;
 
-        public VoteCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> mentPlayers)
+        public VoteCommandInfo(User user, bool isComChat, ulong comChatId, IEnumerable<string> mentPlayers, Service service)
         {
             User = user;
             IsComChat = isComChat;
             ComChatId = comChatId;
             MentPlayers = mentPlayers;
+            Service = service;
         }
 
-        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong> send)
+        public Service Service { get; }
+
+        public TCommand Accept<TCommand>(IVisitor<TCommand> visitor, Action<Answer, ulong, Service> send)
         {
             return visitor.Handle(this, send);
         }

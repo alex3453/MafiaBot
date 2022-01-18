@@ -2,6 +2,6 @@
 {
     public interface IParserFactory
     {
-        IMessageParser GetParserFunc();
+        MessageParser GetParser();
     }
 }

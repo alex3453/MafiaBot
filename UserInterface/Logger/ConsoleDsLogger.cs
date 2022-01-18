@@ -4,7 +4,7 @@ using Discord;
 
 namespace UserInterface
 {
-    public class ConsoleLogger : ILogger
+    public class ConsoleDsLogger : IDsLogger
     {
         public Task Log(LogMessage msg)
         {

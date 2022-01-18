@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace UserInterface
 {
-    public class MessageParser : IMessageParser
+    public class MessageParser
     {
         private readonly CommandMessage[] _botCommands;
 
@@ -17,9 +17,9 @@ namespace UserInterface
             _viewCommands = viewCommands;
         }
  
-        public bool Parse(SocketMessage msg, out ICommandInfo commandInfo)
+        public bool Parse(MessageData msg, out ICommandInfo commandInfo)
         {
-            if (msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!')
+            if (msg == null || msg.Author.IsBot || !msg.Content.Any() || msg.Content.First() != '!')
             {
                 commandInfo = null;
                 return false;
