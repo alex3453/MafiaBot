@@ -7,34 +7,37 @@ namespace UserInterface
 {
     public class Balaboba
     {
-        private class Response
+        class Response
         {
-            public int BadQuery { get; set; }
-            public int Error { get; set; }
-            public string Query { get; set; }
-            public string Text { get; set; }
+            public int bad_query { get; set; }
+            public int error { get; set; }
+            public string query { get; set; }
+            public string text { get; set; }
         }
 
-        private class Message
+        class Message
         {
-            public int Filter { get; set; }
-            public int Intro { get; set; }
-            public string Query { get; set; }
+            public int filter { get; set; }
+            public int intro { get; set; }
+            public string query { get; set; }
         }
         
-        public async Task<string> GetAnswer(string text, int style = 11)
+        public async Task<string> GetAnswer(string text, int style = 0)
         {
             var result = text + " ";
-            var message = new Message { Filter = 1, Intro = style, Query = text };
+            var message = new Message { filter = 1, intro = style, query = text };
             var json = JsonConvert.SerializeObject(message);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            using var httpClient = new HttpClient();
-            var httpResponse = await httpClient.PostAsync("https://zeapi.yandex.net/lab/api/yalm/text3", content);
-            if (httpResponse.Content == null) return result;
-            var responseContent = await httpResponse.Content.ReadAsStringAsync();
-            var res = JsonConvert.DeserializeObject<Response>(responseContent);
-            result += res.Text;
-
+            using (var httpClient = new HttpClient())
+            {
+                var httpResponse = await httpClient.PostAsync("https://zeapi.yandex.net/lab/api/yalm/text3", content);
+                if (httpResponse.Content != null)
+                {
+                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                    var res = JsonConvert.DeserializeObject<Response>(responseContent);
+                    result += res.text;
+                }
+            }
             return result;
         }
     }
