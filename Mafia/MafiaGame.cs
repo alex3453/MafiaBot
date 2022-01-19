@@ -51,12 +51,15 @@ namespace Mafia
         {
             _deadPlayers.Clear();
             IsSomeBodyDied = false;
+
             _votedPlayers = new HashSet<string>();
-            var deadP = _playersInGame.OrderByDescending(x => x.VoteCount).First();
-            if (deadP.VoteCount >= _playersInGame.Count / 2.0)
+            var currentVotedPlayers = _playersInGame
+                .OrderByDescending(x => x.VoteCount)
+                .ToList();
+            if (currentVotedPlayers[0].VoteCount != currentVotedPlayers[1].VoteCount)
             {
                 IsSomeBodyDied = true;
-                KillPlayer(deadP);
+                KillPlayer(currentVotedPlayers[0]);
             }
 
             foreach (var player in _playersInGame)

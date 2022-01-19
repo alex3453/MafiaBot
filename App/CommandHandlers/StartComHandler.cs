@@ -38,9 +38,9 @@ namespace App.CommandHandler
             var toSend = playerRole.ToString();
             if (playerRole is MafiaRole)
             {
-                toSend += "\nТвои напарники:" + playersRoles.Keys
+                toSend += "\nМафии в игре:" + playersRoles.Keys
                     .Where(player => playersRoles[player] is MafiaRole)
-                    .Aggregate(toSend, (current, player) => current + "\n" + player);
+                    .Aggregate(toSend, (current, player) => "\n" + player);
             }
             return toSend;
         }
