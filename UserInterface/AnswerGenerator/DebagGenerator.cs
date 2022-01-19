@@ -2,7 +2,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class DebugGenerator : IAnswerGenerator
+    public class DebugGenerator : AnswerGenerator
     {
         public override string GenerateAnswer(Answer answer)
         {

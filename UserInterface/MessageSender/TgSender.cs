@@ -8,14 +8,14 @@ namespace UserInterface
     public class TgSender : IMessageSender
     {
         private TelegramBotClient _client;
-        private IAnswerGenerator _answerGenerator = new DefaultGenerator();
+        private AnswerGenerator _answerGenerator = new DefaultGenerator();
 
         public TgSender(TelegramBotClient client)
         {
             _client = client;
         }
 
-        public void SetParser(IAnswerGenerator generator)
+        public void SetParser(AnswerGenerator generator)
         {
             _answerGenerator = generator;
         }

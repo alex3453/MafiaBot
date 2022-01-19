@@ -4,7 +4,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public abstract class IAnswerGenerator
+    public abstract class AnswerGenerator
     {
         public abstract string GenerateAnswer(Answer answer);
 

@@ -5,7 +5,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class DefaultGenerator : IAnswerGenerator
+    public class DefaultGenerator : AnswerGenerator
     {
         private  readonly string hi, algo, startGame, mafiaWins, peacefulWins, successfullyRegistered, 
             alreadyRegistered, successfullyVoted, alreadyVoted, endDay, endNight, dayKill, dayAllAlive, nightKill, 

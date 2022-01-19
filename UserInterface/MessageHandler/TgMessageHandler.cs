@@ -22,7 +22,6 @@ namespace UserInterface
 
         public Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            // Console.WriteLine(update.Message.Text + "tg");
             if (!_messageParser.Parse(CreateMessageData(update), out var commandInfo))
                 return Task.CompletedTask;
             ExCommand?.Invoke(commandInfo);

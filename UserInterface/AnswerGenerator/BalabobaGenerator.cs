@@ -3,7 +3,7 @@ using CommonInteraction;
 
 namespace UserInterface
 {
-    public class BalabobaGenerator : IAnswerGenerator
+    public class BalabobaGenerator : AnswerGenerator
     {
         private readonly Balaboba _balaboba;
 

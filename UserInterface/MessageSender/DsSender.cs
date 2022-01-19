@@ -9,7 +9,7 @@ namespace UserInterface
     public class DsSender : IMessageSender
     {
         private readonly DiscordSocketClient _client;
-        private IAnswerGenerator _answerGenerator = new DefaultGenerator();
+        private AnswerGenerator _answerGenerator = new DefaultGenerator();
 
         public DsSender(DiscordSocketClient client)
         {
@@ -29,7 +29,7 @@ namespace UserInterface
             
         }
 
-        public void SetParser(IAnswerGenerator generator)
+        public void SetParser(AnswerGenerator generator)
         {
             _answerGenerator = generator;
         }

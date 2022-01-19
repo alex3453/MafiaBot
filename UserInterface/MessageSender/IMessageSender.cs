@@ -5,7 +5,7 @@ namespace UserInterface
     public interface IMessageSender
     {
         void SendMessage(Answer answer, ulong destinationId);
-        void SetParser(IAnswerGenerator generator);
+        void SetParser(AnswerGenerator generator);
         bool IsItMyService(Service service);
     }
 }
