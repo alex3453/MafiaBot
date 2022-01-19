@@ -31,7 +31,6 @@ namespace Start
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
             container.Bind<IVisitor<BaseCommandHandler>>().To<Visitor>();
-            container.Bind<IDictionaryProvider>().To<GameTeamProvider>();
             container.Bind<IMafiaFactory>().ToFactory();
             
             container.Bind(c => c.FromAssemblyContaining<BaseCommandHandler>()
