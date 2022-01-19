@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Start", "Start\Start.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonInteraction", "CommonInteraction\CommonInteraction.csproj", "{B56B304A-5205-45CB-8919-9826D83D140A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MafiaLogicTests", "MafiaLogicTests\MafiaLogicTests.csproj", "{657F6643-2233-42EF-BD9E-93C878FCF6D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{B56B304A-5205-45CB-8919-9826D83D140A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B56B304A-5205-45CB-8919-9826D83D140A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B56B304A-5205-45CB-8919-9826D83D140A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{657F6643-2233-42EF-BD9E-93C878FCF6D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657F6643-2233-42EF-BD9E-93C878FCF6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657F6643-2233-42EF-BD9E-93C878FCF6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657F6643-2233-42EF-BD9E-93C878FCF6D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
