@@ -30,11 +30,11 @@ namespace Start
             container.Bind<IMafia>().To<MafiaGame>();
             container.Bind<IRoleDistribution>().To<SimpleRoleDist>();
             
-            container.Bind<IVisitor<BaseCommandHandler>>().To<Visitor>();
+            container.Bind<IVisitor<AbstractCommandHandler>>().To<Visitor>();
             container.Bind<IMafiaFactory>().ToFactory();
             
-            container.Bind(c => c.FromAssemblyContaining<BaseCommandHandler>()
-                .SelectAllClasses().InheritedFrom<BaseCommandHandler>().BindAllBaseClasses());
+            container.Bind(c => c.FromAssemblyContaining<AbstractCommandHandler>()
+                .SelectAllClasses().InheritedFrom<AbstractCommandHandler>().BindAllBaseClasses());
             
             container.Bind(c => c.FromAssemblyContaining<CommandMessage>()
                 .SelectAllClasses().InheritedFrom<CommandMessage>().BindAllBaseClasses());

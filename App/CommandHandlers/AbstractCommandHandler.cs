@@ -4,11 +4,11 @@ using CommonInteraction;
 
 namespace App
 {
-    public abstract class BaseCommandHandler
+    public abstract class AbstractCommandHandler
     {
         protected readonly Action<Answer, ulong, string> _send;
         
-        protected BaseCommandHandler(Action<Answer, ulong, string> send)
+        protected AbstractCommandHandler(Action<Answer, ulong, string> send)
         {
             _send = send;
         }

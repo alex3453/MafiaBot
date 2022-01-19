@@ -17,10 +17,6 @@ namespace App
         }
         public GameTeam GetTeam(ICommandInfo info)
         {
-            // if (info.IsComChat && !_gameTeams.Keys.Contains(info.ComChatId))
-            //     _gameTeams[info.ComChatId] = new GameTeam(info.ComChatId, _createMafiaFunc);
-            // return _gameTeams.Values
-            //     .FirstOrDefault(u => info.IsComChat ? u.ChatId == info.ComChatId : u.ContainsUser(info.User));
             foreach (var gt in _gameTeams.Where(g => g.Service == info.Service))
             {
                 if (info.IsComChat && gt.ChatId == info.ComChatId)

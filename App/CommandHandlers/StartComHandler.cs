@@ -6,7 +6,7 @@ using Mafia;
 
 namespace App.CommandHandler
 {
-    public class StartBaseCommand : BaseCommandHandler
+    public class StartComHandler : AbstractCommandHandler
     {
         private readonly StartCommandInfo _info;
         public override void ExecuteCommand(GameTeam gT)
@@ -28,7 +28,7 @@ namespace App.CommandHandler
         }
         
 
-        public StartBaseCommand(StartCommandInfo info, Action<Answer, ulong, string> send) : base(send)
+        public StartComHandler(StartCommandInfo info, Action<Answer, ulong, string> send) : base(send)
         {
             _info = info;
         }

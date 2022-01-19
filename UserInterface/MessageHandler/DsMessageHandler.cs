@@ -18,7 +18,6 @@ namespace UserInterface
 
         public Task ProcessMessage(SocketMessage msg)
         {
-            // Console.WriteLine(msg.Content + "ds");
             if (!_messageParser.Parse(CreateMessageData(msg), out var commandInfo))
                 return Task.CompletedTask;
             ExCommand?.Invoke(commandInfo);
