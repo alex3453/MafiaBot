@@ -1,18 +1,30 @@
+using Mafia;
 using NUnit.Framework;
 
-namespace MafiaLogicTests
+namespace MafiaLogicTest
 {
-    public class Tests
+    [TestFixture]
+    public class MafiaTests
     {
+        private static MafiaGame _mafiaGame;
+        
         [SetUp]
         public void Setup()
         {
+            _mafiaGame = new MafiaGame(new SimpleRoleDist());
         }
 
-        [Test]
-        public void Test1()
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void MinimalPlayersCountTest(int playersCount)
         {
-            Assert.Pass();
+            for (var i = 0; i < playersCount; i++)
+            {
+                _mafiaGame.RegisterPlayer(i.ToString());
+            }
+            Assert.IsFalse(_mafiaGame.Status == Status.ReadyToStart);
         }
     }
 }

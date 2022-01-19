@@ -9,7 +9,7 @@ namespace Mafia
         public List<Role> DistributeRoles(int playersCount)
         {
             var result = new List<Role>();
-            var mafiaCount = playersCount / 10 + 1;
+            var mafiaCount = playersCount / 7 + 1;
             for (var i = 0; i < mafiaCount; i++)
                 result.Add(new MafiaRole());
             for (var i = 0; i < playersCount - mafiaCount; i++)
