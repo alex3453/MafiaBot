@@ -13,7 +13,7 @@ namespace Mafia
         IReadOnlyDictionary<int, string> PlayersNumbers { get; }
         OperationStatus RegisterPlayer(string name);
         void StartGame();
-        IReadOnlyCollection<string> Dead { get; }
+        IReadOnlyCollection<string> DeadPlayers { get; }
         OperationStatus Vote(string voter, string target);
         OperationStatus Act(Player maker, int target);
         IReadOnlyCollection<string> GetWinners();

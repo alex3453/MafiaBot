@@ -20,7 +20,7 @@ namespace Mafia
 
         public MafiaGame(IRoleDistribution roleDist)
         {
-            this._roleDist = roleDist;
+            _roleDist = roleDist;
         }
 
         public OperationStatus RegisterPlayer(string name)
@@ -156,7 +156,6 @@ namespace Mafia
         public IReadOnlyCollection<string> PlayersInGame => _playersInGame.Select(p => p.Name).ToArray();
         public IReadOnlyDictionary<string, Role> PlayersRoles => _allPlayers.ToDictionary(p => p.Name, p => p.Role);
         public IReadOnlyCollection<string> MafiozyPlayers => _mafiozyPlayers.Select(p => p.Name).ToArray();
-        public IReadOnlyCollection<string> Dead => _deadPlayers.Select(p => p.Name).ToArray();
         public IReadOnlyDictionary<int, string> PlayersNumbers => _playersNumbers;
         public IReadOnlyCollection<string> DeadPlayers => _deadPlayers.Select(p => p.Name).ToArray();
     }

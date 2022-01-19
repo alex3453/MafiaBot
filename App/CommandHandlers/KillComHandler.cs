@@ -39,20 +39,20 @@ namespace App.CommandHandler
             if (gT.Mafia.Status is Status.Voting)
             {
                 _send(gT.Mafia.IsSomeBodyDied
-                        ? new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray())
+                        ? new Answer(true, AnswerType.NightKill, gT.Mafia.DeadPlayers.ToArray())
                         : new Answer(true, AnswerType.NightAllAlive), gT.ChatId, _info.Service);
                 _send(new Answer(true, AnswerType.EndNight), gT.ChatId, _info.Service);
             }
             else if (gT.Mafia.Status is Status.MafiaWins)
             {
                 if (gT.Mafia.IsSomeBodyDied)
-                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray()), gT.ChatId, _info.Service);
+                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.DeadPlayers.ToArray()), gT.ChatId, _info.Service);
                 _send(new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId, _info.Service);
             }
             else if (gT.Mafia.Status is Status.PeacefulWins)
             {
                 if (gT.Mafia.IsSomeBodyDied)
-                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.Dead.ToArray()), gT.ChatId, _info.Service);
+                    _send(new Answer(true, AnswerType.NightKill, gT.Mafia.DeadPlayers.ToArray()), gT.ChatId, _info.Service);
                 _send(new Answer(true, AnswerType.PeacefulWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId, _info.Service);
             }
         }

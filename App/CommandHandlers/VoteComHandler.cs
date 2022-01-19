@@ -41,7 +41,7 @@ namespace App
             if (gT.Mafia.Status is Status.MafiaKilling)
             {
                 if (gT.Mafia.IsSomeBodyDied)
-                    _send(new Answer(true, AnswerType.DayKill, gT.Mafia.Dead.ToArray()), gT.ChatId, _info.Service);
+                    _send(new Answer(true, AnswerType.DayKill, gT.Mafia.DeadPlayers.ToArray()), gT.ChatId, _info.Service);
                 else
                     _send(new Answer(true, AnswerType.DayAllAlive), gT.ChatId, _info.Service);
                 _send(new Answer(true, AnswerType.EndDay), gT.ChatId, _info.Service);
@@ -58,7 +58,7 @@ namespace App
                 return;
             }
             if (gT.Mafia.IsSomeBodyDied)
-                _send(new Answer(true, AnswerType.DayKill, gT.Mafia.Dead.ToArray()), gT.ChatId, _info.Service);
+                _send(new Answer(true, AnswerType.DayKill, gT.Mafia.DeadPlayers.ToArray()), gT.ChatId, _info.Service);
             if (IsSend(gT.Mafia.Status is Status.MafiaWins, 
                 new Answer(true, AnswerType.MafiaWins, gT.Mafia.GetWinners().ToArray()), gT.ChatId, _info.Service)) return;
             if (IsSend(gT.Mafia.Status is Status.PeacefulWins, 
