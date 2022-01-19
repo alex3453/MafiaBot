@@ -35,7 +35,7 @@ namespace MafiaLogicTest
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
-        public void LessThenFourPlayersTest(int playersCount)
+        public void LessThenFourPlayersCantStartTest(int playersCount)
         {
             RegisterPlayers(playersCount);
             Assert.AreEqual(Status.WaitingPlayers, _mafiaGame.Status);
@@ -45,7 +45,7 @@ namespace MafiaLogicTest
         [TestCase(5)]
         [TestCase(6)]
         [TestCase(100)]
-        public void MoreThanFourPlayersTest(int playersCount)
+        public void MoreThanFourPlayersStartTest(int playersCount)
         {
             RegisterPlayers(playersCount);
             Assert.AreEqual(Status.ReadyToStart, _mafiaGame.Status);
@@ -121,7 +121,7 @@ namespace MafiaLogicTest
         }
         
         [TestCase]
-        public void DayAfterNightlTest()
+        public void DayAfterNightTest()
         {
             const int playersCount = 4;
             RegisterPlayers(playersCount);
