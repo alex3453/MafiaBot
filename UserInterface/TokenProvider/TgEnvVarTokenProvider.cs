@@ -6,7 +6,7 @@ namespace UserInterface
     {
         public string GetToken()
         {
-            return Environment.GetEnvironmentVariable("MAFIATGTOKEN");
+            return Environment.GetEnvironmentVariable("MAFIATGTOKEN", EnvironmentVariableTarget.User);
         }
     }
 }
