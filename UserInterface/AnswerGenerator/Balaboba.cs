@@ -22,7 +22,7 @@ namespace UserInterface
             public string query { get; set; }
         }
         
-        public async Task<string> GetAnswer(string text, int style = 0)
+        public async Task<string> GetAnswer(string text, int style = 3)
         {
             var result = text + " ";
             var message = new Message { filter = 1, intro = style, query = text };
